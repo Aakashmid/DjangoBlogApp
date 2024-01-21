@@ -1,0 +1,112 @@
+// hide naviagation
+function hide_navigation() {
+    var span_close = document.getElementById('close_modals');
+    var nav = document.getElementById('navigation_bar');
+    var loginform = document.getElementById('login_modal');
+    
+    if (nav.classList.contains('-translate-x-0')) {
+        nav.classList.remove('-translate-x-0');
+        nav.classList.add('translate-x-full');
+    }
+    if (span_close.classList.contains('block') && loginform.classList.contains('hidden')) {
+        span_close.classList.remove('block');
+        span_close.classList.add('hidden');
+    }
+}
+var hamburger = document.querySelector('#test');
+
+hamburger.addEventListener('click',function(){
+    var nav = document.getElementById('navigation_bar');
+    var span_background = document.getElementById('close_modals');
+    if (nav.classList.contains('translate-x-full')) {
+        nav.classList.remove('translate-x-full');
+        nav.classList.add('-translate-x-0');
+    }
+    if (span_background.classList.contains('hidden')) {
+        span_background.classList.remove('hidden');
+        span_background.classList.add('block');
+    }
+});
+
+
+function searchBar_Show() {
+    var searchBar = document.getElementById('searchBar');
+    if (searchBar.classList.contains('hidden')) {
+        searchBar.classList.remove('hidden');
+        searchBar.classList.add('block');
+    }
+    else if (searchBar.classList.contains('block')) {
+        searchBar.classList.remove('block');
+        searchBar.classList.add('hidden');
+    }
+}
+
+// show login form
+function showLogin() {
+    var loginform = document.getElementById('login_modal');
+    var nav = document.getElementById('navigation_bar');
+    var span_background = document.getElementById('close_modals');
+    if (loginform.classList.contains('hidden')) {
+        loginform.classList.remove('hidden');
+        loginform.classList.add('block');
+    }
+    if (span_background.classList.contains('hidden')) {
+        span_background.classList.remove('hidden');
+        span_background.classList.add('block');
+    }
+
+    if (nav.classList.contains('-translate-x-0')) {
+        nav.classList.remove('-translate-x-0');
+        nav.classList.add('translate-x-full');
+    }
+}
+
+function closeLoginModal() {
+    var loginform = document.getElementById('login_modal');
+    var span_close = document.getElementById('close_modals');
+
+    if (loginform.classList.contains('block')) {
+        loginform.classList.remove('block');
+        loginform.classList.add('hidden');
+    }
+    if (span_close.classList.contains('block')) {
+        span_close.classList.remove('block');
+        span_close.classList.add('hidden');
+    }
+}
+
+
+//  onclick span hide all modals  and also span element
+var span_close = document.getElementById('close_modals');
+span_close.addEventListener('click', function () {
+    var loginform = document.getElementById('login_modal');
+    var nav = document.getElementById('navigation_bar');
+    if (loginform.classList.contains('block')) {
+        loginform.classList.remove('block');
+        loginform.classList.add('hidden');
+    }
+    if (nav.classList.contains('-translate-x-0')) {
+        nav.classList.remove('-translate-x-0');
+        nav.classList.add('translate-x-full');
+    }
+    if (span_close.classList.contains('block')) {
+        span_close.classList.remove('block');
+        span_close.classList.add('hidden');
+    }
+
+});
+
+
+// Dissmiss Alert
+
+var alert = document.getElementById('alert');
+if (alert) {
+    var alert_btn = document.getElementById('dismiss_alert');
+    alert_btn.onclick = function () {
+        var alert = document.getElementById('alert');
+        if (alert.classList.contains('flex')) {
+            alert.classList.remove('flex');
+            alert.classList.add('hidden');
+        }
+    }
+}

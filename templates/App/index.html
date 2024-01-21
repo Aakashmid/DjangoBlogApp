@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+{% endblock title %}
+
+
+{% block body %}
+<div class="container ">
+    <div class="w-11/12 p-3  mb-6 max-h-max  jumbotron mx-auto border-[1px] rounded-sm text-white bg-gray-800 ">
+        <p class="font-semibold text-2xl">Hello World</p>
+        <p class="text-lg mt-2">This is a template for a simple marketing or informational website. It includes a large
+            callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create
+            something more unique.</p>
+    </div>
+    <hr>
+    <h1 class="ml-4 font text-xl font-semibold mt-4">Most readed Posts :</h3>
+        <div class="mt-4 flex flex-col space-y-2 px-2">
+            {% for post in allPosts %}
+            <div class="card border-gray-600 border-[1px] rounded-md shadow-md">
+                <div class="upper-part flex-col  px-4 mt-4">
+                    <div class="flex space-x-2">
+                        <a href="#" class="prifile w-fit h-auto">
+                            <img src="{% static 'img/profile.jpg' %}" class="w-7 rounded-xl h-auto" alt="">
+                        </a>
+                        <a href="" class="author-name font-sans">
+                            {{post.author}}
+                        </a>
+                    </div>
+                    <div class="">
+                        <p class="text-sm">{{post.publish_time}}</p>
+                    </div>
+                </div>
+
+                <a href="/post-blogs/{{post.id}}/">
+                    <div class="card-body p-4">
+                        <h2 class="title font-bold text-lg">{{post.title}}</h2>
+                        <div class="preview card-text">
+                            <p class="text-[17px]">{{post.content|safe | truncatechars_html:150}}
+                        </div>
+                    </div>
+                </a>
+                <div class="footer-part flex justify-between"></div>
+            </div>
+            {% endfor %}
+
+        </div>
+
+
+        <div class=""></div>
+
+
+
+</div>
+{% endblock body %}
+
+{% block js%}
+<script>
+    let previews = document.getElementsByClassName('preview');
+    Array.from(previews).forEach((element) => {
+        element.innerHTML = element.innerText;
+    })
+</script>
+{% endblock js %}

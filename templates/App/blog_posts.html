@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Blogs{% endblock title %}
+
+{% block js%}
+<script>
+
+    let previews = document.getElementsByClassName('preview');
+    Array.from(previews).forEach((element) => {
+        element.innerHTML = element.innerText;
+    })
+
+    //on click card body change color of heading
+    let card = document.getElementsByClassName('card_link');
+</script>
+{% endblock js %}
+
+{% block body %}
+<div class="container pt-2">
+    <div class="category  flex overflow-x-scroll px-2">
+        <a href="#" class="p-2 text-lg font-semibold hover:text-blue-600 hover:underline">Trending</a>
+        <a href="#" class="p-2 text-lg font-semibold hover:text-blue-600 hover:underline">Trending</a>
+        <a href="#" class="p-2 text-lg font-semibold hover:text-blue-600 hover:underline">Trending</a>
+        <a href="#" class="p-2 text-lg font-semibold hover:text-blue-600 hover:underline">Trending</a>
+    </div>
+    <div class="blogs mt-4 clear-left">
+        <div class="p-2 flex flex-col space-y-2">
+            {% for post in allPosts %}
+            <div class="card  flex flex-col  space-y-1  border-gray-800 rounded-md shadow-xl py-3 bg-gray-50">
+                <div class="upper-part flex-col space-y-1 px-2 ">
+                    <div class="flex space-x-2">
+                        <a href="#" class="prifile w-fit h-auto">
+                            <img src="{% static 'img/profile.jpg' %}" class="w-7 rounded-xl h-auto" alt="">
+                        </a>
+                        <a href="" class="author-name font-sans">
+                            {{post.author}}
+                        </a>
+                    </div>
+                    <div class="">
+                        <p class="text-xs">{{post.publish_time}}</p>
+                    </div>
+                </div>
+                <div class="px-2">
+                    <a href="{{post.id}}" class="flex flex-col ">
+                        <h1 class="title font-semibold text-xl">{{post.title}}</h1>
+                        <p class="blog-content">
+                            <div class="preview">{{post.content|safe|truncatechars_html:100}}</div>
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <hr class="my-1 bg-gray-800">
+            {% endfor %}
+        </div>
+    </div>
+
+    {% endblock body %}
