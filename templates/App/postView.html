@@ -55,9 +55,10 @@
                         <p class="flex space-x-3">
                             <span class="like text-[14px]">like</span>
                             <span class="dislike text-[14px]">dislike</span>
-                            <span class="reply text-[14px]"><a role="button" id="btn{{comment.sno}}" class="reply-button py-1 px-3 hover:bg-gray-300   active:bg-blue-500 rounded-2xl active:text-white">Reply</a></span>
+                            <span class="reply text-[14px]"><a role="button" id="btn{{comment.sno}}"
+                                    class="reply-button py-1 px-3 hover:bg-gray-300   active:bg-blue-500 rounded-2xl active:text-white">Reply</a></span>
                         </p>
-                        <div class="reply-section hidden" id="replyForm{{comment.sno}}">
+                        <div class="reply-section hidden " id="replyForm{{comment.sno}}">
                             <!-- Reply input -->
                             <form action="/post-comment" method="get" class="">
                                 {% csrf_token %}
@@ -65,23 +66,29 @@
                                 <input type="hidden" name="parentSno" value="{{comment.sno}}">
                                 <div class="">
                                     <div class="flex space-x-1 items-center">
-                                        <img src="{% static 'img/profile.jpg' %}" alt=".." class="w-auto h-6 rounded-3xl">
+                                        <img src="{% static 'img/profile.jpg' %}" alt=".."
+                                            class="w-auto h-6 rounded-3xl">
                                         <input
                                             class="p-1 rounded  border-[1px] focus:outline focus:outline-blue-300 outline-2 w-full"
-                                            type="text" name="comment" id="comment" placeholder="Enter your comment here..."
-                                            required>
+                                            type="text" name="comment" id="comment"
+                                            placeholder="Enter your comment here..." required>
                                     </div>
                                     <div class="flex mt-2  space-x-2 w-full justify-end">
-                                        <button id="cancel{{comment.sno}}" type="button" class="cancel-reply hover:bg-gray-400  active:bg-blue-500 active:text-white py-1 px-3 text-[15px] rounded-2xl">Cancel</button>
-                                        <button type="submit" class="py-1 px-3 bg-blue-500 text-[15px]  rounded-2xl text-white  ">
+                                        <button id="cancel{{comment.sno}}" type="button"
+                                            class="cancel-reply hover:bg-gray-300  active:bg-blue-500 active:text-white py-1 px-3 text-[15px] rounded-2xl">Cancel</button>
+                                        <button type="submit"
+                                            class="py-1 px-3 bg-blue-500 text-[15px]   rounded-2xl text-white  ">
                                             Reply
                                         </button>
                                     </div>
                                 </div>
                             </form>
-                            <div class="all-replies flex flex-col spy-2 ">
+                            <div class="all-replies mt-1 flex flex-col space-y-2 bg-gray-50 py-2 px-1 ">
                                 {% for reply in replies|get_replies:comment.sno %}
-                                <p class="">{{reply.comment_text}}</p>
+                                <div class="flex space-x-2">
+                                    <img src="{% static 'img/profile.jpg' %}" alt=".." class="w-auto h-6 rounded-3xl">
+                                    <p class="text-sm">{{reply.comment_text}}</p>
+                                </div>
                                 {% endfor%}
                             </div>
                         </div>
@@ -113,33 +120,46 @@
             }
         })
         // Onclick reply button
-        let reply_btns=document.getElementsByClassName('reply-button');
+        let reply_btns = document.getElementsByClassName('reply-button');
         for (let index = 0; index < reply_btns.length; index++) {
             let element = reply_btns[index];
-            let element_id= element.id;
-            let s_no=element_id.slice(3)
-            element.addEventListener('click',function(){
-                let reply_form=document.getElementById('replyForm'+s_no)
+            let element_id = element.id;
+            let s_no = element_id.slice(3)
+            element.addEventListener('click', function () {
+                let reply_form = document.getElementById('replyForm' + s_no)
                 if (reply_form.classList.contains('hidden')) {
                     reply_form.classList.remove('hidden');
                     reply_form.classList.add('block');
                 }
-                else if(reply_form.classList.contains('block')){
+                else if (reply_form.classList.contains('block')) {
                     reply_form.classList.remove('block');
                     reply_form.classList.add('hidden');
                 }
+                for (let i = 0; i < reply_btns.length; i++) {
+                    if (i != index) {
+                        let x = reply_btns[i];
+                        let x_id = x.id;
+                        let Sno = x_id.slice(3)
+                        let reply_form = document.getElementById('replyForm' + Sno)
+                        if (reply_form.classList.contains('block')) {
+                            reply_form.classList.remove('block');
+                            reply_form.classList.add('hidden');
+                        }
+                    }
+
+                }
             })
-            let cancelReply_btn=document.getElementById('cancel'+s_no)
-            cancelReply_btn.addEventListener('click',function(){
-                let reply_form=document.getElementById('replyForm'+s_no)
-                
+            let cancelReply_btn = document.getElementById('cancel' + s_no)
+            cancelReply_btn.addEventListener('click', function () {
+                let reply_form = document.getElementById('replyForm' + s_no)
+
                 if (reply_form.classList.contains('block')) {
 
                     reply_form.classList.remove('block');
                     reply_form.classList.add('hidden');
                 }
             })
-            
+
         }
         setTimeout(readIncrease, 20000);
         function readIncrease() {
