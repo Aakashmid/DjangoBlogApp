@@ -25,10 +25,10 @@ SECRET_KEY = 'django-insecure-8kbo$_-*8irf^50#5kdmn4=lm)o*w*7=a7*$git!+9ie-u$qyf
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['dev-blog-2bb6.onrender.com','127.0.0.1']
 
 
-# Application definition
+# Application definitions
 
 INSTALLED_APPS = [
     'django.contrib.admin',
