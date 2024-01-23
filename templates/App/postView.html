@@ -5,7 +5,7 @@
 
 <div class="container pt-2">
     <div class="main-body p-2 flex-col space-y-3 max-w-full">
-        <h1 class="font-bold text-2xl">{{post.title}}</h1>
+        <h1 class="font-bold text-3xl">{{post.title}}</h1>
         <div class="post-header flex space-x-2">
             <img src="{% static 'img/profile.jpg' %}" alt="..." class="w-11 h-auto rounded-3xl">
             <div class="flex flex-col space-y-1">
@@ -16,6 +16,11 @@
                     Published on {{post.publish_time}}
                 </p>
             </div>
+        </div>
+        <div class="flex space-x-6">
+            <span class="">likes</span>
+            <span class="">Comments({{comments|length}})</span>
+            <span class="">{{post.read_count}} Read</span>
         </div>
         <div class="no-tailwind-base">
             {{post.content|safe}}
@@ -47,7 +52,7 @@
             <!-- Comments  -->
             <!-- <div class="All-comments flex flex-col space-y-2  px-2 mt-2"> -->
             {% for comment in comments %}
-            <div class="">
+            <div class="mt-2">
                 <div class="flex space-x-2">
                     <img src="{% static 'img/profile.jpg' %}" alt=".." class="w-7 h-auto rounded-full">
                     <p class="user">{{comment.user.username}}</p>
@@ -76,7 +81,7 @@
                                     <img src="{% static 'img/profile.jpg' %}" alt=".." class="w-auto h-6 rounded-3xl">
                                     <input
                                         class="p-1 rounded  border-[1px] focus:outline focus:outline-blue-300 outline-2 w-full"
-                                        type="text" name="comment" id="comment" placeholder="Enter your comment here..."
+                                        type="text" name="comment" id="reply{{comment.sno}}" placeholder="Enter your comment here..."
                                         required>
                                 </div>
                                 <div class="flex mt-2  space-x-2 w-full justify-end">
@@ -168,7 +173,19 @@
         }
         setTimeout(readIncrease, 20000);
         function readIncrease() {
-            // console.log('Increased');
+            // $.ajax({
+            //         url: "/post-blogs/{{post.id}}/",  // Replace with your Django endpoint URL
+            //         type: "POST",  // or "POST" depending on your Django view
+            //         dataType: "json",  // Change the data type if your endpoint returns a different format
+            //         success: function (data) {
+            //             // Handle the successful response here
+            //             console.log("Success:", data);
+            //         },
+            //         error: function (error) {
+            //             // Handle the error response here
+            //             console.log("Error:", error);
+            //         }
+            //     });
         }
     });
 </script>
