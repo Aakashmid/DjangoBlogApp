@@ -2,42 +2,54 @@
 
 {% block title %}Create user{% endblock title %}Create user
 {% block body %}
-
-   
-    <div class=" p-4 bg-gray-100 mx-2">
-        <div class="">
+<div class="h-full bg-gray-100">
+    <div class=" p-4 bg-gray-100 w-full  rounded-md  grid place-items-center ">
+        <div class="p-2 mt-2">
             <p class="text-lg font-serif text-center">Creat your free account</p>
         </div>
-        <form action="/sign-up/" class="w-full p-4 space-y-2" method="post">
+        <form action="/sign-up/" class="p-3 space-y-2 w-[85%]" method="post">
             {% csrf_token %}
             <div class="flex-col flex space-y-1">
                 <label for="first_name" class="text-[17px] ">First name</label>
-                <input name="first_name" type="text" class="text-[17px] rounded p-2 border-[1px] border-black focus:outline  focus:outline-1 focus:outline-gray-700" required>
+                <input name="first_name" type="text"
+                    class="text-[17px] rounded px-2 py-1 border-[1px] border-black focus:outline  focus:outline-1 focus:outline-gray-700"
+                    required>
             </div>
             <div class="flex-col flex space-y-1">
                 <label for="last_name" class="text-[17px] ">Last name</label>
-                <input name="last_name" type="text" class="text-[17px] rounded p-2 border-[1px] border-black focus:outline  focus:outline-1 focus:outline-gray-700" required>
+                <input name="last_name" type="text"
+                    class="text-[17px] rounded px-2 py-1 border-[1px] border-black focus:outline  focus:outline-1 focus:outline-gray-700"
+                    required>
             </div>
             <div class="flex-col flex space-y-1">
                 <label for="eamil" class="text-[17px] ">Email</label>
-                <input name="eamil" type="email" class="text-[17px] rounded p-2 border-[1px] border-black focus:outline  focus:outline-1 focus:outline-gray-700" required>
+                <input name="eamil" type="email"
+                    class="text-[17px] rounded px-2 py-1 border-[1px] border-black focus:outline  focus:outline-1 focus:outline-gray-700"
+                    required>
             </div>
             <div class="flex-col flex space-y-1">
                 <label for="username" class="text-[17px] ">Username</label>
-                <input name="username" id="username" type="text" class="text-[17px] rounded p-2 border-[1px] border-black focus:outline  focus:outline-1 focus:outline-gray-700" required>
+                <input name="username" id="susername" type="text"
+                    class="text-[17px] rounded px-2 py-1 border-[1px] border-black focus:outline  focus:outline-1 focus:outline-gray-700"
+                    required>
             </div>
             <div class="flex-col flex space-y-1">
                 <label for="password" class="text-[17px] ">Password</label>
-                <input name="password" id="password" type="text" class="text-[17px] rounded p-2 border-[1px] border-black focus:outline  focus:outline-1 focus:outline-gray-700" required>
+                <input name="password" id="spassword" type="password"
+                    class="text-[17px] rounded px-2 py-1 border-[1px] border-black focus:outline  focus:outline-1 focus:outline-gray-700"
+                    required>
             </div>
             <div class="btn flex justify-center">
-                <button type="submit" class="text-[16px] p-2 px-4 font-semibold rounded bg-blue-500 text-black ">Sign up</button>
+                <button type="submit" class="text-[16px] p-2 px-4 font-semibold rounded bg-blue-500 text-white ">Sign
+                    up</button>
             </div>
             <div class="">
-                <p class="text-center mt-3">If alerdy have an account ? <a href="/" onclick="showLogin()" class="text-blue-700 font-semibold ">Login </a></p>
+                <p class="text-center mt-3">If alerdy have an account ? <a href="/" onclick="showLogin()"
+                        class="text-blue-700 font-semibold ">Login </a></p>
             </div>
         </form>
     </div>
+</div>
 
 
 {% endblock body %}
