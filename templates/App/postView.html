@@ -21,85 +21,91 @@
             {{post.content|safe}}
         </div>
     </div>
-    <div class="p-2">
-        <h3 class="font-semibold  p-2">
+    <div class="p-2 ">
+        <h3 class="font-semibold ">
             <a class="" id="comment_btn">
-                Comments()
+                All Comments({{comments|length}})
             </a>
         </h3>
-        <div class="comment-block ">
+        <div id="comment-block" class="hidden duration-700">
             <!-- Comment input -->
-            <div class="comment-input px-2">
+            <div class="comment-input">
                 <form action="/post-comment" method="get" class="py-2">
                     {% csrf_token %}
                     <input type="hidden" name="postSno" value="{{post.id}}">
                     <input type="hidden" name="parentSno" value="">
                     <div class="flex-col flex space-y-1">
-                        <input class="p-1 rounded  border-[1px] focus:outline focus:outline-blue-300 outline-2"
+                        <input
+                            class="p-1 rounded  border-[1px] border-gray-600 focus:outline focus:outline-blue-200 outline-2 outline-offset-1"
                             type="text" name="comment" id="comment" placeholder="Enter your comment here..." required>
-                        <button type="submit" class="p-1 bg-blue-400 rounded text-black w-[25%]">Comment</button>
+                        <button type="submit"
+                            class="p-1 bg-blue-400 active:bg-white active:text-black active:outline-blue-500 outline-1 outline text-gray-100 rounded  w-[25%]">Comment</button>
                     </div>
                 </form>
             </div>
 
             <!-- Comments  -->
-            <div class="All-comments flex flex-col space-y-2  px-2 mt-2">
-                {% for comment in comments %}
-                <div class="">
-                    <div class="flex space-x-2">
-                        <img src="{% static 'img/profile.jpg' %}" alt=".." class="w-7 h-auto rounded-full">
-                        <p class="user">{{comment.user.username}}</p>
-                    </div>
-                    <div class="flex flex-col ml-9 space-y-1">
-                        <p class="text-[17px] font-medium">{{comment.comment_text}}</p>
-                        <p class="flex space-x-3">
-                            <span class="like text-[14px]">like</span>
-                            <span class="dislike text-[14px]">dislike</span>
-                            <span class="reply text-[14px]"><a role="button" id="btn{{comment.sno}}"
-                                    class="reply-button py-1 px-3 hover:bg-gray-300   active:bg-blue-500 rounded-2xl active:text-white">Reply</a></span>
-                        </p>
-                        <div class="reply-section hidden " id="replyForm{{comment.sno}}">
-                            <!-- Reply input -->
-                            <form action="/post-comment" method="get" class="">
-                                {% csrf_token %}
-                                <input type="hidden" name="postSno" value="{{post.id}}">
-                                <input type="hidden" name="parentSno" value="{{comment.sno}}">
-                                <div class="">
-                                    <div class="flex space-x-1 items-center">
-                                        <img src="{% static 'img/profile.jpg' %}" alt=".."
-                                            class="w-auto h-6 rounded-3xl">
-                                        <input
-                                            class="p-1 rounded  border-[1px] focus:outline focus:outline-blue-300 outline-2 w-full"
-                                            type="text" name="comment" id="comment"
-                                            placeholder="Enter your comment here..." required>
-                                    </div>
-                                    <div class="flex mt-2  space-x-2 w-full justify-end">
-                                        <button id="cancel{{comment.sno}}" type="button"
-                                            class="cancel-reply hover:bg-gray-300  active:bg-blue-500 active:text-white py-1 px-3 text-[15px] rounded-2xl">Cancel</button>
-                                        <button type="submit"
-                                            class="py-1 px-3 bg-blue-500 text-[15px]   rounded-2xl text-white  ">
-                                            Reply
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                            <div class="all-replies mt-1 flex flex-col space-y-2 bg-gray-50 py-2 px-1 ">
-                                {% for reply in replies|get_replies:comment.sno %}
-                                <div class="flex space-x-2">
+            <!-- <div class="All-comments flex flex-col space-y-2  px-2 mt-2"> -->
+            {% for comment in comments %}
+            <div class="">
+                <div class="flex space-x-2">
+                    <img src="{% static 'img/profile.jpg' %}" alt=".." class="w-7 h-auto rounded-full">
+                    <p class="user">{{comment.user.username}}</p>
+                </div>
+                <div class="flex flex-col ml-9 space-y-2">
+                    <p class="text-[17px] font-medium">{{comment.comment_text}}</p>
+                    <p class="flex space-x-3">
+                        <span class="like text-[14px]">like</span>
+                        <span class="dislike text-[14px]">dislike</span>
+                        {% if replies|get_replies:comment.sno|length > 0 %}
+                        <span class="reply text-[14px]"><a role="button" id="btn{{comment.sno}}"
+                                class="reply-button py-1 px-3 hover:bg-gray-300   active:bg-blue-500 rounded-2xl active:text-white">Reply({{replies|get_replies:comment.sno|length}})</a></span>
+                        {% else %}
+                        <span class="reply text-[14px]"><a role="button" id="btn{{comment.sno}}"
+                                class="reply-button py-1 px-3 hover:bg-gray-300   active:bg-blue-500 rounded-2xl active:text-white">Reply</a></span>
+                        {% endif %}
+                    </p>
+                    <div class="reply-section hidden " id="replyForm{{comment.sno}}">
+                        <!-- Reply input -->
+                        <form action="/post-comment" method="get" class="">
+                            {% csrf_token %}
+                            <input type="hidden" name="postSno" value="{{post.id}}">
+                            <input type="hidden" name="parentSno" value="{{comment.sno}}">
+                            <div class="">
+                                <div class="flex space-x-1 items-center">
                                     <img src="{% static 'img/profile.jpg' %}" alt=".." class="w-auto h-6 rounded-3xl">
-                                    <p class="text-sm">{{reply.comment_text}}</p>
+                                    <input
+                                        class="p-1 rounded  border-[1px] focus:outline focus:outline-blue-300 outline-2 w-full"
+                                        type="text" name="comment" id="comment" placeholder="Enter your comment here..."
+                                        required>
                                 </div>
-                                {% endfor%}
+                                <div class="flex mt-2  space-x-2 w-full justify-end">
+                                    <button id="cancel{{comment.sno}}" type="button"
+                                        class="cancel-reply hover:bg-gray-300  active:bg-blue-500 active:text-white py-1 px-3 text-[15px] rounded-2xl">Cancel</button>
+                                    <button type="submit"
+                                        class="py-1 px-3 bg-blue-500 text-[15px]   rounded-2xl text-white  ">
+                                        Reply
+                                    </button>
+                                </div>
                             </div>
+                        </form>
+                        <div class="all-replies mt-1 flex flex-col space-y-2 bg-gray-50 py-2 px-1 ">
+                            {% for reply in replies|get_replies:comment.sno %}
+                            <div class="flex space-x-2">
+                                <img src="{% static 'img/profile.jpg' %}" alt=".." class="w-auto h-6 rounded-3xl">
+                                <p class="text-sm">{{reply.comment_text}}</p>
+                            </div>
+                            {% endfor%}
                         </div>
                     </div>
                 </div>
-                {% endfor %}
             </div>
-
-
+            {% endfor %}
         </div>
+
+
     </div>
+</div>
 </div>
 
 {% endblock body %}
@@ -109,7 +115,7 @@
     $(document).ready(function () {
         let commnent_btn = document.querySelector('#comment_btn');
         commnent_btn.addEventListener('click', function () {
-            let comment_block = document.getElementsByClassName("comment-block")[0];
+            let comment_block = document.getElementById("comment-block");
             if (comment_block.classList.contains('hidden')) {
                 comment_block.classList.remove('hidden');
                 comment_block.classList.add('block');
@@ -146,7 +152,6 @@
                             reply_form.classList.add('hidden');
                         }
                     }
-
                 }
             })
             let cancelReply_btn = document.getElementById('cancel' + s_no)
