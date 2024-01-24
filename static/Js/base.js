@@ -3,7 +3,7 @@ function hide_navigation() {
     var span_close = document.getElementById('close_modals');
     var nav = document.getElementById('navigation_bar');
     var loginform = document.getElementById('login_modal');
-    
+
     if (nav.classList.contains('-translate-x-0')) {
         nav.classList.remove('-translate-x-0');
         nav.classList.add('translate-x-full');
@@ -15,7 +15,7 @@ function hide_navigation() {
 }
 var hamburger = document.querySelector('#test');
 
-hamburger.addEventListener('click',function(){
+hamburger.addEventListener('click', function () {
     var nav = document.getElementById('navigation_bar');
     var span_background = document.getElementById('close_modals');
     if (nav.classList.contains('translate-x-full')) {
@@ -26,6 +26,7 @@ hamburger.addEventListener('click',function(){
         span_background.classList.remove('hidden');
         span_background.classList.add('block');
     }
+    
 });
 
 
@@ -54,7 +55,7 @@ function showLogin() {
         span_background.classList.remove('hidden');
         span_background.classList.add('block');
     }
-
+    
     if (nav.classList.contains('-translate-x-0')) {
         nav.classList.remove('-translate-x-0');
         nav.classList.add('translate-x-full');
@@ -64,7 +65,7 @@ function showLogin() {
 function closeLoginModal() {
     var loginform = document.getElementById('login_modal');
     var span_close = document.getElementById('close_modals');
-
+    
     if (loginform.classList.contains('block')) {
         loginform.classList.remove('block');
         loginform.classList.add('hidden');
@@ -93,7 +94,7 @@ span_close.addEventListener('click', function () {
         span_close.classList.remove('block');
         span_close.classList.add('hidden');
     }
-
+    
 });
 
 
