@@ -12,9 +12,11 @@ function hide_navigation() {
         span_close.classList.remove('block');
         span_close.classList.add('hidden');
     }
+    let body_element=document.getElementsByTagName('body')[0];
+    body_element.classList.remove('overflow-hidden');
 }
+// show navigation bar
 var hamburger = document.querySelector('#test');
-
 hamburger.addEventListener('click', function () {
     var nav = document.getElementById('navigation_bar');
     var span_background = document.getElementById('close_modals');
@@ -26,7 +28,8 @@ hamburger.addEventListener('click', function () {
         span_background.classList.remove('hidden');
         span_background.classList.add('block');
     }
-    
+    let body_element=document.getElementsByTagName('body')[0];
+    body_element.classList.add('overflow-hidden');
 });
 
 
@@ -60,6 +63,8 @@ function showLogin() {
         nav.classList.remove('-translate-x-0');
         nav.classList.add('translate-x-full');
     }
+    let body_element=document.getElementsByTagName('body')[0];
+    body_element.classList.add('overflow-hidden');
 }
 
 function closeLoginModal() {
@@ -74,6 +79,8 @@ function closeLoginModal() {
         span_close.classList.remove('block');
         span_close.classList.add('hidden');
     }
+    let body_element=document.getElementsByTagName('body')[0];
+    body_element.classList.remove('overflow-hidden');
 }
 
 
@@ -94,6 +101,8 @@ span_close.addEventListener('click', function () {
         span_close.classList.remove('block');
         span_close.classList.add('hidden');
     }
+    let body_element=document.getElementsByTagName('body')[0];
+    body_element.classList.remove('overflow-hidden');
     
 });
 

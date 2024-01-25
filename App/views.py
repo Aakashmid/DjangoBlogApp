@@ -5,7 +5,7 @@ from django.contrib import messages
 from .models import Post,Comment
 from .templatetags import extraFilter
 from django.db.models import Q
-
+from django.http import JsonResponse
 # Create your views here.
 def home(request):
     allPosts=Post.objects.all()
@@ -89,10 +89,11 @@ def Create_post(request):
 
 def Read_post(request,id):
     post=Post.objects.get(id=id)    
-    if request.method=="POST":
+    if request.method=="PATCH":
         post.read_count+=1
         post.save()
-        pass
+        response = JsonResponse({'message': 'data is deleted successfully'})
+        return response
     if post:
         comments=Comment.objects.filter(Q(parent=None) & Q(post=post))
         replies=Comment.objects.filter(post=post).exclude(parent=None)

@@ -171,21 +171,20 @@
             })
 
         }
-        setTimeout(readIncrease, 20000);
+        setTimeout(readIncrease, 120000);
         function readIncrease() {
-            // $.ajax({
-            //         url: "/post-blogs/{{post.id}}/",  // Replace with your Django endpoint URL
-            //         type: "POST",  // or "POST" depending on your Django view
-            //         dataType: "json",  // Change the data type if your endpoint returns a different format
-            //         success: function (data) {
-            //             // Handle the successful response here
-            //             console.log("Success:", data);
-            //         },
-            //         error: function (error) {
-            //             // Handle the error response here
-            //             console.log("Error:", error);
-            //         }
-            //     });
+            $.ajax({
+                type: "PATCH",
+                url: "/post-blogs/{{post.id}}/",
+                headers: {
+                    "X-CSRFToken": '{{ csrf_token }}'
+                },
+                success: function (data) {
+                },
+                error: function (error) {
+                    console.log("Error:", error);
+                }
+            });
         }
     });
 </script>
