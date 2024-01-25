@@ -905,6 +905,10 @@ video {
   margin-bottom: calc(0.75rem * var(--tw-space-y-reverse));
 }
 
+.overflow-hidden {
+  overflow: hidden;
+}
+
 .overflow-x-scroll {
   overflow-x: scroll;
 }
