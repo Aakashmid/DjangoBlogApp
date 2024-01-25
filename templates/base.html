@@ -15,7 +15,7 @@
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
 </head>
 
-<body>
+<body class="">
     <span id="close_modals" class="w-full h-full absolute top-0 bg-black opacity-30 hidden"></span>
     <nav
         class="bg-white text-white py-3 px-2 outline outline-1 outline-gray-400 flex justify-between items-center fixed  top-0 w-full">
@@ -80,7 +80,8 @@
         <div class="my-2 flex flex-col space-y-1 px-4">
             {% if user.is_authenticated %}
             <a href="/create-post/"
-                class="px-2 p-1 text-center hover:bg-gray-800 hover:text-white border-[1px] border-gray-900 rounded-md">Write blog</a>
+                class="px-2 p-1 text-center hover:bg-gray-800 hover:text-white border-[1px] border-gray-900 rounded-md">Write
+                blog</a>
             <a href="/logout-user"
                 class="px-2 p-1 text-center hover:bg-gray-800 hover:text-white border-[1px] border-gray-900 rounded-md">Logout</a>
             {% else %}
@@ -111,7 +112,7 @@
 
     <!-- Login modal -->
     <div id='login_modal' class="login-container hidden">
-        <div 
+        <div
             class=" p-4 bg-gray-100 mx-auto rounded-lg shadow-sm shadow-white w-[90%] fixed top-[40%] left-1/2  -translate-x-1/2 -translate-y-1/2 transform ">
             <div class="float-right">
                 <span onclick="closeLoginModal()"
@@ -137,9 +138,10 @@
                 <div class="btn flex  justify-center pt-2">
                     <button type="submit"
                         class="text-[16px] p-2 px-6 font-semibold rounded-md hover:bg-blue-800 bg-blue-600 text-gray-100 ">Login</button>
-                    </div>
-                    <p class="p-2 text-center">If not registered ? <a href="/sign-up" class="text-blue-600">Create account</a></p>
-                
+                </div>
+                <p class="p-2 text-center">If not registered ? <a href="/sign-up" class="text-blue-600">Create
+                        account</a></p>
+
                 <div class="#">
 
                 </div>
