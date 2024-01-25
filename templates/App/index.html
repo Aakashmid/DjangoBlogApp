@@ -6,7 +6,7 @@
 
 {% block body %}
 <div class="container ">
-    <div class="w-[92%] p-3   mb-6   jumbotron mx-auto border-[1px] rounded-md text-white bg-gray-800 ">
+    <div class="w-[92%] p-3   mb-5 mt-2  jumbotron mx-auto border-[1px] rounded-md text-white bg-gray-800 ">
         <p class="text-lg mt-2">Welcome to BlogBlend , your destination for curated insights and inspiration. Dive into thought-provoking articles on career, mindfulness, and creativity. Unleash your potential with us. Explore BlogBlend today.</p>
         
     </div>
@@ -14,11 +14,11 @@
     <h1 class="ml-4 font text-xl font-semibold mt-4">Most readed Posts :</h3>
         <div class="mt-4 flex flex-col space-y-2 px-2">
             {% for post in allPosts %}
-            <div class="card border-gray-600 border-[1px] rounded-md shadow-md">
-                <div class="upper-part flex-col  px-4 mt-4">
+            <div class="card border-gray-600 border-[1px] rounded-md shadow-md p-3">
+                <div class="upper-part flex-col   ">
                     <div class="flex space-x-2">
-                        <a href="#" class="prifile w-fit h-auto">
-                            <img src="{% static 'img/profile.jpg' %}" class="w-7 rounded-xl h-auto" alt="">
+                        <a href="#" class="profile w-fit h-auto">
+                            <img src="{% static 'img/profile.jpg' %}" class="w-7 rounded-full h-auto" alt="">
                         </a>
                         <a href="" class="author-name font-sans">
                             {{post.author}}
@@ -30,7 +30,7 @@
                 </div>
 
                 <a href="/post-blogs/{{post.id}}/">
-                    <div class="card-body p-4">
+                    <div class="card-body mt-1">
                         <h2 class="title font-bold text-lg">{{post.title}}</h2>
                         <div class="preview card-text">
                             <p class="text-[17px]">{{post.content|safe | truncatechars_html:150}}
@@ -42,12 +42,7 @@
             {% endfor %}
 
         </div>
-
-
         <div class=""></div>
-
-
-
 </div>
 {% endblock body %}
 
