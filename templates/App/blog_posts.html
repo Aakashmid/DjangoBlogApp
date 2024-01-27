@@ -9,22 +9,24 @@
     Array.from(previews).forEach((element) => {
         element.innerHTML = element.innerText;
     })
-
     //on click card body change color of heading
-    let card = document.getElementsByClassName('card_link');
+
 </script>
 {% endblock js %}
 
 {% block body %}
 <div class="container pt-2">
     <div class="category  flex overflow-x-scroll px-2">
-        <a href="#" class="p-2 text-lg font-semibold hover:text-blue-600 hover:underline">Trending</a>
-        <a href="#" class="p-2 text-lg font-semibold hover:text-blue-600 hover:underline">Trending</a>
-        <a href="#" class="p-2 text-lg font-semibold hover:text-blue-600 hover:underline">Trending</a>
-        <a href="#" class="p-2 text-lg font-semibold hover:text-blue-600 hover:underline">Trending</a>
+        <a href="/post-blogs/trend"  id="trend"
+            class="p-2 text-lg font-semibold hover:text-blue-600 hover:underline">Trending</a>
+        <a href="/post-blogs/new"  id="new"
+            class="p-2 text-lg font-semibold hover:text-blue-600 hover:underline">Newest</a>
+        <a href="/post-blogs/old"  id="old"
+            class="p-2 text-lg font-semibold hover:text-blue-600 hover:underline">Oldest</a>
+    
     </div>
     <div class="blogs mt-4 clear-left">
-        <div class="p-2 flex flex-col space-y-2">
+        <div id="testid" class="p-2 flex flex-col space-y-2">
             {% for post in allPosts %}
             <div class="card  flex flex-col  space-y-1  border-gray-800 rounded-md shadow-xl py-3 bg-gray-50">
                 <div class="upper-part flex-col space-y-1 px-2 ">
@@ -41,8 +43,8 @@
                     </div>
                 </div>
                 <div class="px-2">
-                    <a href="{{post.id}}" class="flex flex-col ">
-                        <h1 class="title font-semibold text-xl">{{post.title}}</h1>
+                    <a href="{{post.id}}/" id="card_link" class="flex flex-col ">
+                        <h1 id="title{{post.id}}" class="title font-semibold text-xl">{{post.title}}</h1>
                         <p class="blog-content">
                             <div class="preview">{{post.content|safe|truncatechars_html:100}}</div>
                         </p>

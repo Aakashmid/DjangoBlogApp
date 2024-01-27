@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import login,logout,authenticate
 from django.contrib import messages
@@ -55,7 +55,8 @@ def Logout_hand(request):
     messages.success(request,"Successsfully logout !!")
     return redirect('/')
     
-def Show_post_blogs(request):
+def Show_post_blogs(request,filterOrder=None):
+
     if request.method=="POST":
         search=request.POST.get('SearchQuery')
         trending=request.POST.get('trending')
@@ -69,12 +70,31 @@ def Show_post_blogs(request):
             return render(request,'App/blog_posts.html',params)
         elif trending:
             return render(request,'App/blog_posts.html',params)
-
-
+    
+    elif filterOrder : 
+            ids=['trend','new','old']
+            if filterOrder==ids[0]:
+                #write query for selecting trending posts
+                allPosts=Post.objects.filter(read_count__gte=20)
+                params={"allPosts":allPosts}
+                return render(request,'App/blog_posts.html',params)
+            elif filterOrder==ids[1]:
+                allPosts=Post.objects.all().order_by('-publish_time')
+                params={"allPosts":allPosts}
+                return render(request,'App/blog_posts.html',params)
+            
+            elif filterOrder==ids[2]:
+                allPosts=Post.objects.all().order_by('publish_time')
+                params={"allPosts":allPosts}
+                return render(request,'App/blog_posts.html',params)
     else:
         allPosts=Post.objects.all()
         params={'allPosts':allPosts}
         return render(request,'App/blog_posts.html',params)
+
+         
+
+        
     
 def Create_post(request):
     if request.method=="POST":
