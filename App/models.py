@@ -5,15 +5,18 @@ from datetime import datetime
 from django.utils import timezone
 # Create your models here.
 
+
 class Post(models.Model):
     author=models.CharField(max_length=100)
     title=models.CharField( max_length=500)
     content=models.TextField()
-    publish_time=models.DateTimeField(default=datetime.now())
+    publish_time=models.DateTimeField(default=datetime.now)
     read_count=models.IntegerField(default=0)
 
     def __str__(self) -> str:
         return self.title
+    class Meta:
+        verbose_name_plural="Blog posts"
     
 class Comment(models.Model):
     sno=models.AutoField(primary_key=True)

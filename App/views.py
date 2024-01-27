@@ -123,7 +123,6 @@ def Read_post(request,id):
                 replyDict[reply.parent.sno]=[reply]
             else:
                 replyDict[reply.parent.sno].append(reply)
-            
         return render(request,'App/postView.html',{"post":post,"comments":comments,'replies':replyDict})
     else:
         return redirect('/post-blogs/')
@@ -144,4 +143,4 @@ def post_comment(request):
             comment=Comment(user=user,post=post,comment_text=comment_text,parent=parent)
             comment.save()
             messages.success(request," Reply posted successfully ")
-        return redirect(f'/post-blogs/{post.id}')
+        return redirect(f'/post-blogs/{post.id}/')

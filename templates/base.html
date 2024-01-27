@@ -73,9 +73,16 @@
                 class="text-2xl font-semibold active:text-gray-500 active:bg-white cursor-pointer rounded-sm ">&times;</span>
         </div>
         <div class=" mb-6 p-2">
+            {% if user.is_authenticated %}
+            <div class="p-2 mx-auto  ">
+                <img src="{% static 'img/profile.jpg' %}" class="w-14 h-auto rounded-full" alt="">
+                <p>This is my blog website includes</p>
+            </div>
+            {% else %}
             <div class="p-2 mx-auto  h-28 border-black rounded-sm border-[1px]">
                 <p>This is my blog website includes</p>
             </div>
+            {% endif %}
         </div>
         <div class="my-2 flex flex-col space-y-1 px-4">
             {% if user.is_authenticated %}

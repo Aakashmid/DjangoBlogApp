@@ -646,12 +646,17 @@ video {
   clear: right;
 }
 
+.m-2 {
+  margin: 0.5rem;
+}
+
 .m-0 {
   margin: 0px;
 }
 
-.m-2 {
-  margin: 0.5rem;
+.mx-0 {
+  margin-left: 0px;
+  margin-right: 0px;
 }
 
 .mx-2 {
@@ -769,6 +774,10 @@ video {
 
 .w-11 {
   width: 2.75rem;
+}
+
+.w-14 {
+  width: 3.5rem;
 }
 
 .w-2\/3 {
