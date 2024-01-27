@@ -13,9 +13,15 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+    <script src="https://kit.fontawesome.com/72038e3a92.js" crossorigin="anonymous"></script>
+
+
+    {% block css %}
+    {% endblock css %}
+
 </head>
 
-<body class="m-0">
+<body class="m-0 ">
     <span id="close_modals" class="w-full h-full absolute top-0 bg-black opacity-30 hidden"></span>
     <nav
         class="bg-white text-white py-3 px-2 outline outline-1 outline-gray-400 flex justify-between items-center fixed  top-0 w-full">
@@ -26,7 +32,8 @@
         </a>
         <div class="flex items-center space-x-1">
             <div class="search p-1  rounded-sm" onclick="searchBar_Show()">
-                <span><img class="w-6 h-6" src="{% static 'img/search.jpg' %}" alt=""></span>
+                <span class="text-black p-1 hover:text-gray-600 cursor-pointer"><i
+                        class="fa-solid fa-magnifying-glass fa-xl"></i></span>
             </div>
             <div class="">
                 {% if user.is_authenticated %}
@@ -66,7 +73,7 @@
         </form>
     </div>
     <div id="navigation_bar"
-        class="transform translate-x-full  duration-200 fixed right-0 top-0 bg-gray-100 px-2  z-10 w-2/3 h-full scroll-auto ">
+        class="transform translate-x-full  duration-200 fixed right-0 top-0 bg-gray-100 px-2  z-10 w-[70%] h-full scroll-auto ">
         <div class=" flex justify-between items-center px-1 py-3">
             <p class="font-semibold text-lg text-black">My Blog</p>
             <span id="navigation_close" onclick="hide_navigation()"
@@ -74,9 +81,12 @@
         </div>
         <div class=" mb-6 p-2">
             {% if user.is_authenticated %}
-            <div class="p-2 mx-auto  ">
+            <div class="p-2 mx-auto flex flex-col justify-start space-y-1">
                 <img src="{% static 'img/profile.jpg' %}" class="w-14 h-auto rounded-full" alt="">
-                <p>This is my blog website includes</p>
+                <a href="/profile" class="">
+                    <p class="font-semibold text-lg">{{user.username}}</p>
+                    <p class="text-sm">View profile</p>
+                </a>
             </div>
             {% else %}
             <div class="p-2 mx-auto  h-28 border-black rounded-sm border-[1px]">
@@ -92,7 +102,7 @@
             <a href="/logout-user"
                 class="px-2 p-1 text-center hover:bg-gray-800 hover:text-white border-[1px] border-gray-900 rounded-md">Logout</a>
             {% else %}
-            <a role="button" onclick="showSignUp()"
+            <a href="/sign-up"
                 class="px-2 p-1 text-center hover:bg-gray-800 hover:text-white border-[1px] border-gray-900 rounded-md">Create
                 account</a>
             <a role="button" onclick="showLogin()"
@@ -103,16 +113,17 @@
         <div class="flex flex-col mt-4">
 
             <a href="/" class="">
-                <div class="p-1 hover:bg-blue-100 rounded-sm">Home</div>
+                <div class="p-1 hover:bg-blue-100   text-lg font-normal rounded-sm flex items-center"><span
+                        class="text-gray-700 mr-4"><i class="fa-solid fa-house fa-sm"></i></span> Home</div>
             </a>
             <a href="/post-blogs" class="">
-                <div class="p-1 hover:bg-blue-100 rounded-sm">Blogs</div>
+                <div class="p-1 hover:bg-blue-100 text-lg font-normal  rounded-sm flex items-center">Blogs</div>
             </a>
             <a href="#" class="">
-                <div class="p-1 hover:bg-blue-100 rounded-sm">Category</div>
+                <div class="p-1 hover:bg-blue-100  text-lg font-normal rounded-sm flex items-center">Category</div>
             </a>
             <a href="#" class="">
-                <div class="p-1 hover:bg-blue-100 rounded-sm">About</div>
+                <div class="p-1 hover:bg-blue-100 text-lg font-normal  rounded-sm flex items-center">About</div>
             </a>
         </div>
     </div>
@@ -162,12 +173,12 @@
         </div>
         <!-- main -->
 
-        <div  class="pt-1 ">
+        <div class=" pt-1 ">
             {% block body %}
             {% endblock body %}
         </div>
 
-        <div class="w-[20%] hidden lg:block"></div>
+        <div class="w-[25%] bg-gray-400 h-full hidden lg:block"></div>
     </div>
 
     {% block js %}

@@ -11,4 +11,5 @@ urlpatterns = [
     path('create-post/',views.Create_post,name="Create Post"),
     path('post-blogs/<int:id>/',views.Read_post,name="Blog post"),
     path('post-comment/',views.post_comment,name="Post Comment"),
+    path('profile/',views.profile,name="User Profile"),
 ]

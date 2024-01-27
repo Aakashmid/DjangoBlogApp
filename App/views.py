@@ -47,7 +47,7 @@ def Login_hand(request):
             messages.error(request,"Username or Password is incorrect !!")
             return redirect('/')
     else:
-        return render(request,'login.html')
+         return redirect('/')
 def Logout_hand(request):
     # user=request.user
     # print(user)
@@ -144,3 +144,6 @@ def post_comment(request):
             comment.save()
             messages.success(request," Reply posted successfully ")
         return redirect(f'/post-blogs/{post.id}/')
+    
+def profile(request):
+    return render(request,'App/profile.html')

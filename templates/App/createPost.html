@@ -2,14 +2,27 @@
 {% load static %}
 
 
+{% block css %}
+
+{% endblock css %}
 
 {% block js %}
- 
+
 <script>
+  $(document).ready(function() {
 
-$('#blog_content').summernote({
-
-    height: 240,
+    var screenWidth = $(window).width();
+    if (screenWidth < 768) {
+        $('#blog_content').summernote({
+            height: 180,
+            width: '100%',
+        });
+    } else {
+        $('#blog_content').summernote({
+            height: 240,
+            width: 800,
+        });
+    }
 });
 </script>
 
@@ -24,19 +37,22 @@ $('#blog_content').summernote({
                 {% csrf_token %}
                 <div class="title">
                     <label for="post_title" class="text-lg">Title</label>
-                    <input type="text" name="post_title" class="text-lg w-full  border-[1px] rounded border-gray-700 p-1"
-                        id="post_title" placeholder="Enter title of blog here..." required>
+                    <input type="text" name="post_title"
+                        class="text-lg w-full  border-[1px] rounded border-gray-700 p-1" id="post_title"
+                        placeholder="Enter title of blog here..." required>
                 </div>
                 <div class="no-tailwind-base">
-                    <textarea required  name="blog_content" id="blog_content" class="">
+                    <textarea required name="blog_content" id="blog_content" class="">
                         Write your blog here...
                     </textarea>
                 </div>
                 <div class="post-button">
-                    <button type="submit" class="submit-post-button p-2 rounded bg-gray-700 hover:bg-gray-800 active:outline active:outline-gray-800 active:outline-2 text-white">Post blog</button>
+                    <button type="submit"
+                        class="submit-post-button p-2 rounded bg-gray-700 hover:bg-gray-800 active:outline active:outline-gray-800 active:outline-2 text-white">Post
+                        blog</button>
                 </div>
             </form>
         </div>
     </div>
-</div> 
+</div>
 {% endblock body %}
