@@ -20,7 +20,8 @@
         <div class="flex justify-start space-x-6 ">
             <span class="">12 <i class="fa-regular fa-heart"></i></span>
             <span class="">{{comments|length}} <i class="fa-regular fa-comment"></i></span>
-            <span class="">{{post.read_count}} <span class="text-gray-600"><i class="fa-solid fa-book"></i></span></span>
+            <span class="">{{post.read_count}} <span class="text-gray-600"><i
+                        class="fa-solid fa-book"></i></span></span>
         </div>
         <div class="no-tailwind-base">
             {{post.content|safe}}
@@ -29,7 +30,7 @@
     <div class="p-2 ">
         <h3 class="font-semibold flex space-x-3">
             <a class="" id="comment_btn">
-                Comments({{comments|length}})  <i class="fa-regular fa-comment"></i>
+                Comments({{comments|length}}) <i class="fa-regular fa-comment"></i>
             </a>
         </h3>
         <div id="comment-block" class="hidden">
@@ -60,8 +61,9 @@
                     <div class="flex flex-col ml-9 space-y-2">
                         <p class="text-[17px] font-medium">{{comment.comment_text}}</p>
                         <p class="flex space-x-3">
-                            <span class="like text-[14px]">
-                                <i class="fa-regular fa-thumbs-up"></i></span>
+                            <span  class="like text-[14px]">
+                                <i class="fa-regular fa-thumbs-up "></i>
+                            </span>
                             <span class="dislike text-[14px]"><i class="fa-regular fa-thumbs-down"></i></span>
                             {% if replies|get_replies:comment.sno|length > 0 %}
                             <span class="reply text-[14px]"><a role="button" id="btn{{comment.sno}}"
@@ -188,7 +190,7 @@
                     console.log("Error:", error);
                 }
             });
-        }
+        }        
     });
 </script>
 {% endblock js %}

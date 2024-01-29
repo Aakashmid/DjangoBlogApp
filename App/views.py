@@ -8,7 +8,7 @@ from django.db.models import Q
 from django.http import JsonResponse
 # Create your views here.
 def home(request):
-    allPosts=Post.objects.all()
+    allPosts=Post.objects.filter(Q(read_count__gte=10))
     parms={"allPosts":allPosts}
     return render(request,'App/index.html',parms)
 

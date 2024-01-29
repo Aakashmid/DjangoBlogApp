@@ -12,11 +12,11 @@ function hide_navigation() {
         span_close.classList.remove('block');
         span_close.classList.add('hidden');
     }
-    let body_element=document.getElementsByTagName('body')[0];
+    let body_element = document.getElementsByTagName('body')[0];
     body_element.classList.remove('overflow-hidden');
 }
 // show navigation bar
-var hamburger = document.querySelector('#test');
+var hamburger = document.querySelector('#hamburger');
 hamburger.addEventListener('click', function () {
     var nav = document.getElementById('navigation_bar');
     var span_background = document.getElementById('close_modals');
@@ -28,8 +28,9 @@ hamburger.addEventListener('click', function () {
         span_background.classList.remove('hidden');
         span_background.classList.add('block');
     }
-    let body_element=document.getElementsByTagName('body')[0];
-    body_element.classList.add('overflow-hidden');
+    // let body_element = document.getElementsByTagName('body')[0];
+    // body_element.classList.add('overflow-hidden');
+    document.body.classList.add('overflow-hidden');
 });
 
 
@@ -58,19 +59,19 @@ function showLogin() {
         span_background.classList.remove('hidden');
         span_background.classList.add('block');
     }
-    
+
     if (nav.classList.contains('-translate-x-0')) {
         nav.classList.remove('-translate-x-0');
         nav.classList.add('translate-x-full');
     }
-    let body_element=document.getElementsByTagName('body')[0];
+    let body_element = document.getElementsByTagName('body')[0];
     body_element.classList.add('overflow-hidden');
 }
 
 function closeLoginModal() {
     var loginform = document.getElementById('login_modal');
     var span_close = document.getElementById('close_modals');
-    
+
     if (loginform.classList.contains('block')) {
         loginform.classList.remove('block');
         loginform.classList.add('hidden');
@@ -79,7 +80,7 @@ function closeLoginModal() {
         span_close.classList.remove('block');
         span_close.classList.add('hidden');
     }
-    let body_element=document.getElementsByTagName('body')[0];
+    let body_element = document.getElementsByTagName('body')[0];
     body_element.classList.remove('overflow-hidden');
 }
 
@@ -101,9 +102,9 @@ span_close.addEventListener('click', function () {
         span_close.classList.remove('block');
         span_close.classList.add('hidden');
     }
-    let body_element=document.getElementsByTagName('body')[0];
+    let body_element = document.getElementsByTagName('body')[0];
     body_element.classList.remove('overflow-hidden');
-    
+
 });
 
 
