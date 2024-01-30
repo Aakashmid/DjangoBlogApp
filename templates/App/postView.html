@@ -18,7 +18,7 @@
             </div>
         </div>
         <div class="flex justify-start space-x-6 ">
-            <span class="">12 <i class="fa-regular fa-heart"></i></span>
+            <span class="">{{post.like}}<i class="fa-regular fa-heart"></i></span>
             <span class="">{{comments|length}} <i class="fa-regular fa-comment"></i></span>
             <span class="">{{post.read_count}} <span class="text-gray-600"><i
                         class="fa-solid fa-book"></i></span></span>
@@ -62,7 +62,7 @@
                         <p class="text-[17px] font-medium">{{comment.comment_text}}</p>
                         <p class="flex space-x-3">
                             <span  class="like text-[14px]">
-                                <i class="fa-regular fa-thumbs-up "></i>
+                                {{comment.like}}<i class="fa-regular fa-thumbs-up "></i>
                             </span>
                             <span class="dislike text-[14px]"><i class="fa-regular fa-thumbs-down"></i></span>
                             {% if replies|get_replies:comment.sno|length > 0 %}

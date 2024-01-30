@@ -12,6 +12,7 @@ class Post(models.Model):
     content=models.TextField()
     publish_time=models.DateTimeField(default=datetime.now)
     read_count=models.IntegerField(default=0)
+    like=models.IntegerField(default=0)
 
     def __str__(self) -> str:
         return self.title
@@ -25,6 +26,7 @@ class Comment(models.Model):
     parent=models.ForeignKey('self', on_delete=models.CASCADE,null=True)
     timeStamp=models.DateTimeField(default=timezone.now)
     comment_text=models.TextField()
+    like=models.IntegerField(default=0)
 
     def __str__(self) -> str:
         return self.comment_text + "...  by   "+ self.user.username
