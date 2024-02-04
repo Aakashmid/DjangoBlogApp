@@ -1032,6 +1032,10 @@ video {
   border-radius: 0.125rem;
 }
 
+.rounded-xl {
+  border-radius: 0.75rem;
+}
+
 .border-\[1px\] {
   border-width: 1px;
 }
