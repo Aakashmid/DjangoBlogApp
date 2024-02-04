@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load humanize %}
 {% load static %}
 {% load extraFilter %}
 {% block body %}
@@ -7,18 +8,19 @@
     <div class="main-body p-2 flex-col space-y-3 max-w-full">
         <h1 class="font-bold text-2xl">{{post.title}}</h1>
         <div class="post-header flex space-x-2">
-            <img src="{% static 'img/profile.jpg' %}" alt="..." class="w-11 h-auto rounded-3xl">
+            <img src="{% static 'img/profile.jpg' %}" alt="..." class="w-12 h-auto rounded-3xl">
             <div class="flex flex-col space-y-1">
-                <p class=" text-sm">
-                    <span class="">By </span><a href="" class="text-blue-500">{{post.author}}</a>
+                <p class=" ">
+                    <span class="font-normal">By </span><a href="" class="text-blue-500 font-medium ">{{post.author}}</a>
                 </p>
-                <p class="time text-sm">
-                    Published on {{post.publish_time}}
+                <p class="time text-sm font-light">
+                    Posted on {{post.publish_time}}
                 </p>
             </div>
         </div>
         <div class="flex justify-start space-x-6 ">
-            <span class="">{{post.like}}<i class="fa-regular fa-heart"></i></span>
+            <span class="flex space-x-1 items-center"><span class="">{{post.like}}</span><i
+                    class="fa-regular fa-heart"></i></span>
             <span class="">{{comments|length}} <i class="fa-regular fa-comment"></i></span>
             <span class="">{{post.read_count}} <span class="text-gray-600"><i
                         class="fa-solid fa-book"></i></span></span>
@@ -56,15 +58,23 @@
                 <div class="">
                     <div class="flex space-x-2">
                         <img src="{% static 'img/profile.jpg' %}" alt=".." class="w-7 h-auto rounded-full">
-                        <p class="user">{{comment.user.username}}</p>
+                        <p class="user ">{{comment.user.username}} <span class="font-light text-sm">
+                                . {{comment.timeStamp|naturaltime}}
+                            </span>
+                        </p>
                     </div>
                     <div class="flex flex-col ml-9 space-y-2">
                         <p class="text-[17px] font-medium">{{comment.comment_text}}</p>
-                        <p class="flex space-x-3">
-                            <span  class="like text-[14px]">
-                                {{comment.like}}<i class="fa-regular fa-thumbs-up "></i>
+                        <p class="flex space-x-5">
+                            <span class="flex space-x-1">
+                                <span id="like_Count{{comment.sno}}" class="like-Count">
+                                    {{comment.like}}
+                                </span>
+                                <span  onclick="changeLikeState(this)"
+                                    id="comment_like{{comment.sno}}" class="like text-[14px]">
+                                    <i class="fa-regular fa-thumbs-up "></i>
+                                </span>
                             </span>
-                            <span class="dislike text-[14px]"><i class="fa-regular fa-thumbs-down"></i></span>
                             {% if replies|get_replies:comment.sno|length > 0 %}
                             <span class="reply text-[14px]"><a role="button" id="btn{{comment.sno}}"
                                     class="reply-button py-1 px-3 hover:bg-gray-300   active:bg-blue-500 rounded-2xl active:text-white">Reply({{replies|get_replies:comment.sno|length}})</a></span>
@@ -111,8 +121,6 @@
                 </div>
                 {% endfor %}
             </div>
-
-
         </div>
     </div>
 </div>
@@ -121,6 +129,45 @@
 
 {% block js %}
 <script>
+    // function likeButton_state(){ 
+    //     let likeBtns = document.getElementsByClassName('like');
+    //     likeBtns.forEach(element => {
+    //         // console.log('element');
+    //         console.log(element);
+    //     });
+    // }
+    // likeButton_state();
+    function changeLikeState(elem) {
+        let likeBtn = document.getElementById(elem.id);
+        // console.log( elem.id.slice(12));
+        function changeLikeCount(action) {
+            $.ajax({
+                type: "POST",
+                url: "/post-blogs/{{post.id}}/",
+                data: { 'commentNo': elem.id.slice(12), 'action': action },
+                dataType: "json",
+                headers: {
+                    "X-CSRFToken": '{{ csrf_token }}'
+                },
+                success: function (data) {
+                    // console.log(data.likeCount);      
+                    document.getElementById('like_Count' + elem.id.slice(12)).innerText = data.likeCount;
+                },
+                error: function (error) {
+                    console.log("Your error:", error);
+                }
+            });
+        }
+        if (likeBtn.innerHTML.trim() == `<i class="fa-regular fa-thumbs-up " aria-hidden="true"></i>`) {
+            likeBtn.innerHTML = `<i class="fa-solid fa-thumbs-up "></i>`;
+            changeLikeCount("likeIncrease");
+        }
+        else {
+            likeBtn.innerHTML = `<i class="fa-regular fa-thumbs-up "></i>`;
+            changeLikeCount("likeDecrease");
+        }
+    }
+
     $(document).ready(function () {
 
         let commnent_btn = document.querySelector('#comment_btn');
@@ -190,7 +237,7 @@
                     console.log("Error:", error);
                 }
             });
-        }        
+        }
     });
 </script>
 {% endblock js %}

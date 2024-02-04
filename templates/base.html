@@ -1,5 +1,6 @@
 {% load compress %}
 {% load static %}
+{% load humanize %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -24,7 +25,7 @@
 <body class="">
     <span id="close_modals" class="w-full h-full absolute top-0 bg-black opacity-30 hidden"></span>
     <nav
-        class="bg-white text-white py-3 px-2 outline outline-1 outline-gray-400 flex justify-between items-center fixed  top-0 w-full">
+        class="bg-white text-white py-3 px-2 outline outline-1 outline-gray-400 flex justify-between items-center fixed  top-0 w-full z-20">
         <a href="/" class="">
             <div class="">
                 <p class=" text-2xl font-bold text-black">BlogBlend</p>
@@ -73,7 +74,7 @@
         </form>
     </div>
     <div id="navigation_bar"
-        class="transform translate-x-full  duration-200 fixed right-0 top-0 bg-gray-100 px-2  z-10 w-[70%] h-full scroll-auto ">
+        class="transform translate-x-full  duration-200 fixed right-0 top-0 bg-gray-100 px-2  z-30 w-[72%] h-full scroll-auto ">
         <div class=" flex justify-between items-center px-1 py-3">
             <p class="font-semibold text-lg text-black">My Blog</p>
             <span id="navigation_close" onclick="hide_navigation()"
@@ -84,7 +85,7 @@
             <div class="p-2 mx-auto flex flex-col justify-start space-y-1">
                 <img src="{% static 'img/profile.jpg' %}" class="w-14 h-auto rounded-full" alt="">
                 <a href="/profile" class="">
-                    <p class="font-semibold text-lg">{{user.username}}</p>
+                    <p class="font-semibold text-lg">{{user.first_name}} {{user.last_name}}</p>
                     <p class="text-sm">View profile</p>
                 </a>
             </div>
@@ -94,7 +95,7 @@
             </div>
             {% endif %}
         </div>
-        <div class="my-2 flex flex-col space-y-1 px-4">
+        <div class="flex flex-col space-y-2 px-6">
             {% if user.is_authenticated %}
             <a href="/create-post/"
                 class="px-2 p-1 text-center hover:bg-gray-800 hover:text-white border-[1px] border-gray-900 rounded-md">Write
@@ -109,7 +110,7 @@
                 class="px-2 p-1 text-center hover:bg-gray-800 hover:text-white border-[1px] border-gray-900 rounded-md">Login</a>
             {% endif %}
         </div>
-        <hr class="bg-black">
+        <hr class="bg-black my-3">
         <div class="flex flex-col mt-4">
 
             <a href="/" class="">
@@ -117,14 +118,23 @@
                         class="text-gray-700 mr-4"><i class="fa-solid fa-house fa-sm"></i></span> Home</div>
             </a>
             <a href="/post-blogs" class="">
-                <div class="p-1 hover:bg-blue-100 text-lg font-normal  rounded-sm flex items-center">Blogs</div>
+                <div class="p-1 hover:bg-blue-100 text-lg font-normal  rounded-sm flex items-center">All Posts</div>
             </a>
+            
+            <div class="p-1 hover:bg-blue-100 text-lg font-normal  rounded-sm flex justify-between items-center">
+                <label for="categories">
+                    Select category
+                </label>
+                <select name="categories" id="categories" class="p-1 rounded">
+                    <option value="option1" class="text-[16px] p-1">Computer Science</option>
+                    <option value="option2" class="text-[16px] p-1">programming</option>
+                    <option value="option3" class="text-[16px] p-1">Data Science</option>
+                </select>
+            </div>
             <a href="#" class="">
-                <div class="p-1 hover:bg-blue-100  text-lg font-normal rounded-sm flex items-center">Category</div>
+                <div class="p-1 hover:bg-blue-100  text-lg font-normal rounded-sm flex items-center">About</div>
             </a>
-            <a href="#" class="">
-                <div class="p-1 hover:bg-blue-100 text-lg font-normal  rounded-sm flex items-center">About</div>
-            </a>
+
         </div>
     </div>
 
@@ -183,7 +193,7 @@
 
     {% block js %}
     {% endblock js %}
-    <script src="{% static 'Js/base.js' %}" ></script>
+    <script src="{% static 'Js/base.js' %}"></script>
 </body>
 
 </html>

@@ -41,6 +41,8 @@ def Login_hand(request):
         authenticated_user=authenticate(username=username,password=password)
         if authenticated_user:
             login(request,authenticated_user)
+            # print(f"First name of user is {authenticated_user.username} ")
+            # print(authenticated_user.first_name)
             messages.success(request,"Successsfully logged in user !!")
             return redirect('/')
         else:
@@ -108,12 +110,47 @@ def Create_post(request):
     return render(request,'App/createPost.html')
 
 def Read_post(request,id):
+    if request.method=="POST":
+        action=request.POST.get('action')
+        if action=="PostLikeIncrease":
+            # post=Post.objects.get(p)
+            pass
+        #If liked button of comment
+        elif action=='likeIncrease':
+            comment_sno=int(request.POST.get('commentNo'))
+            comment=Comment.objects.get(sno=comment_sno)
+            if not comment.isLiked:   #If comment first time liked 
+                comment.like+=1
+                comment.isLiked=True
+                comment.save()
+                response=JsonResponse({'likeCount':comment.like})
+                return response
+            else:
+                response=JsonResponse({'likeCount':comment.like})
+                return response
+
+        elif action=='likeDecrease': # Decrease like count
+                comment_sno=int(request.POST.get('commentNo'))
+                comment=Comment.objects.get(sno=comment_sno)
+                comment.like-=1
+                comment.isLiked=False
+                comment.save()
+        
+                response=JsonResponse({'likeCount':comment.like})
+                return response
+        
     post=Post.objects.get(id=id)    
     if request.method=="PATCH":
-        post.read_count+=1
-        post.save()
-        response = JsonResponse({'message': 'data is deleted successfully'})
-        return response
+        if not post.isReaded:
+            post.read_count+=1
+            post.isReaded=True
+            post.save()
+            response = JsonResponse({'message': 'post read count is increased successfully'})
+            return response
+        else:
+            response = JsonResponse({'message': 'read count is alerdyincreased '})
+            return response
+            
     if post:
         comments=Comment.objects.filter(Q(parent=None) & Q(post=post))
         replies=Comment.objects.filter(post=post).exclude(parent=None)

@@ -30,16 +30,18 @@
             {% for post in allPosts %}
             <div class="card  flex flex-col  space-y-1  border-gray-800 rounded-md shadow-xl py-3 bg-gray-50">
                 <div class="upper-part flex-col space-y-1 px-2 ">
-                    <div class="flex space-x-2">
+                    <div class="flex space-x-2 items-center">
                         <a href="#" class="prifile w-fit h-auto">
-                            <img src="{% static 'img/profile.jpg' %}" class="w-7 rounded-xl h-auto" alt="">
+                            <img src="{% static 'img/profile.jpg' %}" class="h-8 rounded-3xl w-auto" alt="">
                         </a>
                         <a href="" class="author-name font-sans">
-                            {{post.author}}
+                            <p class="">
+                                {{post.author}}
+                            </p>
+                            <p class="text-xs">Posted on {{post.publish_time}}</p>
                         </a>
                     </div>
                     <div class="">
-                        <p class="text-xs">{{post.publish_time}}</p>
                     </div>
                 </div>
                 <div class="px-2">
