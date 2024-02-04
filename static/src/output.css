@@ -650,10 +650,6 @@ video {
   z-index: 0;
 }
 
-.z-10 {
-  z-index: 10;
-}
-
 .z-20 {
   z-index: 20;
 }
@@ -880,14 +876,6 @@ video {
   width: 100%;
 }
 
-.w-11 {
-  width: 2.75rem;
-}
-
-.w-\[70\%\] {
-  width: 70%;
-}
-
 .max-w-full {
   max-width: 100%;
 }
@@ -1030,10 +1018,6 @@ video {
 
 .rounded-sm {
   border-radius: 0.125rem;
-}
-
-.rounded-xl {
-  border-radius: 0.75rem;
 }
 
 .border-\[1px\] {

@@ -94,10 +94,6 @@ def Show_post_blogs(request,filterOrder=None):
         params={'allPosts':allPosts}
         return render(request,'App/blog_posts.html',params)
 
-         
-
-        
-    
 def Create_post(request):
     if request.method=="POST":
         title=request.POST.get('post_title')
@@ -113,9 +109,29 @@ def Read_post(request,id):
     if request.method=="POST":
         action=request.POST.get('action')
         if action=="PostLikeIncrease":
-            # post=Post.objects.get(p)
-            pass
-        #If liked button of comment
+            post_id=int(request.POST.get('postid'))
+            post=Post.objects.get(id=post_id)
+            if not post.isLiked:
+                post.like+=1
+                post.isLiked=True
+                post.save()
+                response=JsonResponse({'likeCount':post.like})
+                return response
+            else:
+                response=JsonResponse({'likeCount':post.like})
+                return response
+                
+        
+        elif action=="PostLikeDecrease":
+            post_id=int(request.POST.get('postid'))
+            post=Post.objects.get(id=post_id)
+            post.like-=1
+            post.isLiked=False
+            post.save()
+            response=JsonResponse({'likeCount':post.like})
+            return response
+
+        #If click like button of comment
         elif action=='likeIncrease':
             comment_sno=int(request.POST.get('commentNo'))
             comment=Comment.objects.get(sno=comment_sno)
@@ -135,7 +151,6 @@ def Read_post(request,id):
                 comment.like-=1
                 comment.isLiked=False
                 comment.save()
-        
                 response=JsonResponse({'likeCount':comment.like})
                 return response
         
