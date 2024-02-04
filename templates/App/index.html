@@ -16,16 +16,16 @@
             {% for post in allPosts %}
             <div class="card border-gray-600 border-[1px] rounded-md shadow-md p-3">
                 <div class="upper-part flex-col   ">
-                    <div class="flex space-x-2">
+                    <div class="flex items-center space-x-2">
                         <a href="#" class="profile w-fit h-auto">
-                            <img src="{% static 'img/profile.jpg' %}" class="w-7 rounded-full h-auto" alt="">
+                            <img src="{% static 'img/profile.jpg' %}" class="w-auto rounded-full h-8" alt="">
                         </a>
-                        <a href="" class="author-name font-sans">
-                            {{post.author}}
+                        <a href="" class="author-name flex flex-col  font-sans font-medium">
+                            <p class="">
+                                {{post.author}}
+                            </p>
+                            <p class="text-xs">Posted on {{post.publish_time}}</p>
                         </a>
-                    </div>
-                    <div class="">
-                        <p class="text-sm">{{post.publish_time}}</p>
                     </div>
                 </div>
 
