@@ -125,11 +125,15 @@ def Read_post(request,id):
         elif action=="PostLikeDecrease":
             post_id=int(request.POST.get('postid'))
             post=Post.objects.get(id=post_id)
-            post.like-=1
-            post.isLiked=False
-            post.save()
-            response=JsonResponse({'likeCount':post.like})
-            return response
+            if post.isLiked:
+                post.like-=1
+                post.isLiked=False
+                post.save()
+                response=JsonResponse({'likeCount':post.like})
+                return response
+            else:
+                response=JsonResponse({'likeCount':post.like})
+                return response
 
         #If click like button of comment
         elif action=='likeIncrease':
