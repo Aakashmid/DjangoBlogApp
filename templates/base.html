@@ -85,7 +85,8 @@
             <div class="p-2 mx-auto flex flex-col justify-start space-y-1">
                 <img src="{% static 'img/profile.jpg' %}" class="w-14 h-auto rounded-full" alt="">
                 <a href="/profile" class="">
-                    <p class="font-semibold text-lg">{{user.first_name}} {{user.last_name}}</p>
+                    <!-- <p class="font-semibold text-lg">{{user.first_name}} {{user.last_name}}</p> -->
+                    <p class="font-semibold text-lg">{{user.username}} </p>
                     <p class="text-sm">View profile</p>
                 </a>
             </div>

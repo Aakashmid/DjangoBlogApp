@@ -141,7 +141,7 @@
         let likeBtns = document.getElementsByClassName('like');
         for (let i = 0; i < likeBtns.length; i++) {
             const element = likeBtns[i];
-            if (localStorage.getItem(element.id)) {
+            if (localStorage.getItem(element.id+"{{user.first_name}}")) {
                 element.innerHTML = localStorage.getItem(element.id);
             }
         }
@@ -186,11 +186,11 @@
         if (likeBtn.innerHTML.trim() == `<i class="fa-regular fa-thumbs-up " aria-hidden="true"></i>`) {
             likeBtn.innerHTML = `<i class="fa-solid fa-thumbs-up "></i>`;
             changeLikeCount("likeIncrease", elem);
-            localStorage.setItem(likeBtn.id, likeBtn.innerHTML);
+            localStorage.setItem(likeBtn.id+"{{user.first_name}}", likeBtn.innerHTML);
         }
         else {
             likeBtn.innerHTML = `<i class="fa-regular fa-thumbs-up "></i>`;
-            localStorage.setItem(likeBtn.id, likeBtn.innerHTML);
+            localStorage.setItem(likeBtn.id+"{{user.first_name}}", likeBtn.innerHTML);
             changeLikeCount("likeDecrease", elem);
         }
     }
@@ -201,12 +201,12 @@
         if (likeBtn.innerHTML.trim() == `<i class="fa-regular fa-heart" aria-hidden="true"></i>`) {
             likeBtn.innerHTML = `<i class="fa-solid fa-heart" style="color: #f7022b;"></i>`;
             changeLikeCount('PostLikeIncrease', likeBtn);
-            localStorage.setItem(likeBtn.id, likeBtn.innerHTML);
+            localStorage.setItem(likeBtn.id+"{{user.first_name}}", likeBtn.innerHTML);
         }
         else {
             likeBtn.innerHTML = `<i class="fa-regular fa-heart"></i>`;
             changeLikeCount('PostLikeDecrease', likeBtn);
-            localStorage.setItem(likeBtn.id, likeBtn.innerHTML);
+            localStorage.setItem(likeBtn.id+"{{user.first_name}}", likeBtn.innerHTML);
         }
     }
 
