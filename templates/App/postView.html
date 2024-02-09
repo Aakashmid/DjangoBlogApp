@@ -136,25 +136,24 @@
 
 {% block js %}
 <script>
-    // var likeBtnStateDict = {};
     function likeButton_state() {
-        let likeBtns = document.getElementsByClassName('like');
-        for (let i = 0; i < likeBtns.length; i++) {
-            const element = likeBtns[i];
-            if (localStorage.getItem(element.id+"{{user.first_name}}")) {
-                element.innerHTML = localStorage.getItem(element.id);
+        if ({{user.is_authenticated|lower}}){
+            let likeBtns = document.getElementsByClassName('like');
+            for (let i = 0; i < likeBtns.length; i++) {
+                let element = likeBtns[i];
+                if (localStorage.getItem(element.id + "{{user.username}}")) {
+                    element.innerHTML = localStorage.getItem(element.id+"{{user.username}}");
+                }
             }
         }
     }
     likeButton_state();
+
+    //function send ajax to views to change like count in database
     function changeLikeCount(action, element) {
         let dataToSend = { 'action': action };
         if (element.id.charAt(0) === 'c') {
             dataToSend.commentNo = element.id.slice(12);
-            console.log(dataToSend);
-        }
-        else {
-            dataToSend.postid = element.id.slice(8);
             console.log(dataToSend);
         }
         $.ajax({
@@ -179,37 +178,53 @@
             }
         });
     }
-    function changeLikeState(elem) {
-        let likeBtn = document.getElementById(elem.id);
-        // console.log( elem.id.slice(12));
 
+    //When comment like is clicked 
+
+    function changeLikeState(likeBtn) {
+        console.log(likeBtn.innerHTML);
+        //lower method is used because in js True is in lower form (true)
+    if ({{ user.is_authenticated|lower }}) {
+        // let likeBtn = document.getElementById(elem.id);
+        // // console.log( elem.id.slice(12));
         if (likeBtn.innerHTML.trim() == `<i class="fa-regular fa-thumbs-up " aria-hidden="true"></i>`) {
             likeBtn.innerHTML = `<i class="fa-solid fa-thumbs-up "></i>`;
-            changeLikeCount("likeIncrease", elem);
-            localStorage.setItem(likeBtn.id+"{{user.first_name}}", likeBtn.innerHTML);
+            changeLikeCount("CommentlikeIncrease", likeBtn);
+            localStorage.setItem(likeBtn.id + "{{user.username}}", likeBtn.innerHTML);
         }
         else {
             likeBtn.innerHTML = `<i class="fa-regular fa-thumbs-up "></i>`;
-            localStorage.setItem(likeBtn.id+"{{user.first_name}}", likeBtn.innerHTML);
-            changeLikeCount("likeDecrease", elem);
+            localStorage.setItem(likeBtn.id + "{{user.username}}", likeBtn.innerHTML);
+            changeLikeCount("CommentlikeDecrease", likeBtn);
         }
     }
-    function changeLikeStatePost(element) {
-        let likeBtn = document.getElementById(element.id);
-        // console.log(element.id);
-        // console.log(likeBtn.innerHTML);
-        if (likeBtn.innerHTML.trim() == `<i class="fa-regular fa-heart" aria-hidden="true"></i>`) {
-            likeBtn.innerHTML = `<i class="fa-solid fa-heart" style="color: #f7022b;"></i>`;
-            changeLikeCount('PostLikeIncrease', likeBtn);
-            localStorage.setItem(likeBtn.id+"{{user.first_name}}", likeBtn.innerHTML);
+    else {
+        showLogin();
+    }
+    }
+
+    // When post like is clicked
+    function changeLikeStatePost(likeBtn) {
+        //check user is logged in or not
+        if({{user.is_authenticated|lower}}){
+            
+            if (likeBtn.innerHTML.trim() == `<i class="fa-regular fa-heart" aria-hidden="true"></i>`) {
+                likeBtn.innerHTML = `<i class="fa-solid fa-heart" style="color: #f7022b;"></i>`;
+                changeLikeCount('PostLikeIncrease', likeBtn);
+                localStorage.setItem(likeBtn.id + "{{user.username}}", likeBtn.innerHTML);
+            }
+            else {
+                likeBtn.innerHTML = `<i class="fa-regular fa-heart"></i>`;
+                changeLikeCount('PostLikeDecrease', likeBtn);
+                localStorage.setItem(likeBtn.id + "{{user.username}}", likeBtn.innerHTML);
+            }
         }
-        else {
-            likeBtn.innerHTML = `<i class="fa-regular fa-heart"></i>`;
-            changeLikeCount('PostLikeDecrease', likeBtn);
-            localStorage.setItem(likeBtn.id+"{{user.first_name}}", likeBtn.innerHTML);
+        else{
+            showLogin();
         }
     }
 
+    //when document is ready
     $(document).ready(function () {
         let commnent_btn = document.querySelector('#comment_btn');
         commnent_btn.addEventListener('click', function () {
@@ -264,6 +279,8 @@
             })
 
         }
+
+        // funtion to increase readcount if user stay for while
         setTimeout(readIncrease, 120000);
         function readIncrease() {
             $.ajax({
