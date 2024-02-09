@@ -7,7 +7,6 @@ Profile
 
 {% block body %}
 <div id="profile_page" class="profile-container">
-
     <div class="upper">
         <div class="h-36 flex flex-col justify-center bg-gray-700">
             <span onclick="ShowEditForm()" class="z-0  absolute right-2 top-16 font-medium rounded-md text-sm  text-white bg-gray-900 p-2 hover:bg-gray-950 active:outline active:outline-1
@@ -36,59 +35,68 @@ Profile
         </div>
     </div>
     <hr class="mx-auto w-11/12 bg-gray-900 mt-8">
+    <div class=""></div>
+</div>
 
-    <div id="profile_edit_form" class="hidden profile-edit-form">
-        <div class="p-4">
-            <button class="bg-black text-white p-2" onclick="profilePage()">Back</button>
-            <form action="#" class=" flex flex-col mt-6">
-                <div class="flex justify-center py-2">
-                    <span class=""><img src="{% static 'img/profile.jpg' %}" alt=".." class="h-28 w-auto rounded-full">
-                        <span
-                            class="icon-edit relative left-[80px] -top-[30px] bg-white rounded-full text-black">edit</span>
-                    </span>
-                </div>
-                <div class="px-4 py-2">
-                    <label for="name" class=" text-lg w-full font-semibold">Name</label>
-                    <input type="text" class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 p-2">
-                </div>
-                <div class="px-4 py-2">
-                    <label for="username" class=" text-lg w-full font-semibold">Username</label>
-                    <input type="text" name="username"
-                        class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 p-2">
-                </div>
-                <div class="px-4 py-2">
-                    <label for="password" class=" text-lg w-full font-semibold">Password</label>
-                    <input type="password"
-                        class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 p-2" name="password">
-                </div>
-                <div class="px-4 py-2">
-                    <label for="Email" class=" text-lg w-full font-semibold">Email</label>
-                    <input type="email" id="Email" name="Email"
-                        class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 p-2">
-                </div>
-                <button
-                    class="mx-auto mt-6 submit py-2 px-4 rounded-lg text-lg bg-blue-950 text-white font-normal w-[40%]">Save
-                    Changes</button>
-            </form>
-        </div>
+<!-- Profile edit form/page -->
+<div id="profile_edit_form" class="hidden profile-edit-form">
+    <div class="p-4">
+        <button class="bg-black text-white p-2 rounded" onclick="profilePage()">Back</button>
+        <form action="#" class=" flex flex-col mt-6">
+            <div class="flex justify-center py-2">
+                <span class=""><img src="{% static 'img/profile.jpg' %}" alt=".." class="h-28 w-auto rounded-full">
+                    <span
+                        class="icon-edit relative left-[80px] -top-[30px] bg-white rounded-full text-black">edit</span>
+                </span>
+            </div>
+            <div class="px-4 py-2">
+                <label for="name" class=" text-lg w-full font-semibold">Name</label>
+                <input type="text" class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 px-2 py-[6px]">
+            </div>
+            <div class="px-4 py-2">
+                <label for="username" class=" text-lg w-full font-semibold">Username</label>
+                <input type="text" name="username"
+                    class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 px-2 py-[6px]">
+            </div>
+            <div class="px-4 py-2">
+                <label for="password" class=" text-lg w-full font-semibold">Password</label>
+                <input type="password"
+                    class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 px-2 py-[6px]" name="password">
+            </div>
+            <div class="px-4 py-2">
+                <label for="Email" class=" text-lg w-full font-semibold">Email</label>
+                <input type="email" id="Email" name="Email"
+                    class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 px-2 py-[6px]">
+            </div>
+            <button
+                class="mx-auto mt-6 submit py-2 px-6 rounded-lg text-lg bg-blue-950 text-white font-normal w-fit">Save
+                Changes</button>
+        </form>
     </div>
 </div>
 
 {% endblock body %}
 {% block js%}
 <script>
+    //show edit profile form
     function ShowEditForm() {
         let profilePage = document.getElementById('profile_page');
         let editProfilePage = document.getElementById('profile_edit_form');
         profilePage.innerHTML = editProfilePage.innerHTML;
-        // console.log(editProfilePage);
     }
     var profile_Page = document.getElementById('profile_page');
     let prHtml = profile_Page.innerHTML;
+    //change page of editform to default profile page
     function profilePage() {
         let profilePage = document.getElementById('profile_page');
         profilePage.innerHTML = prHtml;
     }
+    
+    $(document).ready(function(){
+    let body_element=document.getElementsByTagName('body')[0];
+    body_element.classList.add('bg-gray-100');
+
+    });
 </script>
 
 {% endblock js%}

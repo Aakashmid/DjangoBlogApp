@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect,HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import login,logout,authenticate
 from django.contrib import messages
-from .models import Post,Comment
+from .models import Post,Comment,PostLike,CommentLike,PostReadedUser  
 from .templatetags import extraFilter
 from django.db.models import Q
 from django.http import JsonResponse
@@ -106,70 +106,77 @@ def Create_post(request):
     return render(request,'App/createPost.html')
 
 def Read_post(request,id):
+    post=Post.objects.get(id=id)
     if request.method=="POST":
         action=request.POST.get('action')
+        post=Post.objects.get(pk=id)
         if action=="PostLikeIncrease":
-            post_id=int(request.POST.get('postid'))
-            post=Post.objects.get(id=post_id)
-            if not post.isLiked:
+            if not PostLike.objects.filter(user=request.user,post=post).exists():
                 post.like+=1
-                post.isLiked=True
                 post.save()
+                Like=PostLike.objects.create(user=request.user,post=post)
+                Like.save()
                 response=JsonResponse({'likeCount':post.like})
                 return response
             else:
                 response=JsonResponse({'likeCount':post.like})
                 return response
                 
-        
         elif action=="PostLikeDecrease":
-            post_id=int(request.POST.get('postid'))
-            post=Post.objects.get(id=post_id)
-            if post.isLiked:
+            post=Post.objects.get(id=id)
+            if PostLike.objects.filter(user=request.user,post=post).exists():
                 post.like-=1
-                post.isLiked=False
                 post.save()
+                Like=PostLike.objects.get(user=request.user,post=post)
+                Like.delete()
                 response=JsonResponse({'likeCount':post.like})
                 return response
             else:
                 response=JsonResponse({'likeCount':post.like})
-                return response
-
+                return response   
+            
         #If click like button of comment
-        elif action=='likeIncrease':
+        elif action=='CommentlikeIncrease':
             comment_sno=int(request.POST.get('commentNo'))
             comment=Comment.objects.get(sno=comment_sno)
-            if not comment.isLiked:   #If comment first time liked 
+            if not CommentLike.objects.filter(user=request.user,comment=comment).exists():
                 comment.like+=1
-                comment.isLiked=True
+                print("increase like by 1")
                 comment.save()
+                # Create object like and save it ,that keep detailw which user liked  comment
+                Like=CommentLike.objects.create(user=request.user,comment=comment)
+                Like.save()
                 response=JsonResponse({'likeCount':comment.like})
                 return response
             else:
                 response=JsonResponse({'likeCount':comment.like})
                 return response
 
-        elif action=='likeDecrease': # Decrease like count
+        elif action=='CommentlikeDecrease': # Decrease like count
                 comment_sno=int(request.POST.get('commentNo'))
                 comment=Comment.objects.get(sno=comment_sno)
-                comment.like-=1
-                comment.isLiked=False
-                comment.save()
+                if CommentLike.objects.filter(user=request.user,comment=comment).exists():
+                    comment.like-=1
+                    comment.save()
+                    CommentLike.objects.get(user=request.user,comment=comment).delete()
+                    response=JsonResponse({'likeCount':comment.like})
+                    return response
                 response=JsonResponse({'likeCount':comment.like})
                 return response
         
-    post=Post.objects.get(id=id)    
-    if request.method=="PATCH":
-        if not post.isReaded:
+    # for increase readcount when user visit blog for sometime check also user is new or old
+    if request.method=="PATCH":    
+        if not PostReadedUser.objects.filter(user=request.user,post=post).exists():
             post.read_count+=1
-            post.isReaded=True
             post.save()
+            reader=PostReadedUser.objects.create(user=request.user,post=post)
+            reader.save()
             response = JsonResponse({'message': 'post read count is increased successfully'})
-            return response
-        else:
-            response = JsonResponse({'message': 'read count is alerdyincreased '})
-            return response
-            
+            return response  
+        response = JsonResponse({'message': 'read count is alerdyincreased '})
+        return response
+
+###  Fitler comments and replies of a post 
     if post:
         comments=Comment.objects.filter(Q(parent=None) & Q(post=post))
         replies=Comment.objects.filter(post=post).exclude(parent=None)

@@ -122,15 +122,17 @@
                 <div class="p-1 hover:bg-blue-100 text-lg font-normal  rounded-sm flex items-center">All Posts</div>
             </a>
             
-            <div class="p-1 hover:bg-blue-100 text-lg font-normal  rounded-sm flex justify-between items-center">
-                <label for="categories">
-                    Select category
-                </label>
-                <select name="categories" id="categories" class="p-1 rounded">
-                    <option value="option1" class="text-[16px] p-1">Computer Science</option>
-                    <option value="option2" class="text-[16px] p-1">programming</option>
-                    <option value="option3" class="text-[16px] p-1">Data Science</option>
-                </select>
+            <div id="cat_link" class="p-1 hover:bg-blue-100 text-lg font-normal  rounded-sm" onmouseover="showcat()"  onclick="showcat()">Select Categories</div>
+            <div id="categories" class=" absolute top-[436px] mx-auto w-fit bg-gray-400 rounded text-black p-2 hidden">
+                <ul class="h-44 overflow-y-scroll px-6 " onmouseleave="hidecatDiv()">
+                    <li class="p-1 active:bg-gray-200"><a href="" class="text-[17px]  active:text-black active:font-semibold">Computer Science</a></li>
+                    <li class="p-1 active:bg-gray-200"><a href="" class="text-[17px] active:text-black active:font-semibold">Computer Science</a></li>
+                    <li class="p-1 active:bg-gray-200"><a href="" class="text-[17px] active:text-black active:font-semibold">Computer Science</a></li>
+                    <li class="p-1 active:bg-gray-200"><a href="" class="text-[17px] active:text-black active:font-semibold">Computer Science</a></li>
+                    <li class="p-1 active:bg-gray-200"><a href="" class="text-[17px] active:text-black active:font-semibold">Computer Science</a></li>
+                    <li class="p-1 active:bg-gray-200"><a href="" class="text-[17px] active:text-black active:font-semibold">Computer Science</a></li>
+                    <li class="p-1 active:bg-gray-200"><a href="" class="text-[17px] active:text-black active:font-semibold">Computer Science</a></li>
+                </ul>
             </div>
             <a href="#" class="">
                 <div class="p-1 hover:bg-blue-100  text-lg font-normal rounded-sm flex items-center">About</div>
@@ -182,9 +184,10 @@
         <div class="w-[25%] hidden  lg:block mr-2">
             <div class="w-0.5 float-end bg-gray-600 h-full my-2 mx-2"></div>
         </div>
+<!-- __________________________________________________________________ -->
+<!-- __________________________________________________________________ -->
         <!-- main -->
-
-        <div class=" pt-1 ">
+        <div class="">
             {% block body %}
             {% endblock body %}
         </div>

@@ -1,3 +1,22 @@
+function showcat(){
+    let catDiv=document.getElementById('categories');
+    if (catDiv.classList.contains('block')) {
+        catDiv.classList.remove('block');
+        catDiv.classList.add('hidden');
+    }
+    else if (catDiv.classList.contains('hidden')) {
+        catDiv.classList.remove('hidden');
+        catDiv.classList.add('block');
+    }
+}
+function hidecatDiv(){
+    let catDiv=document.getElementById('categories');
+    if (catDiv.classList.contains('block')) {
+        catDiv.classList.remove('block');
+        catDiv.classList.add('hidden');
+    }
+}
+
 // hide naviagation
 function hide_navigation() {
     var span_close = document.getElementById('close_modals');
@@ -109,7 +128,6 @@ span_close.addEventListener('click', function () {
 
 
 // Dissmiss Alert
-
 var alert = document.getElementById('alert');
 if (alert) {
     var alert_btn = document.getElementById('dismiss_alert');
@@ -121,3 +139,7 @@ if (alert) {
         }
     }
 }
+
+
+//Show category on hovering or click categoring link
+

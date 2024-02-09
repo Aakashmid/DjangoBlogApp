@@ -12,9 +12,9 @@ class Post(models.Model):
     content=models.TextField()
     publish_time=models.DateField(default=datetime.today)
     read_count=models.IntegerField(default=0)
-    isReaded=models.BooleanField(default=False)
+    # isReaded=models.BooleanField(default=False)
     like=models.IntegerField(default=0)
-    isLiked=models.BooleanField(default=False)
+    # isLiked=models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return self.title
@@ -29,7 +29,22 @@ class Comment(models.Model):
     timeStamp=models.DateTimeField(default=timezone.now)
     comment_text=models.TextField()
     like=models.IntegerField(default=0)
-    isLiked=models.BooleanField(default=False)
+    # isLiked=models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return self.comment_text + "...  by   "+ self.user.username
+    
+#store which user like which post
+class PostLike(models.Model):
+    user=models.ForeignKey(User, verbose_name="user who liked", on_delete=models.CASCADE)
+    post=models.ForeignKey(Post, verbose_name="post which is liked", on_delete=models.CASCADE)
+
+#store which user like which comment
+class CommentLike(models.Model):
+    user=models.ForeignKey(User, on_delete=models.CASCADE)
+    comment=models.ForeignKey(Comment, on_delete=models.CASCADE)
+class PostReadedUser(models.Model):
+    user=models.ForeignKey(User, verbose_name="user", on_delete=models.CASCADE)
+    post=models.ForeignKey(Post, verbose_name="Readed post", on_delete=models.CASCADE)
+
+    
