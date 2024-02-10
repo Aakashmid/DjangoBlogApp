@@ -15,17 +15,17 @@
 {% endblock js %}
 
 {% block body %}
-<div class="container pt-2">
+<div class="container pt-2 lg:w-full">
     <div class="category  flex overflow-x-scroll px-2">
-        <a href="/post-blogs/trend"  id="trend"
+        <a href="/post-blogs/trend" id="trend"
             class="p-2 text-lg font-semibold hover:text-blue-600 hover:underline">Trending</a>
-        <a href="/post-blogs/new"  id="new"
+        <a href="/post-blogs/new" id="new"
             class="p-2 text-lg font-semibold hover:text-blue-600 hover:underline">Newest</a>
-        <a href="/post-blogs/old"  id="old"
+        <a href="/post-blogs/old" id="old"
             class="p-2 text-lg font-semibold hover:text-blue-600 hover:underline">Oldest</a>
-    
+
     </div>
-    <div class="blogs mt-4 clear-left">
+    <div class="blogs mt-4 clear-left w-full">
         <div id="testid" class="p-2 flex flex-col space-y-2">
             {% for post in allPosts %}
             <div class="card  flex flex-col  space-y-1  border-gray-800 rounded-md shadow-xl py-3 bg-gray-50">
@@ -57,5 +57,5 @@
             {% endfor %}
         </div>
     </div>
-
-    {% endblock body %}
+</div>
+{% endblock body %}

@@ -25,7 +25,7 @@
 <body class="">
     <span id="close_modals" class="w-full h-full absolute top-0 bg-black opacity-30 hidden"></span>
     <nav
-        class="bg-white text-white py-3 px-2 outline outline-1 outline-gray-400 flex justify-between items-center fixed  top-0 w-full z-20">
+        class="lg:px-36 bg-white text-white py-3 px-2 outline outline-1 outline-gray-400 flex justify-between items-center fixed  top-0 w-full z-20">
         <a href="/" class="">
             <div class="">
                 <p class=" text-2xl font-bold text-black">BlogBlend</p>
@@ -47,7 +47,7 @@
                     href="/sign-up">Create account</a>
                 {% endif %}
             </div>
-            <div id="hamburger" class="hamburger flex-col flex space-y-1 p-2 hover:bg-gray-200  rounded-md">
+            <div id="hamburger" class="lg:hidden hamburger flex-col flex space-y-1 p-2 hover:bg-gray-200  rounded-md">
                 <div class="h-0.5 w-[18px]  bg-black"></div>
                 <div class="h-0.5 w-[18px]  bg-black"></div>
                 <div class="h-0.5 w-[18px]  bg-black"></div>
@@ -74,7 +74,7 @@
         </form>
     </div>
     <div id="navigation_bar"
-        class="transform translate-x-full  duration-200 fixed right-0 top-0 bg-gray-100 px-2  z-30 w-[72%] h-full scroll-auto ">
+        class="lg:hidden transform translate-x-full  duration-200 fixed right-0 top-0 bg-gray-100 px-2  z-30 w-[72%] h-full scroll-auto ">
         <div class=" flex justify-between items-center px-1 py-3">
             <p class="font-semibold text-lg text-black">My Blog</p>
             <span id="navigation_close" onclick="hide_navigation()"
@@ -86,7 +86,7 @@
                 <img src="{% static 'img/profile.jpg' %}" class="w-14 h-auto rounded-full" alt="">
                 <a href="/profile" class="">
                     <!-- <p class="font-semibold text-lg">{{user.first_name}} {{user.last_name}}</p> -->
-                    <p class="font-semibold text-lg">{{user.username}} </p>
+                    <p class="font-semibold text-lg">{{user.first_name}} {{user.last_name}} </p>
                     <p class="text-sm">View profile</p>
                 </a>
             </div>
@@ -119,23 +119,35 @@
                         class="text-gray-700 mr-4"><i class="fa-solid fa-house fa-sm"></i></span> Home</div>
             </a>
             <a href="/post-blogs" class="">
-                <div class="p-1 hover:bg-blue-100 text-lg font-normal  rounded-sm flex items-center">All Posts</div>
+                <div class="p-1 hover:bg-blue-100 text-lg font-normal  rounded-sm flex items-center"><span
+                        class="text-gray-700 mr-4"><i class="fa-solid fa-book"></i></span> All Posts</div>
             </a>
-            
-            <div id="cat_link" class="p-1 hover:bg-blue-100 text-lg font-normal  rounded-sm" onmouseover="showcat()"  onclick="showcat()">Select Categories</div>
-            <div id="categories" class=" absolute top-[436px] mx-auto w-fit bg-gray-400 rounded text-black p-2 hidden">
+
+            <div id="cat_link" class="p-1 hover:bg-blue-100 text-lg font-normal  rounded-sm" onclick="showhidecat()">
+                <span class="text-gray-700 mr-4"><i class="fa-solid fa-folder"></i></span>
+                Select Categories
+            </div>
+            <div id="categories" class=" absolute top-[433px] mx-auto w-fit bg-gray-300 rounded text-black p-2 hidden">
                 <ul class="h-44 overflow-y-scroll px-6 " onmouseleave="hidecatDiv()">
-                    <li class="p-1 active:bg-gray-200"><a href="" class="text-[17px]  active:text-black active:font-semibold">Computer Science</a></li>
-                    <li class="p-1 active:bg-gray-200"><a href="" class="text-[17px] active:text-black active:font-semibold">Computer Science</a></li>
-                    <li class="p-1 active:bg-gray-200"><a href="" class="text-[17px] active:text-black active:font-semibold">Computer Science</a></li>
-                    <li class="p-1 active:bg-gray-200"><a href="" class="text-[17px] active:text-black active:font-semibold">Computer Science</a></li>
-                    <li class="p-1 active:bg-gray-200"><a href="" class="text-[17px] active:text-black active:font-semibold">Computer Science</a></li>
-                    <li class="p-1 active:bg-gray-200"><a href="" class="text-[17px] active:text-black active:font-semibold">Computer Science</a></li>
-                    <li class="p-1 active:bg-gray-200"><a href="" class="text-[17px] active:text-black active:font-semibold">Computer Science</a></li>
+                    <li class="p-1 active:bg-gray-200"><a href=""
+                            class="text-[17px]  active:text-black active:font-semibold">Computer Science</a></li>
+                    <li class="p-1 active:bg-gray-200"><a href=""
+                            class="text-[17px] active:text-black active:font-semibold">Data Science</a></li>
+                    <li class="p-1 active:bg-gray-200"><a href=""
+                            class="text-[17px] active:text-black active:font-semibold">Programming </a></li>
+                    <li class="p-1 active:bg-gray-200"><a href=""
+                            class="text-[17px] active:text-black active:font-semibold">Science</a></li>
+                    <li class="p-1 active:bg-gray-200"><a href=""
+                            class="text-[17px] active:text-black active:font-semibold">Computer Science</a></li>
+                    <li class="p-1 active:bg-gray-200"><a href=""
+                            class="text-[17px] active:text-black active:font-semibold">Computer Science</a></li>
+                    <li class="p-1 active:bg-gray-200"><a href=""
+                            class="text-[17px] active:text-black active:font-semibold">Computer Science</a></li>
                 </ul>
             </div>
             <a href="#" class="">
-                <div class="p-1 hover:bg-blue-100  text-lg font-normal rounded-sm flex items-center">About</div>
+                <div class="p-1 hover:bg-blue-100  text-lg font-normal rounded-sm flex items-center"><span
+                        class="text-gray-700 mr-4"><i class="fa-solid fa-circle-info"></i></span>About</div>
             </a>
 
         </div>
@@ -144,7 +156,7 @@
     <!-- Login modal -->
     <div id='login_modal' class="login-container hidden">
         <div
-            class=" p-4 bg-gray-100 mx-auto rounded-lg shadow-sm shadow-white w-[90%] fixed top-[40%] left-1/2  -translate-x-1/2 -translate-y-1/2 transform ">
+            class=" lg:w-[25%] lg:h-1/2   p-4 bg-gray-100 mx-auto rounded-lg shadow-sm shadow-white w-[90%] fixed top-[40%] left-1/2  -translate-x-1/2 -translate-y-1/2 transform ">
             <div class="float-right">
                 <span onclick="closeLoginModal()"
                     class="transform -translate-y-4 close  text-2xl relative right-0 text-semibold cursor-pointer">&times;</span>
@@ -180,19 +192,91 @@
         </div>
     </div>
 
-    <div class="main-container lg:flex  ">
-        <div class="w-[25%] hidden  lg:block mr-2">
-            <div class="w-0.5 float-end bg-gray-600 h-full my-2 mx-2"></div>
+    <div class="main-container lg:flex w-full ">
+        <div class="side-navigation-bar hidden lg:block ">
+            <div id="navigation_bar"
+            class=" bg-gray-100 px-2  z-30 w-auto h-full scroll-auto ">
+            <div class=" flex justify-between items-center px-1 py-3">
+                <p class="font-semibold text-lg text-black">My Blog</p>
+            </div>
+            <div class=" mb-6 p-2">
+                {% if user.is_authenticated %}
+                <div class="p-2 mx-auto flex flex-col justify-start space-y-1">
+                    <img src="{% static 'img/profile.jpg' %}" class="w-14 h-auto rounded-full" alt="">
+                    <a href="/profile" class="">
+                        <!-- <p class="font-semibold text-lg">{{user.first_name}} {{user.last_name}}</p> -->
+                        <p class="font-semibold text-lg">{{user.first_name}} {{user.last_name}} </p>
+                        <p class="text-sm">View profile</p>
+                    </a>
+                </div>
+                {% else %}
+                <div class="p-2 mx-auto  h-28 border-black rounded-sm border-[1px]">
+                    <p>This is my blog website includes</p>
+                </div>
+                {% endif %}
+            </div>
+            <div class="flex flex-col space-y-2 px-6">
+                {% if user.is_authenticated %}
+                <a href="/create-post/"
+                    class="px-2 p-1 text-center hover:bg-gray-800 hover:text-white border-[1px] border-gray-900 rounded-md">Write
+                    blog</a>
+                <a href="/logout-user"
+                    class="px-2 p-1 text-center hover:bg-gray-800 hover:text-white border-[1px] border-gray-900 rounded-md">Logout</a>
+                {% else %}
+                <a href="/sign-up"
+                    class="px-2 p-1 text-center hover:bg-gray-800 hover:text-white border-[1px] border-gray-900 rounded-md">Create
+                    account</a>
+                <a role="button" onclick="showLogin()"
+                    class="px-2 p-1 text-center hover:bg-gray-800 hover:text-white border-[1px] border-gray-900 rounded-md">Login</a>
+                {% endif %}
+            </div>
+            <hr class="bg-black my-3">
+            <div class="flex flex-col mt-4">
+    
+                <a href="/" class="">
+                    <div class="p-1 hover:bg-blue-100   text-lg font-normal rounded-sm flex items-center"><span
+                            class="text-gray-700 mr-4"><i class="fa-solid fa-house fa-sm"></i></span> Home</div>
+                </a>
+                <a href="/post-blogs" class="">
+                    <div class="p-1 hover:bg-blue-100 text-lg font-normal  rounded-sm flex items-center"><span
+                            class="text-gray-700 mr-4"><i class="fa-solid fa-book"></i></span> All Posts</div>
+                </a>
+    
+                <div id="cat_link" class="p-1 hover:bg-blue-100 text-lg font-normal  rounded-sm" onclick="showhidecat()">
+                    <span class="text-gray-700 mr-4"><i class="fa-solid fa-folder"></i></span>
+                    Select Categories
+                </div>
+                <div id="categories" class=" absolute top-[433px] mx-auto w-fit bg-gray-300 rounded text-black p-2 hidden">
+                    <ul class="h-44 overflow-y-scroll px-6 " onmouseleave="hidecatDiv()">
+                        <li class="p-1 active:bg-gray-200"><a href=""
+                                class="text-[17px]  active:text-black active:font-semibold">Computer Science</a></li>
+                        <li class="p-1 active:bg-gray-200"><a href=""
+                                class="text-[17px] active:text-black active:font-semibold">Data Science</a></li>
+                        <li class="p-1 active:bg-gray-200"><a href=""
+                                class="text-[17px] active:text-black active:font-semibold">Programming </a></li>
+                        <li class="p-1 active:bg-gray-200"><a href=""
+                                class="text-[17px] active:text-black active:font-semibold">Science</a></li>
+                        <li class="p-1 active:bg-gray-200"><a href=""
+                                class="text-[17px] active:text-black active:font-semibold">Computer Science</a></li>
+                        <li class="p-1 active:bg-gray-200"><a href=""
+                                class="text-[17px] active:text-black active:font-semibold">Computer Science</a></li>
+                        <li class="p-1 active:bg-gray-200"><a href=""
+                                class="text-[17px] active:text-black active:font-semibold">Computer Science</a></li>
+                    </ul>
+                </div>
+                <a href="#" class="">
+                    <div class="p-1 hover:bg-blue-100  text-lg font-normal rounded-sm flex items-center"><span
+                            class="text-gray-700 mr-4"><i class="fa-solid fa-circle-info"></i></span>About</div>
+                </a>
+    
+            </div>
         </div>
-<!-- __________________________________________________________________ -->
-<!-- __________________________________________________________________ -->
-        <!-- main -->
-        <div class="">
+        </div>
+        <div class="base-body lg:w-[60%] ">
             {% block body %}
             {% endblock body %}
         </div>
-
-        <div class="w-[25%] bg-gray-400 h-full hidden lg:block"></div>
+        <div class="w-[20%] h-full hidden lg:block bg-black"></div>
     </div>
 
     {% block js %}
