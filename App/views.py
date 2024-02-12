@@ -2,10 +2,12 @@ from django.shortcuts import render,redirect,HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import login,logout,authenticate
 from django.contrib import messages
-from .models import Post,Comment,PostLike,CommentLike,PostReadedUser  
+from .models import Post,Comment,PostLike,CommentLike,PostReadedUser ,BlogUser
 from .templatetags import extraFilter
 from django.db.models import Q
 from django.http import JsonResponse
+from django.utils import timezone
+from datetime import datetime, timedelta
 # Create your views here.
 def home(request):
     allPosts=Post.objects.filter(Q(read_count__gte=10))
@@ -61,7 +63,6 @@ def Show_post_blogs(request,filterOrder=None):
 
     if request.method=="POST":
         search=request.POST.get('SearchQuery')
-        trending=request.POST.get('trending')
         if search:
             allPosts=Post.objects.all()
             Posts=[]
@@ -70,14 +71,12 @@ def Show_post_blogs(request,filterOrder=None):
                     Posts.append(post)
             params={"allPosts":Posts}
             return render(request,'App/blog_posts.html',params)
-        elif trending:
-            return render(request,'App/blog_posts.html',params)
-    
+
     elif filterOrder : 
-            ids=['trend','new','old']
+            ids=['trend','new','old','mostreaded']
             if filterOrder==ids[0]:
                 #write query for selecting trending posts
-                allPosts=Post.objects.filter(read_count__gte=20)
+                allPosts=Post.objects.filter(Q(read_count__gte=50)& Q(publish_time__gte=timezone.now()-timedelta(days=3)))[:20]
                 params={"allPosts":allPosts}
                 return render(request,'App/blog_posts.html',params)
             elif filterOrder==ids[1]:
@@ -87,6 +86,11 @@ def Show_post_blogs(request,filterOrder=None):
             
             elif filterOrder==ids[2]:
                 allPosts=Post.objects.all().order_by('publish_time')
+                params={"allPosts":allPosts}
+                return render(request,'App/blog_posts.html',params)
+            elif filterOrder==ids[3]:
+                allPosts=Post.objects.all().order_by('-read_count')[:20]
+                # allPosts=Post.objects.filter(Q())
                 params={"allPosts":allPosts}
                 return render(request,'App/blog_posts.html',params)
     else:
@@ -208,5 +212,12 @@ def post_comment(request):
             messages.success(request," Reply posted successfully ")
         return redirect(f'/post-blogs/{post.id}/')
     
-def profile(request):
-    return render(request,'App/profile.html')
+def profile(request,Author_name=None):
+    if Author_name:
+        # posts=Post.objects.filter(author=Author_name)
+        user=User.objects.get(username=Author_name)
+        bloguser=BlogUser.objects.get(user=user)
+        allPosts=Post.objects.filter(author=Author_name)
+        return render(request,'App/author.html',{"User":bloguser,'Posts':allPosts})
+    else:
+        return render(request,'App/profile.html')

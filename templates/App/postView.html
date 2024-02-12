@@ -11,7 +11,7 @@
             <img src="{% static 'img/profile.jpg' %}" alt="..." class="w-12 h-auto rounded-3xl">
             <div class="flex flex-col space-y-1">
                 <p class=" ">
-                    <span class="font-normal">By </span><a href=""
+                    <span class="font-normal">By </span><a href="{% url 'Author Profile' post.author %}"
                         class="text-blue-500 font-medium ">{{post.author}}</a>
                 </p>
                 <p class="time text-sm font-light">

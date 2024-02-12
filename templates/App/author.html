@@ -1,1 +1,80 @@
 {% extends "base.html" %}
+{% load static %}
+{% block body %}
+<div class="author-page-container">
+    <div class="">
+        <div class="h-28 w-full bg-gray-800"></div>
+        <div class="py-6 px-4 flex flex-col space-y-6">
+            <div class="flex space-x-3 items-center  ">
+                <span class=""><img class="w-auto h-20 rounded-full " src="{% static 'img/profile.jpg' %}"
+                        alt="..."></span>
+                <div class="flex flex-col space-y-1">
+                    <span class="Author-name font-semibold text-black text-2xl">{{User.user.first_name}} {{User.user.last_name}}</span>
+                    <span class="font-normal">{{User.followers}} Followers</span>
+                </div>
+            </div>
+            <div class="flex ">
+                <button class=" text-white w-2/3 bg-blue-950 rounded-3xl p-2">Follow</button>
+            </div>
+            <div class="">
+                <div class="flex space-x-4 items-center">
+                    <span class=""><a href="#" id="author_home"  onclick="changeLinkAppearence(this)" class="author-link underline underline-offset-[13px]">Home</a></span>
+                    <span class=""><a href="#" id="author_lists" onclick="changeLinkAppearence(this)" class="author-link underline-offset-[13px]">Lists</a></span>
+                    <span class=""><a href="#" id="author_about" onclick="changeLinkAppearence(this)" class="author-link underline-offset-[13px]">About</a></span>
+                </div>
+                <hr class="bg-black mt-2">
+            </div>
+        </div>
+        <!-- Content part of page -->
+        <div class="p-3">
+            {% if Posts %}
+            {% for post in Posts %}
+            <div class="Card-blog-post flex flex-col space-y-3 px-1">
+                <div class="upper-part">Posted on {{post.publish_time}} </div>
+                <div class="main-body flex items-center space-x-2">
+                    <p class="font-semibold text-xl">
+                        {{post.title}}
+                    </p>
+                    <img src="{% static 'img/profile.jpg' %}" class="rounded w-16 h-auto" alt="">
+                </div>
+                <div class="footer-part flex items-center  justify-between">
+                    <span class="flex space-x-5 items-center">
+                        <span class="like">Like</span>
+                        <span class="like">Read</span>
+                    </span>
+                    <span class="flex space-x-5 items-center ">
+                        <span class="like">Save</span>
+                        <span class="like text-2xl font-bold">...</span>
+                    </span>
+                </div>
+            </div>
+            <hr class="bg-black w-full mt-2">
+            {% endfor %}
+            {% else %}
+            <div class="p-5">
+                <h1 class="">There is no post return by this author</h1>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock body %}
+{% block js %}
+<script>
+//underline element clicked
+function changeLinkAppearence(element){
+    element.classList.add('underline');
+    links=document.getElementsByClassName('author-link');
+    for (let i = 0; i < links.length; i++) {
+        const link = links[i];
+        if (link != element) {
+            if (link.classList.contains('underline')) {
+                link.classList.remove('underline');
+            }
+        }
+        
+    }
+    // console.log(element.innerText);
+}
+</script>
+{% endblock js %}

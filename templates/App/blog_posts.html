@@ -23,6 +23,8 @@
             class="p-2 text-lg font-semibold hover:text-blue-600 hover:underline">Newest</a>
         <a href="/post-blogs/old" id="old"
             class="p-2 text-lg font-semibold hover:text-blue-600 hover:underline">Oldest</a>
+        <a href="/post-blogs/mostreaded" id="mostreaded"
+            class="p-2 text-lg font-semibold hover:text-blue-600 hover:underline">Most Readed </a>
 
     </div>
     <div class="blogs mt-4 clear-left w-full">
@@ -34,7 +36,7 @@
                         <a href="#" class="prifile w-fit h-auto">
                             <img src="{% static 'img/profile.jpg' %}" class="h-8 rounded-3xl w-auto" alt="">
                         </a>
-                        <a href="" class="author-name font-sans">
+                        <a href="{% url 'Author Profile' post.author %}" class="author-name font-sans">
                             <p class="">
                                 {{post.author}}
                             </p>

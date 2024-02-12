@@ -192,8 +192,8 @@
         </div>
     </div>
 
-    <div class="main-container lg:flex w-full ">
-        <div class="side-navigation-bar hidden lg:block ">
+    <div class="main-container lg:flex w-full h-full ">
+        <div class="side-navigation-bar hidden lg:block w-[18%] fixed h-full ">
             <div id="navigation_bar"
             class=" bg-gray-100 px-2  z-30 w-auto h-full scroll-auto ">
             <div class=" flex justify-between items-center px-1 py-3">
@@ -242,7 +242,7 @@
                             class="text-gray-700 mr-4"><i class="fa-solid fa-book"></i></span> All Posts</div>
                 </a>
     
-                <div id="cat_link" class="p-1 hover:bg-blue-100 text-lg font-normal  rounded-sm" onclick="showhidecat()">
+                <div id="cat_link" class="p-1 cursor-pointer hover:bg-blue-100 text-lg font-normal  rounded-sm" onclick="showhidecat()">
                     <span class="text-gray-700 mr-4"><i class="fa-solid fa-folder"></i></span>
                     Select Categories
                 </div>
@@ -272,13 +272,12 @@
             </div>
         </div>
         </div>
-        <div class="base-body lg:w-[60%] ">
+        <div class="base-body lg:w-[60%] lg:ml-[18%]">
             {% block body %}
             {% endblock body %}
         </div>
-        <div class="w-[20%] h-full hidden lg:block bg-black"></div>
+        <div class="w-[22%] h-full hidden lg:block bg-black"></div>
     </div>
-
     {% block js %}
     {% endblock js %}
     <script src="{% static 'Js/base.js' %}"></script>
