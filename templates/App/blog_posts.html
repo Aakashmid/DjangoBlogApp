@@ -36,9 +36,9 @@
                         <a href="#" class="prifile w-fit h-auto">
                             <img src="{% static 'img/profile.jpg' %}" class="h-8 rounded-3xl w-auto" alt="">
                         </a>
-                        <a href="{% url 'Author Profile' post.author %}" class="author-name font-sans">
+                        <a href="{% url 'Author Profile' post.author_id %}" class="author-name font-sans">
                             <p class="">
-                                {{post.author}}
+                                {{post.author.first_name}} {{post.author.last_name}}
                             </p>
                             <p class="text-xs">Posted on {{post.publish_time}}</p>
                         </a>

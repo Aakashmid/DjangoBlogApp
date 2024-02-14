@@ -22,7 +22,7 @@
                         </a>
                         <a href="{% url 'Author Profile' post.author %}" class="author-name flex flex-col  font-sans font-medium">
                             <p class="">
-                                {{post.author}}
+                                {{post.author.first_name}} {{post.author.last_name}}
                             </p>
                             <p class="text-xs">Posted on {{post.publish_time}}</p>
                         </a>

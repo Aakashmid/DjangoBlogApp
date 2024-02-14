@@ -12,5 +12,5 @@ urlpatterns = [
     path('post-blogs/<int:id>/',views.Read_post,name="Blog post"),
     path('post-comment/',views.post_comment,name="Post Comment"),
     path('profile/',views.profile,name="User Profile"),
-    path('Author/profile/<str:Author_name>',views.profile,name="Author Profile"),
+    path('Author/profile/<int:author_id>',views.profile,name="Author Profile"),
 ]

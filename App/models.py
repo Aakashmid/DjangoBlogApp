@@ -7,12 +7,30 @@ from django.utils import timezone
 # Create your models here.
 
 
+# class Post(models.Model):
+#     author=models.CharField(max_length=1000)
+#     title=models.CharField( max_length=500)
+#     content=models.TextField()
+#     publish_time=models.DateField(default=datetime.today)
+#     read_count=models.IntegerField(default=0)
+#     # user=models.ForeignKey(User, on_delete=models.CASCADE)
+#     # isReaded=models.BooleanField(default=False)
+#     like=models.IntegerField(default=0)
+#     # isLiked=models.BooleanField(default=False)
+
+#     def __str__(self) -> str:
+#         return self.title
+#     class Meta:
+#         verbose_name_plural="Blog posts"
+
+
 class Post(models.Model):
-    author=models.CharField(max_length=100)
+    # author=models.CharField(max_length=1000)
     title=models.CharField( max_length=500)
     content=models.TextField()
     publish_time=models.DateField(default=datetime.today)
     read_count=models.IntegerField(default=0)
+    author=models.ForeignKey(User, on_delete=models.CASCADE,default=1)
     # isReaded=models.BooleanField(default=False)
     like=models.IntegerField(default=0)
     # isLiked=models.BooleanField(default=False)

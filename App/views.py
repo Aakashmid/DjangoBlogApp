@@ -30,6 +30,8 @@ def Create_account(request):
             user.first_name=fname
             user.last_name=lname
             user.save()
+            bloguser=BlogUser.objects.create(user=user)
+            bloguser.save()
             login(request,user=user)
             
             messages.success(request,"Account is created successfully")
@@ -102,8 +104,8 @@ def Create_post(request):
     if request.method=="POST":
         title=request.POST.get('post_title')
         content=request.POST.get('blog_content')
-        author=request.user.username
-        post=Post(author=author,title=title,content=content)
+        # author=request.user.first_name+" "+request.user.last_name
+        post=Post(author=request.user,title=title,content=content)
         post.save()
         messages.success(request,"Blog is posted successfuly !!")
         return redirect('/')
@@ -212,12 +214,11 @@ def post_comment(request):
             messages.success(request," Reply posted successfully ")
         return redirect(f'/post-blogs/{post.id}/')
     
-def profile(request,Author_name=None):
-    if Author_name:
-        # posts=Post.objects.filter(author=Author_name)
-        user=User.objects.get(username=Author_name)
-        bloguser=BlogUser.objects.get(user=user)
-        allPosts=Post.objects.filter(author=Author_name)
+def profile(request,author_id=None):
+    if author_id:
+        # here author id is user.id of user
+        bloguser=BlogUser.objects.get(user=author_id)
+        allPosts=Post.objects.filter(author=author_id)
         return render(request,'App/author.html',{"User":bloguser,'Posts':allPosts})
     else:
         return render(request,'App/profile.html')
