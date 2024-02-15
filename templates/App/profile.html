@@ -8,52 +8,80 @@ Profile
 {% block body %}
 <div id="profile_page" class="profile-container">
     <div class="upper">
-        <div class="h-36 flex flex-col justify-center bg-gray-700">
-            <span onclick="ShowEditForm()" class="z-0  absolute right-2 top-16 font-medium rounded-md text-sm  text-white bg-gray-900 p-2 hover:bg-gray-950 active:outline active:outline-1
+        <div class="flex flex-col justify-center">
+            <div class="h-24 flex flex-col justify-center bg-gray-800">
+            </div>
+            <div class="p-3">
+                <span onclick="ShowEditForm()" class="z-0  absolute right-2 top-16 font-medium rounded-md text-sm  text-white bg-gray-900 p-2 hover:bg-gray-950 active:outline active:outline-1
                 "><i class="fa-solid fa-pen"></i></span>
-            <span class="flex flex-col items-center absolute top-[138px] left-1/2 -translate-x-1/2">
-                <span class="">
-                    <img src="{% static 'img/profile.jpg' %}" alt=""
-                        class="h-24 rounded-3xl w-auto outline outline-4 outline-gray-100 ">
-                </span>
-                <span class="">
-                    <h1 class="text-2xl  mt-2 font-bold ">{{user.first_name}} {{user.last_name}}</h1>
-                </span>
-            </span>
-        </div>
-        <div class="py-4  mt-24">
-            <div class="flex   justify-center space-x-8">
-                <span class="flex flex-col items-center">
-                    <h1 class="font-semibold text-2xl text-gray-900">122</h1>
-                    <h2 class="font-medium">followers</h2>
-                </span>
-                <span class="flex flex-col items-center">
-                    <h1 class="font-semibold text-2xl text-gray-900">122</h1>
-                    <h2 class="font-medium">following</h2>
+                <span class="flex space-x-5 items-center ">
+                    <span class="">
+                        <img src="{% static 'img/profile.jpg' %}" alt=""
+                            class="h-20 rounded-full w-auto outline outline-4 outline-gray-100 ">
+                    </span>
+                    <span class="">
+                        <h1 class="text-2xl font-semibold ">{{user.first_name}} {{user.last_name}}</h1>
+                        <span class="flex space-x-8 mt-2">
+                            <p class="text-[17px]">{{User.followers}} Followers</p>
+                            <p class="text-[17px]">{{User.following}} Following</p>
+                        </span>
+                    </span>
                 </span>
             </div>
         </div>
     </div>
-    <hr class="mx-auto w-11/12 bg-gray-900 mt-8">
-    <div class=""></div>
+    <div class="mt-6">
+        <span class="w-full">
+            <ul class="flex space-x-4 py-2 px-4">
+                <li id="profile_home" class="profile-link cursor-pointer underline underline-offset-[14px]"
+                    onclick="changeLinkAppearence(this)">Home </li>
+                <li id="profile_about" class="profile-link cursor-pointer underline-offset-[14px]"
+                    onclick="changeLinkAppearence(this)">About </li>
+            </ul>
+        </span>
+        <hr class="mx-3 bg-gray-900 ">
+        <!-- Home section -->
+        <div class="Home-page p-3">
+            <div class="">
+                <h1 class="text-lg ">Here display saved blog post </h1>
+            </div>
+        </div>
+
+        <!-- About Section -->
+        <div class="about-page hidden p-3">
+            <div class="">
+                <div class="overflow-visible  h-16">
+                    <p class="text-lg font-serif">{{User.Bio}} </p>
+                </div>
+                <span class="flex space-x-8 relative bottom-0">
+                    <p class="text-purple-500">{{User.followers}} Follower</p>
+                    <p class="text-purple-500">{{User.following}} Following</p>
+                </span>
+            </div>
+            <hr class="bg-gray-800 w-full mt-3">
+        </div>
+    </div>
 </div>
 
 <!-- Profile edit form/page -->
 <div id="profile_edit_form" class="hidden profile-edit-form">
     <div class="p-4">
-        <button class="active:bg-gray-300 hover:bg-gray-300 font-thin  p-2 rounded" onclick="profilePage()"><i class="fa-solid fa-angle-up fa-rotate-270 fa-xl"></i></button>
+        <button class="active:bg-gray-300 hover:bg-gray-300 font-thin  p-2 rounded" onclick="profilePage()"><i
+                class="fa-solid fa-angle-up fa-rotate-270 fa-xl"></i></button>
         <form action="#" class=" flex flex-col mt-6" enctype="multipart/form-data">
             <div class="flex justify-center py-2">
                 <span class=""><img src="{% static 'img/profile.jpg' %}" alt=".." class="h-28 w-auto rounded-full">
                     <!-- <input type="file" accept="image/*"> -->
                     <span
-                        class="icon-edit relative left-[80px] -top-[30px] bg-white rounded-full p-1 w-6 h-au text-black"><i class="fa-solid fa-pencil"></i></span>
+                        class="icon-edit relative left-[80px] -top-[30px] bg-white rounded-full p-1 w-6 h-au text-black"><i
+                            class="fa-solid fa-pencil"></i></span>
                 </span>
             </div>
-            
+
             <div class="px-4 py-2">
                 <label for="name" class=" text-lg w-full font-medium">Name</label>
-                <input type="text" class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 px-2 py-[6px]">
+                <input type="text"
+                    class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 px-2 py-[6px]">
             </div>
             <div class="px-4 py-2">
                 <label for="username" class=" text-lg w-full font-medium">Username</label>
@@ -63,7 +91,8 @@ Profile
             <div class="px-4 py-2">
                 <label for="password" class=" text-lg w-full font-medium">Password</label>
                 <input type="password"
-                    class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 px-2 py-[6px]" name="password">
+                    class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 px-2 py-[6px]"
+                    name="password">
             </div>
             <div class="px-4 py-2">
                 <label for="Email" class=" text-lg w-full font-medium">Email</label>
@@ -93,12 +122,45 @@ Profile
         let profilePage = document.getElementById('profile_page');
         profilePage.innerHTML = prHtml;
     }
-    
-    $(document).ready(function(){
-    let body_element=document.getElementsByTagName('body')[0];
-    body_element.classList.add('bg-gray-100');
+
+    $(document).ready(function () {
+        let body_element = document.getElementsByTagName('body')[0];
+        body_element.classList.add('bg-gray-100');
 
     });
+
+
+    //underline element clicked
+    function changeLinkAppearence(element) {
+        element.classList.add('underline');
+        //here profile-link is class given link element  
+        links = document.getElementsByClassName('profile-link');
+        for (let i = 0; i < links.length; i++) {
+            const link = links[i];
+            if (link != element) {
+                if (link.classList.contains('underline')) {
+                    link.classList.remove('underline');
+                }
+            }
+        }
+        if (element.id == "profile_about") {
+            // console.log('About page should be shown');
+            home_page = document.getElementsByClassName('Home-page')[0];
+            home_page.classList.add('hidden');
+            about_page = document.getElementsByClassName('about-page')[0];
+            about_page.classList.remove('hidden');
+        }
+        else if (element.id == "profile_home") {
+            home_page = document.getElementsByClassName('Home-page')[0];
+            home_page.classList.remove('hidden');
+            about_page = document.getElementsByClassName('about-page')[0];
+            about_page.classList.add('hidden');
+            // console.log(element.innerText);
+
+        }
+    }
+
+
 </script>
 
 {% endblock js%}

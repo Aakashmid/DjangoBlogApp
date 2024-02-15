@@ -68,7 +68,7 @@ class PostReadedUser(models.Model):
 
 class BlogUser(models.Model):
     user=models.OneToOneField(User, verbose_name="User", on_delete=models.CASCADE)
-    Bio=models.CharField( max_length=5000 ,default=None)
+    Bio=models.CharField( max_length=5000 ,default="Write about you so people know about you more")
     followers=models.IntegerField(default=0)
     following=models.IntegerField(default=0)
 

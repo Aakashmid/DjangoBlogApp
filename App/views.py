@@ -215,10 +215,14 @@ def post_comment(request):
         return redirect(f'/post-blogs/{post.id}/')
     
 def profile(request,author_id=None):
+    if request.method=="POST":
+        pass
     if author_id:
         # here author id is user.id of user
         bloguser=BlogUser.objects.get(user=author_id)
         allPosts=Post.objects.filter(author=author_id)
         return render(request,'App/author.html',{"User":bloguser,'Posts':allPosts})
     else:
-        return render(request,'App/profile.html')
+        bloguser=BlogUser.objects.get(user=request.user)
+        allPosts=Post.objects.filter(author=request.user)
+        return render(request,'App/profile.html',{"User":bloguser,'Posts':allPosts})

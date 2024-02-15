@@ -3,8 +3,8 @@
 {% block body %}
 <div class="author-page-container">
     <div class="">
-        <div class="h-28 w-full bg-gray-800"></div>
-        <div class="py-6 px-4 flex flex-col space-y-6">
+        <div class="h-24 w-full bg-gray-800"></div>
+        <div class="py-3 px-4 flex flex-col space-y-6">
             <div class="flex space-x-3 items-center  ">
                 <span class=""><img class="w-auto h-20 rounded-full " src="{% static 'img/profile.jpg' %}"
                         alt="..."></span>
@@ -14,27 +14,25 @@
                     <span class="font-normal">{{User.followers}} Followers</span>
                 </div>
             </div>
-            <div class="flex ">
-                <button class=" text-white w-2/3 bg-blue-950 rounded-3xl p-2">Follow</button>
+            <div class="px-2">
+                <button onclick="ChangeFollowers(this)" class=" text-white w-2/3 bg-blue-950 rounded-3xl p-2">Follow</button>
             </div>
             <div class="">
                 <div class="flex space-x-4 items-center">
-                    <span class=""><a href="#" id="author_home" onclick="changeLinkAppearence(this)"
-                            class="author-link underline underline-offset-[13px]">Home</a></span>
-                    <!-- <span class=""><a href="#" id="author_lists" onclick="changeLinkAppearence(this)" class="author-link underline-offset-[13px]">Lists</a></span> -->
-                    <span class=""><a href="#" id="author_about" onclick="changeLinkAppearence(this)"
-                            class="author-link underline-offset-[13px]">About</a></span>
+                    <ul class="flex space-x-4 ">
+                        <li id="author_home" class="author-link cursor-pointer underline underline-offset-[14px]" onclick="changeLinkAppearence(this)" >Home </li>
+                        <li id="author_about" class="author-link cursor-pointer underline-offset-[14px]" onclick="changeLinkAppearence(this)" >About </li>
+                    </ul>
                 </div>
                 <hr class="bg-black mt-2">
             </div>
         </div>
         <!-- Content part of page -->
-        <div class="p-3">
-            <div class="Home-page">
-
+        <div class="">
+            <div class="Home-page p-2">
                 {% if Posts %}
                 {% for post in Posts %}
-                <div class="Card-blog-post flex mt-4 flex-col space-y-3 px-1">
+                <div class="Card-blog-post flex mt-4 flex-col space-y-1 px-1">
                     <div class="upper-part">Posted on {{post.publish_time}} </div>
                     <div class="main-body flex w-full">
                         <a href="{{post.id}}/" id="card_link" class="flex flex-col w-[80%] ">
@@ -62,13 +60,13 @@
                 <hr class="bg-black w-full mt-2">
                 {% endfor %}
                 {% else %}
-                <div class="p-5">
+                <div class="p-3 text-lg">
                     <h1 class="">There is no post return by this author</h1>
                 </div>
                 {% endif %}
             </div>
-            <div class="about-page hidden">
-                <p class="">This is about page </p>
+            <div class="px-4 py-2 about-page hidden text-lg">
+                <p class="">{{User.Bio}}</p>
             </div>
         </div>
     </div>
@@ -103,6 +101,16 @@
             about_page.classList.add('hidden');
             // console.log(element.innerText);
 
+        }
+    }
+
+    function ChangeFollowers(followBtn){
+        if (followBtn.innerText=="Follow") {
+            followBtn.innerText="Following";
+        }
+        else if(followBtn.innerText=="Following")
+        {
+            followBtn.innerText="Follow";
         }
     }
 
