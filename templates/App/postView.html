@@ -153,7 +153,7 @@
         let dataToSend = { 'action': action };
         if (element.id.charAt(0) === 'c') {
             dataToSend.commentNo = element.id.slice(12);
-            console.log(dataToSend);
+            // console.log(dataToSend);
         }
         $.ajax({
             type: "POST",

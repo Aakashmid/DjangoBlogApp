@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect,HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import login,logout,authenticate
 from django.contrib import messages
-from .models import Post,Comment,PostLike,CommentLike,PostReadedUser ,BlogUser
+from .models import Post,Comment,PostLike,CommentLike,PostReadedUser ,BlogUser,AuthorFollower
 from .templatetags import extraFilter
 from django.db.models import Q
 from django.http import JsonResponse
@@ -215,13 +215,44 @@ def post_comment(request):
         return redirect(f'/post-blogs/{post.id}/')
     
 def profile(request,author_id=None):
-    if request.method=="POST":
-        pass
     if author_id:
-        # here author id is user.id of user
-        bloguser=BlogUser.objects.get(user=author_id)
-        allPosts=Post.objects.filter(author=author_id)
-        return render(request,'App/author.html',{"User":bloguser,'Posts':allPosts})
+        if request.method=="POST":
+            action=request.POST.get('action')
+            if action=='IncreaseFollower':
+                Author=BlogUser.objects.get(user=author_id)
+                Follower=request.user
+                # if AuthorFollower.objects.filter(Author=Author,follower=Follower).():  
+                # AuthFollRel is object storing AuthorFollower object which keeps information of author and follower data
+                Author.followers+=1
+                Author.save()
+                AuthFollRel=AuthorFollower.objects.create(Author=Author,follower=Follower)
+                AuthFollRel.save()
+                response=JsonResponse({'btnText':"Following",'followerCount':Author.followers})
+                return response
+            elif action=="DecreaseFollower":
+                Author=BlogUser.objects.get(user=author_id)
+                Follower=request.user
+                Author.followers-=1
+                Author.save()
+                AuthFollRel=AuthorFollower.objects.get(Author=Author,follower=Follower)
+                AuthFollRel.delete()
+                response=JsonResponse({'btnText':"Follow",'followerCount':Author.followers})
+                return response
+            else:
+                Author=BlogUser.objects.get(user=author_id)
+                Follower=request.user
+                if AuthorFollower.objects.filter(Author=Author,follower=Follower).exists():
+                    print('Hellow')
+                    response=JsonResponse({'btnText':"Following"})
+                    return response
+                else:
+                    response=JsonResponse({'btnText':"Follow"})
+                    return response
+        else:
+            # here author id is user.id of author user
+            bloguser=BlogUser.objects.get(user=author_id)
+            allPosts=Post.objects.filter(author=author_id)
+            return render(request,'App/author.html',{"User":bloguser,'Posts':allPosts})
     else:
         bloguser=BlogUser.objects.get(user=request.user)
         allPosts=Post.objects.filter(author=request.user)

@@ -614,6 +614,10 @@ video {
   top: -30px;
 }
 
+.bottom-0 {
+  bottom: 0px;
+}
+
 .left-1\/2 {
   left: 50%;
 }
@@ -638,20 +642,12 @@ video {
   top: 4rem;
 }
 
-.top-\[138px\] {
-  top: 138px;
-}
-
 .top-\[40\%\] {
   top: 40%;
 }
 
 .top-\[433px\] {
   top: 433px;
-}
-
-.bottom-0 {
-  bottom: 0px;
 }
 
 .z-0 {
@@ -682,6 +678,11 @@ video {
   margin: 0.5rem;
 }
 
+.mx-3 {
+  margin-left: 0.75rem;
+  margin-right: 0.75rem;
+}
+
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
@@ -695,16 +696,6 @@ video {
 .my-3 {
   margin-top: 0.75rem;
   margin-bottom: 0.75rem;
-}
-
-.mx-2 {
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
-}
-
-.mx-3 {
-  margin-left: 0.75rem;
-  margin-right: 0.75rem;
 }
 
 .mb-5 {
@@ -735,10 +726,6 @@ video {
   margin-top: 0.5rem;
 }
 
-.mt-24 {
-  margin-top: 6rem;
-}
-
 .mt-3 {
   margin-top: 0.75rem;
 }
@@ -749,10 +736,6 @@ video {
 
 .mt-6 {
   margin-top: 1.5rem;
-}
-
-.mt-8 {
-  margin-top: 2rem;
 }
 
 .block {
@@ -783,6 +766,10 @@ video {
   height: 3.5rem;
 }
 
+.h-16 {
+  height: 4rem;
+}
+
 .h-20 {
   height: 5rem;
 }
@@ -793,10 +780,6 @@ video {
 
 .h-28 {
   height: 7rem;
-}
-
-.h-36 {
-  height: 9rem;
 }
 
 .h-44 {
@@ -817,26 +800,6 @@ video {
 
 .h-full {
   height: 100%;
-}
-
-.h-32 {
-  height: 8rem;
-}
-
-.h-16 {
-  height: 4rem;
-}
-
-.max-h-14 {
-  max-height: 3.5rem;
-}
-
-.max-h-10 {
-  max-height: 2.5rem;
-}
-
-.w-11\/12 {
-  width: 91.666667%;
 }
 
 .w-12 {
@@ -1042,12 +1005,6 @@ video {
   margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));
 }
 
-.space-x-12 > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-x-reverse: 0;
-  margin-right: calc(3rem * var(--tw-space-x-reverse));
-  margin-left: calc(3rem * calc(1 - var(--tw-space-x-reverse)));
-}
-
 .overflow-visible {
   overflow: visible;
 }
@@ -1186,11 +1143,6 @@ video {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
-.bg-gray-400 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(156 163 175 / var(--tw-bg-opacity));
-}
-
 .p-1 {
   padding: 0.25rem;
 }
@@ -1205,10 +1157,6 @@ video {
 
 .p-4 {
   padding: 1rem;
-}
-
-.p-5 {
-  padding: 1.25rem;
 }
 
 .p-\[7px\] {
@@ -1255,24 +1203,9 @@ video {
   padding-bottom: 0.75rem;
 }
 
-.py-4 {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-}
-
-.py-6 {
-  padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
-}
-
 .py-\[6px\] {
   padding-top: 6px;
   padding-bottom: 6px;
-}
-
-.px-5 {
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
 }
 
 .pt-2 {
@@ -1334,15 +1267,6 @@ video {
 .text-xs {
   font-size: 0.75rem;
   line-height: 1rem;
-}
-
-.text-\[18px\] {
-  font-size: 18px;
-}
-
-.text-3xl {
-  font-size: 1.875rem;
-  line-height: 2.25rem;
 }
 
 .font-bold {
@@ -1409,9 +1333,9 @@ video {
   color: rgb(31 41 55 / var(--tw-text-opacity));
 }
 
-.text-gray-900 {
+.text-purple-500 {
   --tw-text-opacity: 1;
-  color: rgb(17 24 39 / var(--tw-text-opacity));
+  color: rgb(168 85 247 / var(--tw-text-opacity));
 }
 
 .text-white {
@@ -1419,25 +1343,8 @@ video {
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
-.text-purple-500 {
-  --tw-text-opacity: 1;
-  color: rgb(168 85 247 / var(--tw-text-opacity));
-}
-
 .underline {
   text-decoration-line: underline;
-}
-
-.underline-offset-\[13px\] {
-  text-underline-offset: 13px;
-}
-
-.underline-offset-4 {
-  text-underline-offset: 4px;
-}
-
-.underline-offset-\[10px\] {
-  text-underline-offset: 10px;
 }
 
 .underline-offset-\[14px\] {
@@ -1503,6 +1410,10 @@ video {
   outline-color: #1f2937;
 }
 
+.outline-blue-950 {
+  outline-color: #172554;
+}
+
 .duration-200 {
   transition-duration: 200ms;
 }
@@ -1552,6 +1463,16 @@ video {
   background-color: rgb(3 7 18 / var(--tw-bg-opacity));
 }
 
+.hover\:bg-white:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+
+.hover\:text-black:hover {
+  --tw-text-opacity: 1;
+  color: rgb(0 0 0 / var(--tw-text-opacity));
+}
+
 .hover\:text-blue-600:hover {
   --tw-text-opacity: 1;
   color: rgb(37 99 235 / var(--tw-text-opacity));
@@ -1569,6 +1490,18 @@ video {
 
 .hover\:underline:hover {
   text-decoration-line: underline;
+}
+
+.hover\:outline:hover {
+  outline-style: solid;
+}
+
+.hover\:outline-2:hover {
+  outline-width: 2px;
+}
+
+.hover\:outline-blue-950:hover {
+  outline-color: #172554;
 }
 
 .focus\:outline:focus {

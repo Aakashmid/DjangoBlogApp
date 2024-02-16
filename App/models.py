@@ -62,14 +62,20 @@ class PostLike(models.Model):
 class CommentLike(models.Model):
     user=models.ForeignKey(User, on_delete=models.CASCADE)
     comment=models.ForeignKey(Comment, on_delete=models.CASCADE)
+
+# for informations who read a specific post
 class PostReadedUser(models.Model):
     user=models.ForeignKey(User, verbose_name="user", on_delete=models.CASCADE)
     post=models.ForeignKey(Post, verbose_name="Readed post", on_delete=models.CASCADE)
 
+#  For profile of user 
 class BlogUser(models.Model):
     user=models.OneToOneField(User, verbose_name="User", on_delete=models.CASCADE)
     Bio=models.CharField( max_length=5000 ,default="Write about you so people know about you more")
     followers=models.IntegerField(default=0)
     following=models.IntegerField(default=0)
 
+class AuthorFollower(models.Model):
+    Author=models.ForeignKey(BlogUser, verbose_name="Author", on_delete=models.CASCADE)
+    follower=models.ForeignKey(User, verbose_name="Follower", on_delete=models.CASCADE)
     
