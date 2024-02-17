@@ -1398,6 +1398,10 @@ video {
   outline-offset: 1px;
 }
 
+.outline-blue-950 {
+  outline-color: #172554;
+}
+
 .outline-gray-100 {
   outline-color: #f3f4f6;
 }
@@ -1408,10 +1412,6 @@ video {
 
 .outline-gray-800 {
   outline-color: #1f2937;
-}
-
-.outline-blue-950 {
-  outline-color: #172554;
 }
 
 .duration-200 {
