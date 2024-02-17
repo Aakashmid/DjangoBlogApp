@@ -19,6 +19,7 @@
                 </div>
             </div>
             <div class="px-2">
+                <!-- {% if request.user == User.user %} -->
                 <button id="followBtn" onclick="ChangeFollowers(this)"
                     class=" text-white w-2/3 bg-blue-950 rounded-3xl p-2"></button>
                 <!-- hover:outline-2 hover:outline hover:outline-blue-950 hover:bg-white hover:text-black -->
@@ -80,6 +81,8 @@
     </div>
 </div>
 {% endblock body %}
+
+
 {% block js %}
 <script>
     //underline element clicked
@@ -141,9 +144,6 @@
     }
     function ChangeFollowers(followBtn) {
         if (followBtn.innerText == "Follow") {
-            // followBtn.innerText = "Following";
-            // followBtn.classList.remove('text-white','bg-blue-950');
-            // followBtn.classList.add('text-black','outline','outline-2','outline-blue-950');
             SenAjaxchangeFollower(followBtn, "IncreaseFollower");
         }
         else if (followBtn.innerText == "Following") {

@@ -25,7 +25,6 @@ from django.utils import timezone
 
 
 class Post(models.Model):
-    # author=models.CharField(max_length=1000)
     title=models.CharField( max_length=500)
     content=models.TextField()
     publish_time=models.DateField(default=datetime.today)
