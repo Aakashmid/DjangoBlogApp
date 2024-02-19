@@ -20,7 +20,7 @@
                         <a href="#" class="profile w-fit h-auto">
                             <img src="{% static 'img/profile.jpg' %}" class="w-auto rounded-full h-8" alt="">
                         </a>
-                        <a href="{% url 'Author Profile' post.author %}" class="author-name flex flex-col  font-sans font-medium">
+                        <a href="{% url 'App:Author Profile' post.author_id %}" class="author-name flex flex-col  font-sans font-medium">
                             <p class="">
                                 {{post.author.first_name}} {{post.author.last_name}}
                             </p>

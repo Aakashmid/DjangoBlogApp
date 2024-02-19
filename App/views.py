@@ -10,7 +10,7 @@ from django.utils import timezone
 from datetime import datetime, timedelta
 # Create your views here.
 def home(request):
-    allPosts=Post.objects.filter(Q(read_count__gte=10))
+    allPosts=Post.objects.all().order_by('-read_count')[:5]
     parms={"allPosts":allPosts}
     return render(request,'App/index.html',parms)
 
@@ -78,7 +78,8 @@ def Show_post_blogs(request,filterOrder=None):
             ids=['trend','new','old','mostreaded']
             if filterOrder==ids[0]:
                 #write query for selecting trending posts
-                allPosts=Post.objects.filter(Q(read_count__gte=50)& Q(publish_time__gte=timezone.now()-timedelta(days=3)))[:20]
+                allPosts=Post.objects.filter(Q(read_count__gte=0)& Q(publish_time__gte=timezone.now()-timedelta(days=6)))[:20]
+                # allPosts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=3)).order_by('-read_count')[:4]
                 params={"allPosts":allPosts}
                 return render(request,'App/blog_posts.html',params)
             elif filterOrder==ids[1]:
@@ -246,7 +247,6 @@ def profile(request,author_id=None):
                 else:
                     response=JsonResponse({'btnText':"Follow",'followerCount':Author.followers})
                     return response
-
 
             else:
                 Author=BlogUser.objects.get(user=author_id)
