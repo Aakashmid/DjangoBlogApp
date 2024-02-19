@@ -112,6 +112,8 @@
             {% endif %}
         </div>
         <hr class="bg-black my-3">
+
+        <!-- navigation bar  -->
         <div class="flex flex-col mt-4">
 
             <a href="/" class="">
@@ -124,7 +126,7 @@
             </a>
 
             <div id="cat_link" class="p-1 hover:bg-blue-100 text-lg font-normal  rounded-sm" onclick="showhidecat()">
-                <span class="text-gray-700 mr-4"><i class="fa-solid fa-folder"></i></span>
+                <span class="text-gray-700 mr-2"><i class="fa-solid fa-folder"></i></span>
                 Select Categories
             </div>
             <div id="categories" class=" absolute top-[433px] mx-auto w-fit bg-gray-300 rounded text-black p-2 hidden">
@@ -193,6 +195,7 @@
     </div>
 
     <div class="main-container lg:flex w-full h-full ">
+        <!-- navigation for larger screen -->
         <div class="side-navigation-bar hidden lg:block w-[18%] fixed h-full ">
             <div id="navigation_bar"
             class=" bg-gray-100 px-2  z-30 w-auto h-full scroll-auto ">
@@ -242,8 +245,8 @@
                             class="text-gray-700 mr-4"><i class="fa-solid fa-book"></i></span> All Posts</div>
                 </a>
     
-                <div id="cat_link" class="p-1 cursor-pointer hover:bg-blue-100 text-lg font-normal  rounded-sm" onclick="showhidecat()">
-                    <span class="text-gray-700 mr-4"><i class="fa-solid fa-folder"></i></span>
+                <div id="cat_link" class="p-1 cursor-pointer hover:bg-blue-100 text-lg font-normal  rounded-sm items-center" onclick="showhidecat()">
+                    <span class="text-gray-700 mr-2"><i class="fa-solid fa-folder"></i></span>
                     Select Categories
                 </div>
                 <div id="categories" class=" absolute top-[433px] mx-auto w-fit bg-gray-300 rounded text-black p-2 hidden">
