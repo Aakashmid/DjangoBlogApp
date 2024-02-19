@@ -19,10 +19,12 @@
                 </div>
             </div>
             <div class="px-2">
-                <!-- {% if request.user == User.user %} -->
+                {% if request.user == User.user %}
+                {% else %}
                 <button id="followBtn" onclick="ChangeFollowers(this)"
-                    class=" text-white w-2/3 bg-blue-950 rounded-3xl p-2"></button>
+                    class=" text-white w-2/3 bg-blue-950 rounded-3xl p-2">Follow</button>
                 <!-- hover:outline-2 hover:outline hover:outline-blue-950 hover:bg-white hover:text-black -->
+                {% endif %}
             </div>
             <div class="">
                 <div class="flex space-x-4 items-center">
@@ -44,7 +46,7 @@
                 <div class="Card-blog-post flex mt-4 flex-col space-y-1 px-1">
                     <div class="upper-part">Posted on {{post.publish_time}} </div>
                     <div class="main-body flex w-full">
-                        <a href="{{post.id}}/" id="card_link" class="flex flex-col w-[80%] ">
+                        <a href="{% url 'App:Blog Post' post.id %}" id="card_link" class="flex flex-col w-[80%] ">
                             <h1 id="title{{post.id}}" class="title font-semibold text-xl">{{post.title}}</h1>
                             <p class="blog-content">
                                 <div class="preview text-lg">{{post.content|safe|truncatechars_html:100}}</div>
@@ -81,8 +83,6 @@
     </div>
 </div>
 {% endblock body %}
-
-
 {% block js %}
 <script>
     //underline element clicked
@@ -119,7 +119,7 @@
         followCount = document.getElementById('follow_count');
         $.ajax({
             type: "Post",
-            url: "{% url 'Author Profile' User.user_id %}",
+            url: "{% url 'App:Author Profile' User.user_id %}",
             data: { 'action': action },
             dataType: "json",
             headers: {
@@ -143,13 +143,18 @@
         });
     }
     function ChangeFollowers(followBtn) {
-        if (followBtn.innerText == "Follow") {
-            SenAjaxchangeFollower(followBtn, "IncreaseFollower");
+        if({{ user.is_authenticated|lower }}){            
+                        if (followBtn.innerText == "Follow") {
+                            SenAjaxchangeFollower(followBtn, "IncreaseFollower");
+                        }
+                        else if (followBtn.innerText == "Following") {
+                            followBtn.classList.remove('outline');
+                            followBtn.classList.add('text-white', 'bg-blue-950');
+                            SenAjaxchangeFollower(followBtn, "DecreaseFollower");
+                        }
         }
-        else if (followBtn.innerText == "Following") {
-            followBtn.classList.remove('outline');
-            followBtn.classList.add('text-white', 'bg-blue-950');
-            SenAjaxchangeFollower(followBtn, "DecreaseFollower");
+        else{
+            showLogin();
         }
     }
     btn = document.getElementById('followBtn');
