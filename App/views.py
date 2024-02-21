@@ -1,4 +1,5 @@
-from django.shortcuts import render,redirect,HttpResponse
+from django.shortcuts import render,redirect,HttpResponse,HttpResponseRedirect
+from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib.auth import login,logout,authenticate
 from django.contrib import messages
@@ -22,7 +23,8 @@ def Create_account(request):
         username=request.POST.get('username')
         password=request.POST.get('password')
         email=request.POST.get('email')
-        if User.objects.filter(username=username):
+        print(f'email we get {email}')
+        if User.objects.filter(username=username).exists():
             messages.error(request,"This username is taken !!")
             return redirect('/')
         else:
@@ -30,6 +32,7 @@ def Create_account(request):
             user.first_name=fname
             user.last_name=lname
             user.save()
+            print(f'email of user is {user.email}')
             bloguser=BlogUser.objects.create(user=user)
             bloguser.save()
             login(request,user=user)
@@ -252,7 +255,6 @@ def profile(request,author_id=None):
                 Author=BlogUser.objects.get(user=author_id)
                 Follower=request.user
                 if AuthorFollower.objects.filter(Author=Author,follower=Follower).exists():
-                    print('Hellow')
                     response=JsonResponse({'btnText':"Following"})
                     return response
                 else:
@@ -270,3 +272,31 @@ def profile(request,author_id=None):
         allPosts=Post.objects.filter(author=request.user)
         return render(request,'App/profile.html',{"User":bloguser,'Posts':allPosts})
     
+def Change_profile(request):
+    if request.method=="POST":
+        username=request.POST.get('username')
+        name=request.POST.get('fullname')
+        email=request.POST.get('Email')
+        bio=request.POST.get('Bio')
+        if User.objects.filter(username=username).exclude(username=request.user.username):
+            messages.error(request,'This username is taken !!')
+            return HttpResponseRedirect(reverse('App:User Profile'))
+        else:
+            firstname=name.split(' ')[0]
+        # here length is storing how many word is list name is
+            length= len(name.split(' '))
+            lastname=""
+            for i in range(1,length):
+                lastname+=" "+name.split(' ')[i]
+            user=request.user
+            user.first_name=firstname
+            user.last_name=lastname
+            user.username=username
+            user.email=email
+            user.save()
+            bloguser=BlogUser.objects.get(user=user)
+            bloguser.Bio=bio
+            bloguser.save()
+            messages.success(request,"Changed profile successfully !!")
+            return HttpResponseRedirect(reverse('App:User Profile'))
+        

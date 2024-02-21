@@ -68,38 +68,41 @@ Profile
     <div class="p-4">
         <button class="active:bg-gray-300 hover:bg-gray-300 font-thin  p-2 rounded" onclick="profilePage()"><i
                 class="fa-solid fa-angle-up fa-rotate-270 fa-xl"></i></button>
-        <form action="#" class=" flex flex-col mt-6" enctype="multipart/form-data">
+        <form action="{% url 'App:Profile Change' %}" method="post" class=" flex flex-col " enctype="multipart/form-data">
+            {% csrf_token %}
             <div class="flex justify-center py-2">
                 <span class=""><img src="{% static 'img/profile.jpg' %}" alt=".." class="h-28 w-auto rounded-full">
-                    <!-- <input type="file" accept="image/*"> -->
-                    <span
+                    <label for="imageInput"
                         class="icon-edit relative left-[80px] -top-[30px] bg-white rounded-full p-1 w-6 h-au text-black"><i
-                            class="fa-solid fa-pencil"></i></span>
+                            class="fa-solid fa-pencil"></i></label>
                 </span>
+                <input hidden type="file"  id="imageInput" name="image" accept="image/*">
             </div>
 
             <div class="px-4 py-2">
                 <label for="name" class=" text-lg w-full font-medium">Name</label>
-                <input type="text"
-                    class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 px-2 py-[6px]">
+                <input type="text" name="fullname" id="fullname"
+                    class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 px-2 py-[6px]" value="{{user.first_name}} {{user.last_name}}">
             </div>
             <div class="px-4 py-2">
                 <label for="username" class=" text-lg w-full font-medium">Username</label>
-                <input type="text" name="username"
-                    class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 px-2 py-[6px]">
-            </div>
-            <div class="px-4 py-2">
-                <label for="password" class=" text-lg w-full font-medium">Password</label>
-                <input type="password"
-                    class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 px-2 py-[6px]"
-                    name="password">
+                <input type="text" name="username" 
+                    class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 px-2 py-[6px]" value="{{user.username}}">
             </div>
             <div class="px-4 py-2">
                 <label for="Email" class=" text-lg w-full font-medium">Email</label>
                 <input type="email" id="Email" name="Email"
-                    class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 px-2 py-[6px]">
+                    class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 px-2 py-[6px]" value="{{user.email}}">
             </div>
-            <button
+            <div class="px-4 py-2">
+                <label for="Bio" class=" text-lg w-full font-medium">Bio</label>
+                {% if user.bio %}
+                <textarea name="Bio" id="Bio" class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 px-2 py-[6px] h-28" value="{{User.bio}}"></textarea>
+                {% else %}
+                <textarea name="Bio" id="Bio" class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 px-2 py-[6px] h-28" >Write about you so people can know about you more </textarea>
+                {% endif %}
+            </div>
+            <button type="submit"
                 class="mx-auto mt-6 submit py-2 px-6 rounded-lg text-lg bg-blue-950 text-white font-normal w-fit">Save
                 Changes</button>
         </form>
