@@ -12,7 +12,7 @@ Profile
             <div class="h-24 flex flex-col justify-center bg-gray-800">
             </div>
             <div class="p-3">
-                <span onclick="ShowEditForm()" class="z-0  absolute right-2 top-16 font-medium rounded-md text-sm  text-white bg-gray-900 p-2 hover:bg-gray-950 active:outline active:outline-1
+                <span onclick="ShowEditForm()" class="z-0 w-auto float-right font-medium rounded-md text-sm  text-white bg-gray-800 p-2 hover:bg-gray-950 active:outline active:outline-1
                 "><i class="fa-solid fa-pen"></i></span>
                 <span class="flex space-x-5 items-center ">
                     <span class="">
@@ -73,8 +73,8 @@ Profile
             <div class="flex justify-center py-2">
                 <span class=""><img src='/media/{{User.profileImg}}' alt=".." class="aspect-square h-28 w-auto rounded-full">
                     <label for="imageInput"
-                        class="icon-edit relative left-[80px] -top-[30px] bg-white rounded-full p-1 w-6 h-au text-black"><i
-                            class="fa-solid fa-pencil"></i></label>
+                        class="icon-edit relative left-[80px] -top-[30px] bg-black rounded-full px-1 w-6 h-au text-white"><i
+                            class="fa-solid fa-plus "></i></label>
                 </span>
                 <input hidden type="file"  id="imageInput" name="imageInput" accept="image/*" value="/media/{{User.profileImg}}">
             </div>
@@ -96,8 +96,8 @@ Profile
             </div>
             <div class="px-4 py-2">
                 <label for="Bio" class=" text-lg w-full font-medium">Bio</label>
-                {% if user.bio %}
-                <textarea name="Bio" id="Bio" class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 px-2 py-[6px] h-28" value="{{User.bio}}"></textarea>
+                {% if User.Bio %}
+                <textarea name="Bio" id="Bio" class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 px-2 py-[6px] h-28">{{User.Bio}}</textarea>
                 {% else %}
                 <textarea name="Bio" id="Bio" class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 px-2 py-[6px] h-28" >Write about you so people can know about you more </textarea>
                 {% endif %}

@@ -86,27 +86,27 @@ def Show_post_blogs(request,filterOrder=None):
             return render(request,'App/blog_posts.html',params)
 
     elif filterOrder : 
-            ids=['trend','new','old','mostreaded']
-            if filterOrder==ids[0]:
-                #write query for selecting trending posts
-                allPosts=Post.objects.filter(Q(read_count__gte=0)& Q(publish_time__gte=timezone.now()-timedelta(days=6)))[:20]
-                # allPosts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=3)).order_by('-read_count')[:4]
-                params={"allPosts":allPosts}
-                return render(request,'App/blog_posts.html',params)
-            elif filterOrder==ids[1]:
-                allPosts=Post.objects.all().order_by('-publish_time')
-                params={"allPosts":allPosts}
-                return render(request,'App/blog_posts.html',params)
-            
-            elif filterOrder==ids[2]:
-                allPosts=Post.objects.all().order_by('publish_time')
-                params={"allPosts":allPosts}
-                return render(request,'App/blog_posts.html',params)
-            elif filterOrder==ids[3]:
-                allPosts=Post.objects.all().order_by('-read_count')[:20]
-                # allPosts=Post.objects.filter(Q())
-                params={"allPosts":allPosts}
-                return render(request,'App/blog_posts.html',params)
+        ids=['trend','new','old','mostreaded']
+        if filterOrder==ids[0]:
+            #write query for selecting trending posts
+            allPosts=Post.objects.filter(Q(read_count__gte=0)& Q(publish_time__gte=timezone.now()-timedelta(days=6)))[:20]
+            # allPosts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=3)).order_by('-read_count')[:4]
+        elif filterOrder==ids[1]:
+            allPosts=Post.objects.all().order_by('-publish_time')
+        elif filterOrder==ids[2]:
+            allPosts=Post.objects.all().order_by('publish_time')
+        elif filterOrder==ids[3]:
+            allPosts=Post.objects.all().order_by('-read_count')[:20]
+            # allPosts=Post.objects.filter(Q())
+        if request.user.is_anonymous:
+            user=""
+        else:
+            user=BlogUser.objects.get(user=request.user)  #user is current user
+        Authors={}
+        for post in allPosts:
+            Authors[post]=BlogUser.objects.get(user=post.author)
+        params={'allPosts':allPosts,'Authors':Authors,'User':user}
+        return render(request,'App/blog_posts.html',params)
     else:
         if request.user.is_anonymous:
             user=""
@@ -204,6 +204,10 @@ def Read_post(request,id):
 
 ###  Fitler comments and replies of a post 
     if post:
+        if request.user.is_anonymous:
+            user=""
+        else:
+            user=BlogUser.objects.get(user=request.user)
         comments=Comment.objects.filter(Q(parent=None) & Q(post=post))
         replies=Comment.objects.filter(post=post).exclude(parent=None)
         Author=BlogUser.objects.get(user=post.author)
@@ -216,7 +220,7 @@ def Read_post(request,id):
                 replyDict[reply.parent.sno].append(reply)
         for comment in comments:
             CommentsDict[comment]=BlogUser.objects.get(user=comment.user)
-        return render(request,'App/postView.html',{"post":post,"CommentsDict":CommentsDict,'replies':replyDict,'Author':Author})
+        return render(request,'App/postView.html',{"post":post,"CommentsDict":CommentsDict,'replies':replyDict,'Author':Author,"User":user})
     else:
         return redirect('/post-blogs/')
 
@@ -273,6 +277,7 @@ def profile(request,author_id=None):
 
             else:
                 Author=BlogUser.objects.get(user=author_id)
+                # if not request.user.is_anonymous
                 Follower=request.user
                 if AuthorFollower.objects.filter(Author=Author,follower=Follower).exists():
                     response=JsonResponse({'btnText':"Following"})
@@ -305,7 +310,6 @@ def Change_profile(request):
         email=request.POST.get('Email')
         bio=request.POST.get('Bio')
         profilImage=request.FILES.get('imageInput')
-        print(f"image url is {profilImage}")
         if User.objects.filter(username=username).exclude(username=request.user.username):
             messages.error(request,'This username is taken !!')
             return HttpResponseRedirect(reverse('App:User Profile'))
