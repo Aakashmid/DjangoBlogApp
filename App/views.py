@@ -304,6 +304,8 @@ def Change_profile(request):
         name=request.POST.get('fullname')
         email=request.POST.get('Email')
         bio=request.POST.get('Bio')
+        profilImage=request.FILES.get('imageInput')
+        print(f"image url is {profilImage}")
         if User.objects.filter(username=username).exclude(username=request.user.username):
             messages.error(request,'This username is taken !!')
             return HttpResponseRedirect(reverse('App:User Profile'))
@@ -313,7 +315,10 @@ def Change_profile(request):
             length= len(name.split(' '))
             lastname=""
             for i in range(1,length):
-                lastname+=" "+name.split(' ')[i]
+                if i!=1:
+                    lastname+=" "+name.split(' ')[i]
+                else:
+                    lastname+=name.split(' ')[i]
             user=request.user
             user.first_name=firstname
             user.last_name=lastname
@@ -321,6 +326,8 @@ def Change_profile(request):
             user.email=email
             user.save()
             bloguser=BlogUser.objects.get(user=user)
+            if profilImage is not None:
+                bloguser.profileImg=profilImage
             bloguser.Bio=bio
             bloguser.save()
             messages.success(request,"Changed profile successfully !!")

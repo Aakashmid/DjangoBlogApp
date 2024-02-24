@@ -19,7 +19,7 @@
                 </div>
             </div>
             <div class="px-2">
-                {% if request.user == User.user %}
+                {% if request.user == Author.user %}
                 {% else %}
                 <button id="followBtn" onclick="ChangeFollowers(this)"
                     class=" text-white w-2/3 bg-blue-950 rounded-3xl p-2">Follow</button>
