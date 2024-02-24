@@ -30,10 +30,7 @@ class Post(models.Model):
     publish_time=models.DateField(default=datetime.today)
     read_count=models.IntegerField(default=0)
     author=models.ForeignKey(User, on_delete=models.CASCADE,default=1)
-    # isReaded=models.BooleanField(default=False)
     like=models.IntegerField(default=0)
-    # isLiked=models.BooleanField(default=False)
-
     def __str__(self) -> str:
         return self.title
     class Meta:
@@ -70,6 +67,7 @@ class PostReadedUser(models.Model):
 #  For profile of user 
 class BlogUser(models.Model):
     user=models.OneToOneField(User, verbose_name="User", on_delete=models.CASCADE)
+    profileImg=models.ImageField("Profile Image", upload_to='App/profileimg/', default='profile.jpg')
     Bio=models.CharField( max_length=5000 ,default="Write about you so people know about you more")
     followers=models.IntegerField(default=0)
     following=models.IntegerField(default=0)

@@ -28,12 +28,13 @@
     </div>
     <div class="blogs mt-4 clear-left w-full">
         <div id="testid" class="p-2 flex flex-col space-y-2">
-            {% for post in allPosts %}
+            {% for post,Author in Authors.items %}
             <div class="card  flex flex-col  space-y-1  border-gray-800 rounded-md shadow-xl py-3 bg-gray-50">
                 <div class="upper-part flex-col space-y-1 px-2 ">
                     <div class="flex space-x-2 items-center">
                         <a href="#" class="prifile w-fit h-auto">
-                            <img src="{% static 'img/profile.jpg' %}" class="h-8 rounded-3xl w-auto" alt="">
+                         <img src="/media/{{Author.profileImg}}" class="h-8 aspect-square rounded-3xl w-auto" alt="">
+                        {% comment %} <p>/media/{{Author.profileImg}}</p> {% endcomment %}
                         </a>
                         <a href="{% url 'App:Author Profile' post.author_id %}" class="author-name font-sans">
                             <p class="">

@@ -12,7 +12,15 @@ from datetime import datetime, timedelta
 # Create your views here.
 def home(request):
     allPosts=Post.objects.all().order_by('-read_count')[:5]
-    parms={"allPosts":allPosts}
+    if request.user.is_anonymous:
+        user=""
+    else:
+        user=BlogUser.objects.get(user=request.user)   #user is bloguser  or current user
+    Posts={}
+    for post in allPosts:
+        # here post.author is user object who write post
+        Posts[post]=BlogUser.objects.get(user=post.author)
+    parms={"allPosts":Posts,'User':user}
     return render(request,'App/index.html',parms)
 
 
@@ -65,7 +73,7 @@ def Logout_hand(request):
     return redirect('/')
     
 def Show_post_blogs(request,filterOrder=None):
-
+    # Handling search query 
     if request.method=="POST":
         search=request.POST.get('SearchQuery')
         if search:
@@ -100,8 +108,15 @@ def Show_post_blogs(request,filterOrder=None):
                 params={"allPosts":allPosts}
                 return render(request,'App/blog_posts.html',params)
     else:
+        if request.user.is_anonymous:
+            user=""
+        else:
+            user=BlogUser.objects.get(user=request.user)  #user is current user
         allPosts=Post.objects.all()
-        params={'allPosts':allPosts}
+        Authors={}
+        for post in allPosts:
+            Authors[post]=BlogUser.objects.get(user=post.author)
+        params={'allPosts':allPosts,'Authors':Authors,'User':user}
         return render(request,'App/blog_posts.html',params)
 
 def Create_post(request):
@@ -113,7 +128,9 @@ def Create_post(request):
         post.save()
         messages.success(request,"Blog is posted successfuly !!")
         return redirect('/')
-    return render(request,'App/createPost.html')
+    
+    user=BlogUser.objects.get(user=request.user)  #user is current user
+    return render(request,'App/createPost.html',{'User':user})
 
 def Read_post(request,id):
     post=Post.objects.get(id=id)
@@ -151,7 +168,6 @@ def Read_post(request,id):
             comment=Comment.objects.get(sno=comment_sno)
             if not CommentLike.objects.filter(user=request.user,comment=comment).exists():
                 comment.like+=1
-                print("increase like by 1")
                 comment.save()
                 # Create object like and save it ,that keep detailw which user liked  comment
                 Like=CommentLike.objects.create(user=request.user,comment=comment)
@@ -190,13 +206,17 @@ def Read_post(request,id):
     if post:
         comments=Comment.objects.filter(Q(parent=None) & Q(post=post))
         replies=Comment.objects.filter(post=post).exclude(parent=None)
+        Author=BlogUser.objects.get(user=post.author)
+        CommentsDict={}
         replyDict={}
         for reply in replies:
             if reply.parent.sno not in replyDict.keys():
                 replyDict[reply.parent.sno]=[reply]
             else:
                 replyDict[reply.parent.sno].append(reply)
-        return render(request,'App/postView.html',{"post":post,"comments":comments,'replies':replyDict})
+        for comment in comments:
+            CommentsDict[comment]=BlogUser.objects.get(user=comment.user)
+        return render(request,'App/postView.html',{"post":post,"CommentsDict":CommentsDict,'replies':replyDict,'Author':Author})
     else:
         return redirect('/post-blogs/')
 
@@ -263,13 +283,19 @@ def profile(request,author_id=None):
                 
         # If user  want to see author page
         else:
+            if request.user.is_anonymous:
+                user=""
+            else:
+                user=BlogUser.objects.get(user=request.user)
             # here author id is user.id of author user
             bloguser=BlogUser.objects.get(user=author_id)
             allPosts=Post.objects.filter(author=author_id)
-            return render(request,'App/author.html',{"User":bloguser,'Posts':allPosts})
+            # here Author is author of post
+            return render(request,'App/author.html',{"Author":bloguser,'Posts':allPosts,"User":user})
     else:
         bloguser=BlogUser.objects.get(user=request.user)
         allPosts=Post.objects.filter(author=request.user)
+        # Here User is authenticated user
         return render(request,'App/profile.html',{"User":bloguser,'Posts':allPosts})
     
 def Change_profile(request):

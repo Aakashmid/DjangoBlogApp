@@ -758,6 +758,10 @@ video {
   display: none;
 }
 
+.aspect-square {
+  aspect-ratio: 1 / 1;
+}
+
 .h-0 {
   height: 0px;
 }
@@ -1055,14 +1059,6 @@ video {
 
 .border-\[1px\] {
   border-width: 1px;
-}
-
-.border {
-  border-width: 1px;
-}
-
-.border-b {
-  border-bottom-width: 1px;
 }
 
 .border-black {

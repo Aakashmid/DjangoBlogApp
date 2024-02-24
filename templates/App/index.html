@@ -13,12 +13,12 @@
     <hr>
     <h1 class="ml-4 font text-xl font-semibold mt-4">Most readed Posts :</h3>
         <div class="mt-4 flex flex-col space-y-2 px-2">
-            {% for post in allPosts %}
+            {% for post,Author in allPosts.items %}
             <div class="card border-gray-600 border-[1px] rounded-md shadow-md p-3">
                 <div class="upper-part flex-col   ">
                     <div class="flex items-center space-x-2">
                         <a href="#" class="profile w-fit h-auto">
-                            <img src="{% static 'img/profile.jpg' %}" class="w-auto rounded-full h-8" alt="">
+                            <img src="/media/{{Author.profileImg}}" class="aspect-square w-auto rounded-full h-8" alt="">
                         </a>
                         <a href="{% url 'App:Author Profile' post.author_id %}" class="author-name flex flex-col  font-sans font-medium">
                             <p class="">

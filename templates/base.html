@@ -83,7 +83,7 @@
         <div class=" mb-6 p-2">
             {% if user.is_authenticated %}
             <div class="p-2 mx-auto flex flex-col justify-start space-y-1">
-                <img src="{% static 'img/profile.jpg' %}" class="w-14 h-auto rounded-full" alt="">
+                <img src="/media/{{User.profileImg}}" class="aspect-square w-14 h-auto rounded-full" alt="">
                 <a href="/profile" class="">
                     <!-- <p class="font-semibold text-lg">{{user.first_name}} {{user.last_name}}</p> -->
                     <p class="font-semibold text-lg">{{user.first_name}} {{user.last_name}} </p>
@@ -205,7 +205,7 @@
             <div class=" mb-6 p-2">
                 {% if user.is_authenticated %}
                 <div class="p-2 mx-auto flex flex-col justify-start space-y-1">
-                    <img src="{% static 'img/profile.jpg' %}" class="w-14 h-auto rounded-full" alt="">
+                    <img src="/media/{{User.profileImg}}" class="aspect-square w-14 h-auto rounded-full" alt="">
                     <a href="/profile" class="">
                         <!-- <p class="font-semibold text-lg">{{user.first_name}} {{user.last_name}}</p> -->
                         <p class="font-semibold text-lg">{{user.first_name}} {{user.last_name}} </p>

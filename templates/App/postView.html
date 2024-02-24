@@ -8,7 +8,7 @@
     <div class="main-body p-2 flex-col space-y-3 max-w-full">
         <h1 class="font-bold text-2xl">{{post.title}}</h1>
         <div class="post-header flex space-x-2">
-            <img src="{% static 'img/profile.jpg' %}" alt="..." class="w-12 h-auto rounded-3xl">
+            <img src="/media/{{Author.profileImg}}" alt="..." class="aspect-square w-12 h-auto rounded-3xl">
             <div class="flex flex-col space-y-1">
                 <p class=" ">
                     <span class="font-normal">By </span><a href="{% url 'App:Author Profile' post.author_id %}"
@@ -28,7 +28,7 @@
                     <i class="fa-regular fa-heart"></i>
                 </span>
             </span>
-            <span class="">{{comments|length}} <i class="fa-regular fa-comment"></i></span>
+            <span class="">{{CommentsDict|length}} <i class="fa-regular fa-comment"></i></span>
             <span class="">{{post.read_count}} <span class="text-gray-600"><i class="fa-regular fa-eye"></i></span></span>
         </div>
         <div class="no-tailwind-base">
@@ -38,7 +38,7 @@
     <div class="p-2 ">
         <h3 class="font-semibold flex space-x-3">
             <a class="" id="comment_btn">
-                Comments({{comments|length}}) <i class="fa-regular fa-comment"></i>
+                Comments({{CommentsDict|length}}) <i class="fa-regular fa-comment"></i>
             </a>
         </h3>
         <div id="comment-block" class="hidden">
@@ -60,10 +60,10 @@
 
             <!-- Comments  -->
             <div class="All-comments flex flex-col space-y-2  px-2 mt-2">
-                {% for comment in comments %}
+                {% for comment,commentAuthor in CommentsDict.items %}
                 <div class="">
                     <div class="flex space-x-2">
-                        <img src="{% static 'img/profile.jpg' %}" alt=".." class="w-7 h-auto rounded-full">
+                        <img src="/media/{{commentAuthor.profileImg}}" alt=".." class="w-7 h-auto aspect-square rounded-full">
                         <p class="user ">{{comment.user.first_name}} {{comment.user.last_name}}<span class="font-light text-sm">
                                 . {{comment.timeStamp|naturaltime}}
                             </span>
@@ -279,20 +279,23 @@
         }
 
         // funtion to increase readcount if user stay for while
-        setTimeout(readIncrease, 120000);
-        function readIncrease() {
-            $.ajax({
-                type: "PATCH",
-                url: "/post-blogs/{{post.id}}/",
-                headers: {
-                    "X-CSRFToken": '{{ csrf_token }}'
-                },
-                success: function (data) {
-                },
-                error: function (error) {
-                    console.log("Error:", error);
-                }
-            });
+
+        if({{user.is_authenticated|lower}}){
+            setTimeout(readIncrease, 120000);
+            function readIncrease() {
+                $.ajax({
+                    type: "PATCH",
+                    url: "/post-blogs/{{post.id}}/",
+                    headers: {
+                        "X-CSRFToken": '{{ csrf_token }}'
+                    },
+                    success: function (data) {
+                    },
+                    error: function (error) {
+                        console.log("Error:", error);
+                    }
+                });
+            }
         }
     });
 </script>
