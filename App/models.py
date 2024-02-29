@@ -6,36 +6,33 @@ from django.utils import timezone
 
 # Create your models here.
 
-
-# class Post(models.Model):
-#     author=models.CharField(max_length=1000)
-#     title=models.CharField( max_length=500)
-#     content=models.TextField()
-#     publish_time=models.DateField(default=datetime.today)
-#     read_count=models.IntegerField(default=0)
-#     # user=models.ForeignKey(User, on_delete=models.CASCADE)
-#     # isReaded=models.BooleanField(default=False)
-#     like=models.IntegerField(default=0)
-#     # isLiked=models.BooleanField(default=False)
-
-#     def __str__(self) -> str:
-#         return self.title
-#     class Meta:
-#         verbose_name_plural="Blog posts"
-
+#  For profile of user 
+class BlogUser(models.Model):
+    user=models.OneToOneField(User, verbose_name="User", on_delete=models.CASCADE)
+    profileImg=models.ImageField("Profile Image", upload_to='App/profileimg/', default='profile.jpg')
+    Bio=models.CharField( max_length=5000 ,default="Write about you so people know about you more")
+    followers=models.IntegerField(default=0)
+    following=models.IntegerField(default=0)
 
 class Post(models.Model):
     title=models.CharField( max_length=500)
     content=models.TextField()
     publish_time=models.DateField(default=datetime.today)
     read_count=models.IntegerField(default=0)
-    author=models.ForeignKey(User, on_delete=models.CASCADE,default=1)
+    author=models.ForeignKey(BlogUser, on_delete=models.CASCADE)
     like=models.IntegerField(default=0)
+    # categories=models.ManyToManyField(, verbose_name=_(""))
     def __str__(self) -> str:
         return self.title
     class Meta:
         verbose_name_plural="Blog posts"
+
+# class Category(models.Model):
+#     name=models.CharField(max_length=100)s
+#     def __str__(self):
+#         return self.name
     
+
 class Comment(models.Model):
     sno=models.AutoField(primary_key=True)
     user=models.ForeignKey(User, on_delete=models.CASCADE)
@@ -64,13 +61,6 @@ class PostReadedUser(models.Model):
     user=models.ForeignKey(User, verbose_name="user", on_delete=models.CASCADE)
     post=models.ForeignKey(Post, verbose_name="Readed post", on_delete=models.CASCADE)
 
-#  For profile of user 
-class BlogUser(models.Model):
-    user=models.OneToOneField(User, verbose_name="User", on_delete=models.CASCADE)
-    profileImg=models.ImageField("Profile Image", upload_to='App/profileimg/', default='profile.jpg')
-    Bio=models.CharField( max_length=5000 ,default="Write about you so people know about you more")
-    followers=models.IntegerField(default=0)
-    following=models.IntegerField(default=0)
 
 class AuthorFollower(models.Model):
     Author=models.ForeignKey(BlogUser, verbose_name="Author", on_delete=models.CASCADE)

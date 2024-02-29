@@ -6,8 +6,10 @@
         <div class="h-24 w-full bg-gray-800"></div>
         <div class="py-3 px-4 flex flex-col space-y-6">
             <div class="flex space-x-3 items-center  ">
-                <span class=""><img class="aspect-square w-auto h-20 rounded-full " src="/media/{{Author.profileImg}}"
-                        alt="..."></span>
+                <div class="h-20 rounded-full w-20 outline outline-4 outline-gray-100 overflow-hidden">
+                    <img src='/media/{{User.profileImg}}' alt="..."
+                        class=" ">
+                </div>
                 <div class="flex flex-col space-y-1">
                     <span class="Author-name font-semibold text-black text-2xl">{{Author.user.first_name}}
                         {{Author.user.last_name}}</span>

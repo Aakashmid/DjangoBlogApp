@@ -12,15 +12,11 @@ from datetime import datetime, timedelta
 # Create your views here.
 def home(request):
     allPosts=Post.objects.all().order_by('-read_count')[:5]
-    if request.user.is_anonymous:
-        user=""
-    else:
-        user=BlogUser.objects.get(user=request.user)   #user is bloguser  or current user
-    Posts={}
-    for post in allPosts:
-        # here post.author is user object who write post
-        Posts[post]=BlogUser.objects.get(user=post.author)
-    parms={"allPosts":Posts,'User':user}
+    # if request.user.is_anonymous:
+    #     user=""
+    # else:
+    #     user=BlogUser.objects.get(user=request.user)   #user is bloguser  or current user
+    parms={"allPosts":allPosts}
     return render(request,'App/index.html',parms)
 
 
@@ -31,7 +27,6 @@ def Create_account(request):
         username=request.POST.get('username')
         password=request.POST.get('password')
         email=request.POST.get('email')
-        print(f'email we get {email}')
         if User.objects.filter(username=username).exists():
             messages.error(request,"This username is taken !!")
             return redirect('/')
@@ -40,7 +35,6 @@ def Create_account(request):
             user.first_name=fname
             user.last_name=lname
             user.save()
-            print(f'email of user is {user.email}')
             bloguser=BlogUser.objects.create(user=user)
             bloguser.save()
             login(request,user=user)
@@ -102,10 +96,7 @@ def Show_post_blogs(request,filterOrder=None):
             user=""
         else:
             user=BlogUser.objects.get(user=request.user)  #user is current user
-        Authors={}
-        for post in allPosts:
-            Authors[post]=BlogUser.objects.get(user=post.author)
-        params={'allPosts':allPosts,'Authors':Authors,'User':user}
+        params={'allPosts':allPosts,'User':user}
         return render(request,'App/blog_posts.html',params)
     else:
         if request.user.is_anonymous:
@@ -113,10 +104,7 @@ def Show_post_blogs(request,filterOrder=None):
         else:
             user=BlogUser.objects.get(user=request.user)  #user is current user
         allPosts=Post.objects.all()
-        Authors={}
-        for post in allPosts:
-            Authors[post]=BlogUser.objects.get(user=post.author)
-        params={'allPosts':allPosts,'Authors':Authors,'User':user}
+        params={'allPosts':allPosts,'User':user}
         return render(request,'App/blog_posts.html',params)
 
 def Create_post(request):
@@ -124,13 +112,16 @@ def Create_post(request):
         title=request.POST.get('post_title')
         content=request.POST.get('blog_content')
         # author=request.user.first_name+" "+request.user.last_name
-        post=Post(author=request.user,title=title,content=content)
+        author=BlogUser.objects.get(user=request.user)
+        author.save()
+        # print(author)
+        post=Post(author=author,title=title,content=content)
         post.save()
         messages.success(request,"Blog is posted successfuly !!")
         return redirect('/')
     
     user=BlogUser.objects.get(user=request.user)  #user is current user
-    return render(request,'App/createPost.html',{'User':user})
+    return render(request,'App/createPost.html')
 
 def Read_post(request,id):
     post=Post.objects.get(id=id)
@@ -204,13 +195,9 @@ def Read_post(request,id):
 
 ###  Fitler comments and replies of a post 
     if post:
-        if request.user.is_anonymous:
-            user=""
-        else:
-            user=BlogUser.objects.get(user=request.user)
         comments=Comment.objects.filter(Q(parent=None) & Q(post=post))
         replies=Comment.objects.filter(post=post).exclude(parent=None)
-        Author=BlogUser.objects.get(user=post.author)
+        # Author=BlogUser.objects.get(user=post.author)
         CommentsDict={}
         replyDict={}
         for reply in replies:
@@ -220,7 +207,7 @@ def Read_post(request,id):
                 replyDict[reply.parent.sno].append(reply)
         for comment in comments:
             CommentsDict[comment]=BlogUser.objects.get(user=comment.user)
-        return render(request,'App/postView.html',{"post":post,"CommentsDict":CommentsDict,'replies':replyDict,'Author':Author,"User":user})
+        return render(request,'App/postView.html',{"post":post,"CommentsDict":CommentsDict,'replies':replyDict})  #User is logged in user or current user
     else:
         return redirect('/post-blogs/')
 
@@ -288,18 +275,15 @@ def profile(request,author_id=None):
                 
         # If user  want to see author page
         else:
-            if request.user.is_anonymous:
-                user=""
-            else:
-                user=BlogUser.objects.get(user=request.user)
-            # here author id is user.id of author user
-            bloguser=BlogUser.objects.get(user=author_id)
+            # here author id is blogser object pk 
+            bloguser=BlogUser.objects.get(pk=author_id)
             allPosts=Post.objects.filter(author=author_id)
             # here Author is author of post
-            return render(request,'App/author.html',{"Author":bloguser,'Posts':allPosts,"User":user})
+            return render(request,'App/author.html',{"Author":bloguser,'Posts':allPosts})
+            # return render(request,'App/author.html',{'Posts':allPosts})
     else:
         bloguser=BlogUser.objects.get(user=request.user)
-        allPosts=Post.objects.filter(author=request.user)
+        allPosts=Post.objects.filter(author=bloguser)
         # Here User is authenticated user
         return render(request,'App/profile.html',{"User":bloguser,'Posts':allPosts})
     
