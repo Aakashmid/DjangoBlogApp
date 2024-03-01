@@ -6,6 +6,16 @@ from django.utils import timezone
 
 # Create your models here.
 
+class PostCategory(models.Model):
+    name=models.CharField(max_length=100)
+    def __str__(self):
+        return self.name
+class Tag(models.Model):
+    name=models.CharField(max_length=100)
+    def __str__(self):
+        return self.name
+
+
 #  For profile of user 
 class BlogUser(models.Model):
     user=models.OneToOneField(User, verbose_name="User", on_delete=models.CASCADE)
@@ -21,17 +31,13 @@ class Post(models.Model):
     read_count=models.IntegerField(default=0)
     author=models.ForeignKey(BlogUser, on_delete=models.CASCADE)
     like=models.IntegerField(default=0)
-    # categories=models.ManyToManyField(, verbose_name=_(""))
+    category=models.ForeignKey(PostCategory, verbose_name="Post_Categories", on_delete=models.SET_NULL,null=True,blank=True)
+    tags=models.ManyToManyField(Tag, verbose_name="Post_Tags")
     def __str__(self) -> str:
         return self.title
     class Meta:
         verbose_name_plural="Blog posts"
 
-# class Category(models.Model):
-#     name=models.CharField(max_length=100)s
-#     def __str__(self):
-#         return self.name
-    
 
 class Comment(models.Model):
     sno=models.AutoField(primary_key=True)

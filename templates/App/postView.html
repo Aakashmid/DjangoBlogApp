@@ -8,11 +8,11 @@
     <div class="main-body p-2 flex-col space-y-3 max-w-full">
         <h1 class="font-bold text-2xl">{{post.title}}</h1>
         <div class="post-header flex space-x-2">
-            <img src="/media/{{Author.profileImg}}" alt="..." class="aspect-square w-12 h-auto rounded-3xl">
+            <img src="/media/{{post.author.profileImg}}" alt="..." class="aspect-square w-12 h-auto rounded-3xl">
             <div class="flex flex-col space-y-1">
                 <p class=" ">
                     <span class="font-normal">By </span><a href="{% url 'App:Author Profile' post.author_id %}"
-                        class="text-blue-500 font-medium ">  {{post.author.first_name}} {{post.author.last_name}}</a>
+                        class="text-blue-500 font-medium ">  {{post.author.user.first_name}} {{post.author.user.last_name}}</a>
                 </p>
                 <p class="time text-sm font-light">
                     Posted on {{post.publish_time}}

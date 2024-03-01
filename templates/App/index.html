@@ -7,22 +7,25 @@
 {% block body %}
 <div class="container ">
     <div class="w-[92%] p-3   mb-5 mt-2  jumbotron mx-auto border-[1px] rounded-md text-white bg-gray-800 ">
-        <p class="text-lg mt-2">Welcome to BlogBlend , your destination for curated insights and inspiration. Dive into thought-provoking articles on career, mindfulness, and creativity. Unleash your potential with us. Explore BlogBlend today.</p>
-        
+        <p class="text-lg mt-2">Welcome to BlogBlend , your destination for curated insights and inspiration. Dive into
+            thought-provoking articles on career, mindfulness, and creativity. Unleash your potential with us. Explore
+            BlogBlend today.</p>
+
     </div>
     <hr>
-    <h1 class="ml-4 font text-xl font-semibold mt-4">Most readed Posts :</h3>
+    <h1 class="ml-4 font text-xl font-semibold mt-4">Recent Posts :</h3>
         <div class="mt-4 flex flex-col space-y-2 px-2">
-            {% for post,Author in allPosts.items %}
+            {% for post in allPosts %}
             <div class="card border-gray-600 border-[1px] rounded-md shadow-md p-3">
                 <div class="upper-part flex-col   ">
                     <div class="flex items-center space-x-2">
-                        <a href="#" class="profile w-fit h-auto">
-                            <img src="/media/{{Author.profileImg}}" class="aspect-square w-auto rounded-full h-8" alt="">
-                        </a>
-                        <a href="{% url 'App:Author Profile' post.author_id %}" class="author-name flex flex-col  font-sans font-medium">
+                        <div class="author-profile-image w-8 rounded-full h-8 overflow-hidden">
+                            <img src="/media/{{post.author.profileImg}}" class="" alt="">
+                        </div>
+                        <a href="{% url 'App:Author Profile' post.author_id %}"
+                            class="author-name flex flex-col  font-sans font-medium">
                             <p class="">
-                                {{post.author.first_name}} {{post.author.last_name}}
+                                {{post.author.user.first_name}} {{post.author.user.last_name}}
                             </p>
                             <p class="text-xs">Posted on {{post.publish_time}}</p>
                         </a>
@@ -42,7 +45,14 @@
             {% endfor %}
 
         </div>
-        <div class=""></div>
+        <div class="tags-container ml-4 mt-6">
+            <h3 class="font-semibold text-lg">Search posts by tags :</h3>
+            <div class="tags-box w-full p-2 mt-2">
+                {% for tag in postTags %}
+                <span class="bg-gray-200 lg:text-lg p-2 rounded-xl mx-3 my-2 float-left"><a href="#" class="">#{{tag.name}}</a></span>
+                {% endfor %}
+            </div>
+        </div>
 </div>
 {% endblock body %}
 

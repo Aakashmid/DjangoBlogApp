@@ -15,10 +15,11 @@ Profile
                 <span onclick="ShowEditForm()" class="z-0 w-auto float-right font-medium rounded-md text-sm  text-white bg-gray-800 p-2 hover:bg-gray-950 active:outline active:outline-1
                 "><i class="fa-solid fa-pen"></i></span>
                 <span class="flex space-x-5 items-center ">
-                    <div class="h-20 rounded-full w-20 outline outline-4 outline-gray-100 overflow-hidden">
+                    <div class="h-20 rounded-full w-20 outline outline-4 outline-gray-100 overflow-hidden" onclick=showimage()>
                         <img src='/media/{{User.profileImg}}' alt="..."
                             class=" ">
                     </div>
+                    <div class="image-box bg-green-400 fixed left-0 w-[300px]  h-[300px] top-1/3"></div>
                     <span class="">
                         <h1 class="text-2xl font-semibold ">{{user.first_name}} {{user.last_name}}</h1>
                         <span class="flex space-x-8 mt-2">

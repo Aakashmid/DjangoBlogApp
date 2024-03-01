@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib.auth import login,logout,authenticate
 from django.contrib import messages
-from .models import Post,Comment,PostLike,CommentLike,PostReadedUser ,BlogUser,AuthorFollower
+from .models import Post,Comment,PostLike,CommentLike,PostReadedUser ,BlogUser,AuthorFollower,Tag,PostCategory
 from .templatetags import extraFilter
 from django.db.models import Q
 from django.http import JsonResponse
@@ -12,11 +12,8 @@ from datetime import datetime, timedelta
 # Create your views here.
 def home(request):
     allPosts=Post.objects.all().order_by('-read_count')[:5]
-    # if request.user.is_anonymous:
-    #     user=""
-    # else:
-    #     user=BlogUser.objects.get(user=request.user)   #user is bloguser  or current user
-    parms={"allPosts":allPosts}
+    postTags=Tag.objects.all()[:8]
+    parms={"allPosts":allPosts,'postTags':postTags}
     return render(request,'App/index.html',parms)
 
 
@@ -125,6 +122,7 @@ def Create_post(request):
 
 def Read_post(request,id):
     post=Post.objects.get(id=id)
+    print(f'Id of post is {id}')
     if request.method=="POST":
         action=request.POST.get('action')
         post=Post.objects.get(pk=id)

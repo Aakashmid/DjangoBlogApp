@@ -3,5 +3,8 @@ from django.contrib.auth.models import User
 from .models import BlogUser
 
 def BlogUser_context(request):
-    user = BlogUser.objects.get(user=request.user) if request.user.is_authenticated else None
+    if request.user.is_authenticated:
+        user = BlogUser.objects.get(user=request.user)
+    else:
+        user=None
     return {'User': user}
