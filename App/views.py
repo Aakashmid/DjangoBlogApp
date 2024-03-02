@@ -13,7 +13,8 @@ from datetime import datetime, timedelta
 def home(request):
     allPosts=Post.objects.all().order_by('-read_count')[:5]
     postTags=Tag.objects.all()[:8]
-    parms={"allPosts":allPosts,'postTags':postTags}
+    postCats=PostCategory.objects.all()[:10]
+    parms={"allPosts":allPosts,'postTags':postTags,'Categories':postCats}
     return render(request,'App/index.html',parms)
 
 
@@ -108,17 +109,19 @@ def Create_post(request):
     if request.method=="POST":
         title=request.POST.get('post_title')
         content=request.POST.get('blog_content')
+        cat=request.POST.get('category')
+        category=PostCategory.objects.get(name=cat)
         # author=request.user.first_name+" "+request.user.last_name
         author=BlogUser.objects.get(user=request.user)
         author.save()
         # print(author)
-        post=Post(author=author,title=title,content=content)
+        post=Post(author=author,title=title,content=content,category=category)
         post.save()
         messages.success(request,"Blog is posted successfuly !!")
         return redirect('/')
-    
-    user=BlogUser.objects.get(user=request.user)  #user is current user
-    return render(request,'App/createPost.html')
+    categories=PostCategory.objects.all()
+    params={'Categories':categories}
+    return render(request,'App/createPost.html',params)
 
 def Read_post(request,id):
     post=Post.objects.get(id=id)

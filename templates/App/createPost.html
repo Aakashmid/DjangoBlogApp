@@ -9,21 +9,41 @@
 {% block js %}
 
 <script>
-  $(document).ready(function() {
+    $(document).ready(function () {
 
-    var screenWidth = $(window).width();
-    if (screenWidth < 768) {
-        $('#blog_content').summernote({
-            height: 180,
-            width: '100%',
-        });
-    } else {
-        $('#blog_content').summernote({
-            height: 240,
-            width: 800,
-        });
+        var screenWidth = $(window).width();
+        if (screenWidth < 768) {
+            $('#blog_content').summernote({
+                height: 240,
+                width: '100%',
+            });
+        } else {
+            $('#blog_content').summernote({
+                height: 240,
+                width: '100%',
+            });
+        }
+
+        // $("#trigger_cat_dropdown").on("click", function () {
+        //     document.getElementById('Categories').classList.toggle('hidden');
+        // });
+    });
+
+    function toggleDropDown() {
+        document.getElementById('Categories').classList.toggle('hidden');
     }
-});
+    function selectOption(event) {
+        var selectOption = event.target;
+        if (selectOption.tagName === 'LI') {
+            // var selectedValue = selectedOption.getAttribute('data-value');
+            // Update the hidden input with the selected value
+            document.getElementById('selectedOption').value = selectOption.innerText;
+            document.getElementById('selectedOp').innerText = selectOption.innerText;
+            // Close the dropdown after selecting an option
+            toggleDropDown();
+
+        }
+    }
 </script>
 
 {% endblock js %}
@@ -40,6 +60,45 @@
                     <input type="text" name="post_title"
                         class="text-lg w-full  border-[1px] rounded border-gray-700 p-1" id="post_title"
                         placeholder="Enter title of blog here..." required>
+                </div>
+                <div class="flex justify-between">
+                    <span class="Category-dropDown flex space-x-2">
+                        <span class="flex items-center space-x-4">
+                            <a class=" font-semibold lg:text-lg py-2" id="trigger_cat_dropdown"
+                                onclick="toggleDropDown()" role="button">Select
+                                Category</a>
+                            <p class="" id="selectedOp"></p>
+                        </span>
+                        <ul id="Categories"
+                            class="hidden absolute z-10 bg-gray-100 font-normal max-h-52 overflow-y-auto p-2 rounded-md"
+                            onclick="selectOption(event)">
+                            {% for cat in Categories %}
+                            <li class="cursor-pointer hover:bg-white active:bg-blue-200 px-1" data-value="{{cat.name}}">
+                                {{cat.name}}</li>
+                            {% endfor %}
+                            <li class="cursor-pointer hover:bg-white active:bg-blue-200 px-1" data-value="">None</li>
+                        </ul>
+                        <input name="category" type="hidden" id="selectedOption">
+                    </span>
+                    <!-- Tag selector -->
+                    <!-- <span class="Category-dropDown flex space-x-2">
+                        <span class="flex items-center space-x-4">
+                            <a class=" font-semibold lg:text-lg py-2" id="trigger_cat_dropdown"
+                                onclick="toggleDropDown()" role="button">Select
+                                Category</a>
+                            <p class="" id="selectedOp"></p>
+                        </span>
+                        <ul id="Categories"
+                            class="hidden absolute z-10 bg-gray-100 font-normal max-h-52 overflow-y-auto p-2 rounded-md"
+                            onclick="selectOption(event)">
+                            {% for cat in Categories %}
+                            <li class="cursor-pointer hover:bg-white active:bg-blue-200 px-1" data-value="{{cat.name}}">
+                                {{cat.name}}</li>
+                            {% endfor %}
+                            <li class="cursor-pointer hover:bg-white active:bg-blue-200 px-1" data-value="">None</li>
+                        </ul>
+                        <input type="hidden" id="selectedOption">
+                    </span> -->
                 </div>
                 <div class="no-tailwind-base">
                     <textarea required name="blog_content" id="blog_content" class="">
