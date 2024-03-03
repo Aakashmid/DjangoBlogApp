@@ -64,18 +64,24 @@ def Logout_hand(request):
     messages.success(request,"Successsfully logout !!")
     return redirect('/')
     
-def Show_post_blogs(request,filterOrder=None):
+def Show_post_blogs(request,filterOrder=None,category=None):
     # Handling search query 
     if request.method=="POST":
-        search=request.POST.get('SearchQuery')
-        if search:
+        if request.POST['SearchQuery']:
+            search=request.POST.get('SearchQuery')
             allPosts=Post.objects.all()
             Posts=[]
             for post in allPosts:
                 if search in  post.title.lower() or search in post.content.lower():
                     Posts.append(post)
-            params={"allPosts":Posts}
+            params={"allPosts":Posts,'Search':"Search_result_page"}
             return render(request,'App/blog_posts.html',params)
+    elif category is not  None:
+        cat=PostCategory.objects.get(name=category)
+        Posts=Post.objects.filter(category=cat)
+        params={"allPosts":Posts}
+        return render(request,'App/blog_posts.html',params)
+        
 
     elif filterOrder : 
         ids=['trend','new','old','mostreaded']
