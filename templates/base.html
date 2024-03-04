@@ -57,13 +57,16 @@
 
     <div class="empty-box w-full h-14"></div>
     {% for Message in messages %}
-    <div id="alert" class="Dismissable-alert    p-2 bg-gray-200 w-full flex justify-between items-center">
-        <p class=""><strong>{{Message.tags}} : </strong> {{Message}}</p>
-        <span class="text-xl text-black px-2 rounded-lg  hover:bg-gray-300 active:text-white"
-            id="dismiss_alert">&times;</span>
+    <div id="alert" class="p-1 block ">
+        <div  class="Dismissable-alert  rounded-md  p-2 bg-gray-200 w-full flex justify-between items-center">
+
+            <p class=""><strong>{{Message.tags}} : </strong> {{Message}}</p>
+            <span class=" text-xl text-black px-2 py-1 rounded-md  hover:bg-gray-50 active:text-white cursor-pointer"
+                id="dismiss_alert">&times;</span>
+        </div>
     </div>
     {% endfor %}
-    <div id="searchBar" class="searchBar  bg-white m-2 hidden ">
+    <div id="searchBar" class="searchBar  bg-white my-2 hidden ">
         <form action="/post-blogs/" method="post" class="space-x-2 flex ">
             {% csrf_token %}
             <input type="text" name="SearchQuery" id="SearchQuery"
@@ -160,10 +163,10 @@
     <!-- Login modal -->
     <div id='login_modal' class="login-container hidden">
         <div
-            class=" lg:w-[25%] lg:h-1/2   p-4 bg-gray-100 mx-auto rounded-lg shadow-sm shadow-white w-[90%] fixed top-[40%] left-1/2  -translate-x-1/2 -translate-y-1/2 transform ">
+            class=" lg:w-[25%] lg:h-1/2   p-4 bg-gray-200 mx-auto rounded-lg shadow-sm shadow-white w-[90%] fixed top-[40%] left-1/2  -translate-x-1/2 -translate-y-1/2 transform ">
             <div class="float-right">
                 <span onclick="closeLoginModal()"
-                    class="transform -translate-y-4 close  text-2xl relative right-0 text-semibold cursor-pointer">&times;</span>
+                    class="text-gray-800 hover:bg-slate-300  transform -translate-y-3 px-1 translate-x-3 close float-end  text-3xl   text-semibold cursor-pointer">&times;</span>
             </div>
             <div class="mt-4 clear-right">
                 <p class="text-lg font-semibold text-center">Login here</p>
@@ -173,13 +176,13 @@
                 <div class="flex-col flex space-y-1">
                     <label for="username" class="text-[17px] ">Username</label>
                     <input name="username" id="username" type="text"
-                        class="text-[17px] rounded p-2 border-[1px] border-black focus:outline  focus:outline-1 focus:outline-gray-700"
+                        class="focus:bg-gray-50 text-[17px] rounded p-2 border-[1px] border-black focus:outline  focus:outline-1 focus:outline-gray-700"
                         required>
                 </div>
                 <div class="flex-col flex space-y-1">
                     <label for="password" class="text-[17px] ">Password</label>
                     <input name="password" id="password" type="password"
-                        class="text-[17px] rounded p-2 border-[1px] border-black focus:outline  focus:outline-1 focus:outline-gray-700"
+                        class="focus:bg-gray-50 text-[17px] rounded p-2 border-[1px] border-black focus:outline  focus:outline-1 focus:outline-gray-700"
                         required>
                 </div>
                 <div class="btn flex  justify-center pt-2">

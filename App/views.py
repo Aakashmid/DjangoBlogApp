@@ -72,7 +72,7 @@ def Show_post_blogs(request,filterOrder=None,category=None):
             allPosts=Post.objects.all()
             Posts=[]
             for post in allPosts:
-                if search in  post.title.lower() or search in post.content.lower():
+                if search.lower() in  post.title.lower() or search.lower() in post.content.lower():
                     Posts.append(post)
             params={"allPosts":Posts,'Search':"Search_result_page"}
             return render(request,'App/blog_posts.html',params)
@@ -204,6 +204,7 @@ def Read_post(request,id):
     if post:
         comments=Comment.objects.filter(Q(parent=None) & Q(post=post))
         replies=Comment.objects.filter(post=post).exclude(parent=None)
+        related_posts=Post.objects.filter(category=post.category)
         # Author=BlogUser.objects.get(user=post.author)
         CommentsDict={}
         replyDict={}
@@ -214,7 +215,7 @@ def Read_post(request,id):
                 replyDict[reply.parent.sno].append(reply)
         for comment in comments:
             CommentsDict[comment]=BlogUser.objects.get(user=comment.user)
-        return render(request,'App/postView.html',{"post":post,"CommentsDict":CommentsDict,'replies':replyDict})  #User is logged in user or current user
+        return render(request,'App/postView.html',{"post":post,"CommentsDict":CommentsDict,'replies':replyDict,'Related_posts':related_posts})  #User is logged in user or current user
     else:
         return redirect('/post-blogs/')
 

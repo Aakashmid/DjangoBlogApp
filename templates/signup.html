@@ -3,11 +3,11 @@
 {% block title %}Create user{% endblock title %}
 {% block body %}
 <div class="sign-up-container">
-    <div class=" p-4 mt-4 w-full  rounded-md  grid place-items-center ">
+    <div class=" p-4 mt-4 w-full  rounded-md   ">
         <div class="p-2 my-3">
-            <p class="text-lg font-normal font-[arial] text-center">Create your free account</p>
+            <p class="text-xl font-semibold font-[arial] text-center">Create Account</p>
         </div>
-        <form action="/sign-up/" class="p-3 space-y-2 w-[85%]" method="post">
+        <form action="/sign-up/" class="py-3 px-2 space-y-2 w-11/12 mx-auto" method="post">
             {% csrf_token %}
             <div class="flex-col flex space-y-1">
                 <label for="first_name" class="text-[17px] ">First name</label>

@@ -5,11 +5,6 @@
 {% block js%}
 <script>
 
-    let previews = document.getElementsByClassName('preview');
-    Array.from(previews).forEach((element) => {
-        element.innerHTML = element.innerText;
-    })
-    //on click card body change color of heading
 
 </script>
 {% endblock js %}
@@ -63,7 +58,7 @@
         </div>
     </div>
     {% else %}
-    <div class="p-4 mt-6">
+    <div class="p-4 mt-3">
         <p class="font-semibold text-xl">No search result found according to your query !!!</p>
     </div>
     {% endif %}
