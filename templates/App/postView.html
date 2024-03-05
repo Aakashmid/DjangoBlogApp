@@ -41,7 +41,7 @@
     </div>
     <div class="p-2 ">
         <h3 class="font-semibold flex space-x-3">
-            <a class="" id="comment_btn">
+            <a role="button" class="cursor-pointer" id="comment_btn">
                 Comments({{CommentsDict|length}}) <i class="fa-regular fa-comment"></i>
             </a>
         </h3>
@@ -170,8 +170,7 @@
 {% block js %}
 <script>
     function likeButton_state() {
-        if ({{ user.is_authenticated | lower }
-    }) {
+        {% if user.is_authenticated %}
         let likeBtns = document.getElementsByClassName('like');
         for (let i = 0; i < likeBtns.length; i++) {
             let element = likeBtns[i];
@@ -179,7 +178,7 @@
                 element.innerHTML = localStorage.getItem(element.id + "{{user.username}}");
             }
         }
-    }
+        {% endif %}
     }
     likeButton_state();
 
@@ -217,8 +216,8 @@
 
     function changeLikeState(likeBtn) {
         //lower method is used because in js True is in lower form (true)
-        if ({{ user.is_authenticated | lower }
-    }) {
+        // if ({{ user.is_authenticated | lower }}) {
+        {% if user.is_authenticated %}
         // let likeBtn = document.getElementById(elem.id);
         // // console.log( elem.id.slice(12));
         if (likeBtn.innerHTML.trim() == `<i class="fa-regular fa-thumbs-up " aria-hidden="true"></i>`) {
@@ -231,17 +230,15 @@
             localStorage.setItem(likeBtn.id + "{{user.username}}", likeBtn.innerHTML);
             changeLikeCount("CommentlikeDecrease", likeBtn);
         }
-    }
-    else {
+        {% else %}
         showLogin();
-    }
+        {% endif %}
     }
 
     // When post like is clicked
     function changeLikeStatePost(likeBtn) {
         //check user is logged in or not
-        if ({{ user.is_authenticated | lower }
-    }) {
+        {% if user.is_authenticated %}
 
         if (likeBtn.innerHTML.trim() == `<i class="fa-regular fa-heart" aria-hidden="true"></i>`) {
             likeBtn.innerHTML = `<i class="fa-solid fa-heart" style="color: #f7022b;"></i>`;
@@ -253,11 +250,12 @@
             changeLikeCount('PostLikeDecrease', likeBtn);
             localStorage.setItem(likeBtn.id + "{{user.username}}", likeBtn.innerHTML);
         }
-    }
-        else {
+
+        {% else %}
         showLogin();
+        {% endif %}
     }
-    }
+
 
     //when document is ready
     $(document).ready(function () {
@@ -317,8 +315,7 @@
 
         // funtion to increase readcount if user stay for while
 
-        if ({{ user.is_authenticated | lower }
-    }){
+        {% if user.is_authenticated %}
         setTimeout(readIncrease, 120000);
         function readIncrease() {
             $.ajax({
@@ -334,7 +331,7 @@
                 }
             });
         }
-    }
+        {% endif %}
     });
 </script>
 {% endblock js %}
