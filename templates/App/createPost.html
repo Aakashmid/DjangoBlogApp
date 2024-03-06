@@ -64,19 +64,19 @@
                 <div class="flex justify-between">
                     <span class="Category-dropDown flex space-x-2">
                         <span class="flex items-center space-x-4">
-                            <a class=" font-semibold lg:text-lg py-2" id="trigger_cat_dropdown"
+                            <a class=" font-semibold text-lg py-2" id="trigger_cat_dropdown"
                                 onclick="toggleDropDown()" role="button">Select
                                 Category</a>
                             <p class="" id="selectedOp"></p>
                         </span>
                         <ul id="Categories"
-                            class="hidden absolute z-10 bg-gray-100 font-normal max-h-52 overflow-y-auto p-2 rounded-md"
+                            class="hidden w-fit absolute z-10 bg-gray-100 font-normal max-h-52 overflow-y-auto p-2 rounded-md"
                             onclick="selectOption(event)">
                             {% for cat in Categories %}
-                            <li class="cursor-pointer hover:bg-white active:bg-blue-200 px-1" data-value="{{cat.name}}">
+                            <li class="cursor-pointer hover:bg-white active:bg-blue-200 px-1 text-lg" data-value="{{cat.name}}">
                                 {{cat.name}}</li>
                             {% endfor %}
-                            <li class="cursor-pointer hover:bg-white active:bg-blue-200 px-1" data-value="">None</li>
+                            <li class="cursor-pointer hover:bg-white active:bg-blue-200 px-1" data-value=""></li>
                         </ul>
                         <input name="category" type="hidden" id="selectedOption">
                     </span>

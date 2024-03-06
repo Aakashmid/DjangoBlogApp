@@ -58,7 +58,7 @@
     <div class="empty-box w-full h-14"></div>
     {% for Message in messages %}
     <div id="alert" class="p-1 block ">
-        <div  class="Dismissable-alert  rounded-md  p-2 bg-gray-200 w-full flex justify-between items-center">
+        <div class="Dismissable-alert  rounded-md  p-2 bg-gray-200 w-full flex justify-between items-center">
 
             <p class=""><strong>{{Message.tags}} : </strong> {{Message}}</p>
             <span class=" text-xl text-black px-2 py-1 rounded-md  hover:bg-gray-50 active:text-white cursor-pointer"
@@ -163,7 +163,7 @@
     <!-- Login modal -->
     <div id='login_modal' class="login-container hidden">
         <div
-            class=" lg:w-[25%] lg:h-1/2   p-4 bg-gray-200 mx-auto rounded-lg shadow-sm shadow-white w-[90%] fixed top-[40%] left-1/2  -translate-x-1/2 -translate-y-1/2 transform ">
+            class="  lg:h-1/2   p-4 bg-gray-200 mx-auto rounded-lg shadow-sm shadow-white w-[90%] sm:[60%] md:w-[40%] xl:w-[25%] fixed top-[40%] left-1/2  -translate-x-1/2 -translate-y-1/2 transform ">
             <div class="float-right">
                 <span onclick="closeLoginModal()"
                     class="text-gray-800 hover:bg-slate-300  transform -translate-y-3 px-1 translate-x-3 close float-end  text-3xl   text-semibold cursor-pointer">&times;</span>

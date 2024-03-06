@@ -7,7 +7,7 @@
         <div class="p-2 my-3">
             <p class="text-xl font-semibold font-[arial] text-center">Create Account</p>
         </div>
-        <form action="/sign-up/" class="py-3 px-2 space-y-2 w-11/12 mx-auto" method="post">
+        <form action="/sign-up/" class="py-3 px-2 space-y-2 w-11/12 mx-auto sm:w-3/4 md:w-1/2 lg:w-1/2" method="post">
             {% csrf_token %}
             <div class="flex-col flex space-y-1">
                 <label for="first_name" class="text-[17px] ">First name</label>
