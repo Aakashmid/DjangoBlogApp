@@ -58,13 +58,23 @@
                         </span>
                     </div>
                     <div class="footer-part flex items-center justify-between py-2">
-                        <span class="flex space-x-6 items-center ">
+                        <span class="flex space-x-4 items-center ">
                             <a href="" class="">Like</a>
                             <a href="" class="">Comment</a>
                         </span>
                         <span class="flex space-x-6 items-center mx-3">
-                            <a href="" class="bookmark" ><i class="fa-regular fa-bookmark fa-lg"></i></a>
-                            <a href="" class="three-dots"><i class="fa-solid fa-ellipsis fa-lg"></i></a>
+                            <a role="button" class="bookmark" onclick="SavePost(this)" id="Save_post{{post.id}}"><i
+                                    class="fa-regular fa-bookmark fa-lg"></i></a>
+                            <a role="button" class="three-dots cursor-pointer"><i
+                                    class="fa-solid fa-ellipsis fa-lg"></i></a>
+                            <span id="Option_box{{post.id}}"
+                                class="absolute bg-white  hidden p-2 border-gray-500 border rounded ">
+                                <ul class="flex flex-col">
+                                    <li class="" id="follow_op">
+                                        Follow
+                                    </li>
+                                </ul>
+                            </span>
                         </span>
                     </div>
                 </div>
@@ -159,7 +169,37 @@
         showLogin();
         {% endif %}
     }
-    // btn = document.getElementById('followBtn');
-    // SenAjaxchangeFollower(btn);
+
+    // document.getElementsByClassName('three-dots')[0].addEventListener('click',function(){
+    //     document.getElementsByClassName('Option_box').classList.toggle('hidden');
+    // })
+
+    function SavePost(element) {
+        let post_id = element.id.slice(9);
+        $.ajax({
+            type: "Post",
+            url: "{% url 'App:Author Profile' Author.user_id %}",
+            data: { 'Post_id': post_id },
+            dataType: "json",
+            headers: {
+                "X-CSRFToken": '{{ csrf_token }}'
+            },
+            //here  data is response return by server 
+            success: function (data) {
+                element.innerText = data.btnText;
+                if (data.followerCount != undefined) {
+                    followCount.innerText = data.followerCount;
+                }
+                if (element.innerText == "Following") {
+                    element.classList.remove('text-white', 'bg-blue-950');
+                    element.classList.add('text-black', 'outline', 'outline-2', 'outline-blue-950');
+                }
+            },
+            //here error is error return by the url 
+            error: function (error) {
+                console.log("Error:", error);
+            }
+        });
+    }
 </script>
 {% endblock js %}

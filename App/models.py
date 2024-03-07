@@ -23,6 +23,8 @@ class BlogUser(models.Model):
     Bio=models.CharField( max_length=5000 ,default="",null=True)
     followers=models.IntegerField(default=0)
     following=models.IntegerField(default=0)
+    def __str__(self) -> str:
+        return self.user.username
 
 class Post(models.Model):
     title=models.CharField( max_length=500)
@@ -33,6 +35,7 @@ class Post(models.Model):
     like=models.IntegerField(default=0)
     category=models.ForeignKey(PostCategory, verbose_name="Post_Categories", on_delete=models.SET_NULL,null=True,blank=True)
     tags=models.ManyToManyField(Tag, verbose_name="Post_Tags")
+    # saved field tells which user saved this post
     def __str__(self) -> str:
         return self.title
     class Meta:

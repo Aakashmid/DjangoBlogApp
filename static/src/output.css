@@ -1131,6 +1131,10 @@ video {
   border-width: 1px;
 }
 
+.border {
+  border-width: 1px;
+}
+
 .border-black {
   --tw-border-opacity: 1;
   border-color: rgb(0 0 0 / var(--tw-border-opacity));
@@ -1522,6 +1526,10 @@ video {
 
 .outline-white {
   outline-color: #fff;
+}
+
+.outline-gray-500 {
+  outline-color: #6b7280;
 }
 
 .duration-200 {

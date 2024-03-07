@@ -240,47 +240,51 @@ def post_comment(request):
 def profile(request,author_id=None):
     if author_id:
         if request.method=="POST":
-            action=request.POST.get('action')
-            if action=='IncreaseFollower':
-                Author=BlogUser.objects.get(user=author_id)
-                Follower=request.user 
-                # AuthFollRel is object storing AuthorFollower object which keeps information of author and follower data
-                 
-                if not AuthorFollower.objects.filter(Author=Author,follower=Follower).exists():
-                    Author.followers+=1
-                    Author.save()
-                    AuthFollRel=AuthorFollower.objects.create(Author=Author,follower=Follower)
-                    AuthFollRel.save()
-                    response=JsonResponse({'btnText':"Following",'followerCount':Author.followers})
-                    return response
-                else:
-                    response=JsonResponse({'btnText':"Following",'followerCount':Author.followers})
-                    return response   
-            elif action=="DecreaseFollower":
-                Author=BlogUser.objects.get(user=author_id)
-                Follower=request.user
-                if AuthorFollower.objects.filter(Author=Author,follower=Follower).exists():
-                    Author.followers-=1
-                    Author.save()
-                    AuthFollRel=AuthorFollower.objects.get(Author=Author,follower=Follower)
-                    AuthFollRel.delete()
-                    response=JsonResponse({'btnText':"Follow",'followerCount':Author.followers})
-                    return response
-                else:
-                    response=JsonResponse({'btnText':"Follow",'followerCount':Author.followers})
-                    return response
+            if request.POST['action']:
+                action=request.POST.get('action')
+                if action=='IncreaseFollower':
+                    Author=BlogUser.objects.get(user=author_id)
+                    Follower=request.user 
+                    # AuthFollRel is object storing AuthorFollower object which keeps information of author and follower data
+                    
+                    if not AuthorFollower.objects.filter(Author=Author,follower=Follower).exists():
+                        Author.followers+=1
+                        Author.save()
+                        AuthFollRel=AuthorFollower.objects.create(Author=Author,follower=Follower)
+                        AuthFollRel.save()
+                        response=JsonResponse({'btnText':"Following",'followerCount':Author.followers})
+                        return response
+                    else:
+                        response=JsonResponse({'btnText':"Following",'followerCount':Author.followers})
+                        return response   
+                elif action=="DecreaseFollower":
+                    Author=BlogUser.objects.get(user=author_id)
+                    Follower=request.user
+                    if AuthorFollower.objects.filter(Author=Author,follower=Follower).exists():
+                        Author.followers-=1
+                        Author.save()
+                        AuthFollRel=AuthorFollower.objects.get(Author=Author,follower=Follower)
+                        AuthFollRel.delete()
+                        response=JsonResponse({'btnText':"Follow",'followerCount':Author.followers})
+                        return response
+                    else:
+                        response=JsonResponse({'btnText':"Follow",'followerCount':Author.followers})
+                        return response
 
-            else:
-                Author=BlogUser.objects.get(user=author_id)
-                # if not request.user.is_anonymous
-                Follower=request.user
-                if AuthorFollower.objects.filter(Author=Author,follower=Follower).exists():
-                    response=JsonResponse({'btnText':"Following"})
-                    return response
                 else:
-                    response=JsonResponse({'btnText':"Follow"})
-                    return response
-                
+                    Author=BlogUser.objects.get(user=author_id)
+                    # if not request.user.is_anonymous
+                    Follower=request.user
+                    if AuthorFollower.objects.filter(Author=Author,follower=Follower).exists():
+                        response=JsonResponse({'btnText':"Following"})
+                        return response
+                    else:
+                        response=JsonResponse({'btnText':"Follow"})
+                        return response
+            elif request.POST['Post_id']:
+                pass
+                response=JsonResponse({})
+                return response    
         # If user  want to see author page
         else:
             # here author id is blogser object pk 
