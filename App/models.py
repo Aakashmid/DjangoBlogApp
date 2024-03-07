@@ -20,7 +20,7 @@ class Tag(models.Model):
 class BlogUser(models.Model):
     user=models.OneToOneField(User, verbose_name="User", on_delete=models.CASCADE)
     profileImg=models.ImageField("Profile Image", upload_to='App/profileimg/', default='profile.jpg')
-    Bio=models.CharField( max_length=5000 ,default="Write about you so people know about you more")
+    Bio=models.CharField( max_length=5000 ,default="",null=True)
     followers=models.IntegerField(default=0)
     following=models.IntegerField(default=0)
 

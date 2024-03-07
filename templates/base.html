@@ -72,12 +72,14 @@
             <input type="text" name="SearchQuery" id="SearchQuery"
                 class="w-full p-[7px]  bg-gray-50  focus:outline-[2px] shadow-md  focus:outline-blue-300 focus:outline border-[1px] border-gray-500 rounded"
                 placeholder="Search..." required>
-            <button type="submit"
+                <button type="submit"
                 class="hover:bg-blue-900 hover:text-white shadow-sm bg-white text-black rounded text-sm p-[7px] border-[1px] border-gray-500">Search</button>
-        </form>
-    </div>
+            </form>
+        </div>
+
+    <!-- navigation bar  -->
     <div id="navigation_bar"
-        class="lg:hidden transform translate-x-full  duration-200 fixed right-0 top-0 bg-gray-100 px-2  z-30 w-[72%] h-full scroll-auto ">
+        class="lg:hidden transform translate-x-full  duration-200 fixed right-0 top-0 bg-gray-100 px-2  z-30 w-[72%]  h-full scroll-auto ">
         <div class=" flex justify-between items-center px-1 py-3">
             <p class="font-semibold text-lg text-black">My Blog</p>
             <span id="navigation_close" onclick="hide_navigation()"
@@ -118,7 +120,6 @@
         </div>
         <hr class="bg-black my-3">
 
-        <!-- navigation bar  -->
         <div class="flex flex-col mt-4">
 
             <a href="/" class="">
@@ -131,25 +132,15 @@
             </a>
 
             <div id="cat_link" class="p-1 hover:bg-blue-100 text-lg font-normal  rounded-sm" onclick="showhidecat()">
-                <span class="text-gray-700 mr-4"><i class="fa-solid fa-folder fa-sm"></i></span>
-                Select Categories
+                <span class="text-gray-700 mr-3"><i class="fa-solid fa-folder fa-sm"></i></span>
+                Select Post Category 
             </div>
-            <div id="categories" class=" absolute top-[433px] mx-auto w-fit bg-gray-100 rounded text-black p-2 hidden">
+            <div id="categories" class=" absolute top-[433px] mx-auto w-fit bg-gray-300 rounded text-black p-2 hidden">
                 <ul class="h-44 overflow-y-scroll px-6 " onmouseleave="hidecatDiv()">
-                    <li class="p-1 active:bg-gray-200"><a href=""
-                            class="text-[17px]  active:text-black active:font-semibold">Computer Science</a></li>
-                    <li class="p-1 active:bg-gray-200"><a href=""
-                            class="text-[17px] active:text-black active:font-semibold">Data Science</a></li>
-                    <li class="p-1 active:bg-gray-200"><a href=""
-                            class="text-[17px] active:text-black active:font-semibold">Programming </a></li>
-                    <li class="p-1 active:bg-gray-200"><a href=""
-                            class="text-[17px] active:text-black active:font-semibold">Science</a></li>
-                    <li class="p-1 active:bg-gray-200"><a href=""
-                            class="text-[17px] active:text-black active:font-semibold">Computer Science</a></li>
-                    <li class="p-1 active:bg-gray-200"><a href=""
-                            class="text-[17px] active:text-black active:font-semibold">Computer Science</a></li>
-                    <li class="p-1 active:bg-gray-200"><a href=""
-                            class="text-[17px] active:text-black active:font-semibold">Computer Science</a></li>
+                    {% for cat in ForAllCategories %}
+                    <li class="p-1 active:bg-gray-200"><a href="{% url 'App:Blogs-By-Cat' cat.name %}"
+                        class="text-[17px]  active:text-black active:font-semibold">{{cat.name}}</a></li>
+                    {% endfor %}
                 </ul>
             </div>
             <a href="#" class="">
@@ -249,34 +240,7 @@
                     <a href="/post-blogs" class="">
                         <div class="p-1 hover:bg-blue-100 text-lg font-normal  rounded-sm flex items-center"><span
                                 class="text-gray-700 mr-4"><i class="fa-solid fa-book"></i></span> All Posts</div>
-                    </a>
-
-                    <div id="cat_link"
-                        class="p-1 cursor-pointer hover:bg-blue-100 text-lg font-normal  rounded-sm items-center"
-                        onclick="showhidecat()">
-                        <span class="text-gray-700 mr-4"><i class="fa-solid fa-folder"></i></span>
-                        Select Categories
-                    </div>
-                    <div id="categories"
-                        class=" absolute top-[433px] mx-auto w-fit bg-gray-300 rounded text-black p-2 hidden">
-                        <ul class="h-44 overflow-y-scroll px-6 " onmouseleave="hidecatDiv()">
-                            <li class="p-1 active:bg-gray-200"><a href=""
-                                    class="text-[17px]  active:text-black active:font-semibold">Computer Science</a>
-                            </li>
-                            <li class="p-1 active:bg-gray-200"><a href=""
-                                    class="text-[17px] active:text-black active:font-semibold">Data Science</a></li>
-                            <li class="p-1 active:bg-gray-200"><a href=""
-                                    class="text-[17px] active:text-black active:font-semibold">Programming </a></li>
-                            <li class="p-1 active:bg-gray-200"><a href=""
-                                    class="text-[17px] active:text-black active:font-semibold">Science</a></li>
-                            <li class="p-1 active:bg-gray-200"><a href=""
-                                    class="text-[17px] active:text-black active:font-semibold">Computer Science</a></li>
-                            <li class="p-1 active:bg-gray-200"><a href=""
-                                    class="text-[17px] active:text-black active:font-semibold">Computer Science</a></li>
-                            <li class="p-1 active:bg-gray-200"><a href=""
-                                    class="text-[17px] active:text-black active:font-semibold">Computer Science</a></li>
-                        </ul>
-                    </div>
+                    </a>             
                     <a href="#" class="">
                         <div class="p-1 hover:bg-blue-100  text-lg font-normal rounded-sm flex items-center"><span
                                 class="text-gray-700 mr-4"><i class="fa-solid fa-circle-info"></i></span>About</div>
