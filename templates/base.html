@@ -57,25 +57,26 @@
 
     <div class="empty-box w-full h-14"></div>
     {% for Message in messages %}
-    <div id="alert" class="p-1 block ">
-        <div class="Dismissable-alert  rounded-md  p-2 bg-gray-200 w-full flex justify-between items-center">
+    <div id="alert" class="p-1 block z-10 fixed  top-14 w-full">
+        <div class="Dismissable-alert  rounded-md  p-2 bg-red-100 border   w-full flex justify-between items-center">
 
-            <p class=""><strong>{{Message.tags}} : </strong> {{Message}}</p>
+            <p class="text-red-800"><strong>{{Message.tags}} : </strong> {{Message}}</p>
             <span class=" text-xl text-black px-2 py-1 rounded-md  hover:bg-gray-50 active:text-white cursor-pointer"
                 id="dismiss_alert">&times;</span>
         </div>
     </div>
     {% endfor %}
-    <div id="searchBar" class="searchBar  bg-white my-2 hidden ">
-        <form action="/post-blogs/" method="post" class="space-x-2 flex ">
-            {% csrf_token %}
-            <input type="text" name="SearchQuery" id="SearchQuery"
-                class="w-full p-[7px]  bg-gray-50  focus:outline-[2px] shadow-md  focus:outline-blue-300 focus:outline border-[1px] border-gray-500 rounded"
-                placeholder="Search..." required>
+    <div id="searchBar" class="searchBar lg:w-[60%] lg:ml-[18%]   bg-white my-2 hidden  ">
+            <form action="/post-blogs/" method="post" class="space-x-2 flex px-1">
+                {% csrf_token %}
+                <input type="text" name="SearchQuery" id="SearchQuery"
+                    class="w-full p-[7px]  bg-gray-50  focus:outline-[2px] shadow-md  focus:outline-blue-200 focus:outline border-[1px] border-gray-500 rounded outline-offset-1"
+                    placeholder="Search..." required>
                 <button type="submit"
-                class="hover:bg-blue-900 hover:text-white shadow-sm bg-white text-black rounded text-sm p-[7px] border-[1px] border-gray-500">Search</button>
+                    class="hover:bg-blue-900 hover:text-white shadow-sm bg-white text-black rounded text-sm p-[7px] border-[1px] border-gray-500">Search</button>
             </form>
-        </div>
+        
+    </div>
 
     <!-- navigation bar  -->
     <div id="navigation_bar"
@@ -133,13 +134,13 @@
 
             <div id="cat_link" class="p-1 hover:bg-blue-100 text-lg font-normal  rounded-sm" onclick="showhidecat()">
                 <span class="text-gray-700 mr-3"><i class="fa-solid fa-folder fa-sm"></i></span>
-                Select Post Category 
+                Select Post Category
             </div>
             <div id="categories" class=" absolute top-[433px] mx-auto w-fit bg-gray-300 rounded text-black p-2 hidden">
                 <ul class="h-44 overflow-y-scroll px-6 " onmouseleave="hidecatDiv()">
                     {% for cat in ForAllCategories %}
                     <li class="p-1 active:bg-gray-200"><a href="{% url 'App:Blogs-By-Cat' cat.name %}"
-                        class="text-[17px]  active:text-black active:font-semibold">{{cat.name}}</a></li>
+                            class="text-[17px]  active:text-black active:font-semibold">{{cat.name}}</a></li>
                     {% endfor %}
                 </ul>
             </div>
@@ -192,15 +193,15 @@
 
     <div class="main-container lg:flex w-full h-full ">
         <!-- navigation for larger screen -->
-        <div class="side-navigation-bar hidden lg:block w-[18%] fixed h-full ">
+        <div class="z-0 side-navigation-bar lg:fixed top-14  hidden lg:block w-[18%]  h-full ">
             <div id="navigation_bar" class=" bg-gray-200 px-2  z-30 w-auto h-full scroll-auto ">
-                <div class=" flex justify-between items-center px-1 py-3">
-                    <p class="font-semibold text-lg text-black">My Blog</p>
+                <div class=" flex justify-between items-center px-4 py-2">
+                    <p class="font-bold text-lg text-black p-2">BlogBlend</p>
                 </div>
-                <div class=" mb-6 p-2">
+                <div class=" mb-6 px-4 py-2">
                     {% if user.is_authenticated %}
                     <div class="p-2 mx-auto flex flex-col justify-start space-y-1">
-                        <div class="w-14 h-14 outline outline-white rounded-full overflow-hidden">
+                        <div class="w-16 h-16 outline outline-white rounded-full overflow-hidden">
                             <img src="/media/{{User.profileImg}}" class="" alt="">
                         </div>
                         <a href="/profile" class="">
@@ -215,7 +216,7 @@
                     </div>
                     {% endif %}
                 </div>
-                <div class="flex flex-col space-y-2 px-6">
+                <div class="flex flex-col space-y-2 px-4">
                     {% if user.is_authenticated %}
                     <a href="/create-post/"
                         class="px-2 p-1 text-center hover:bg-gray-800 hover:text-white border-[1px] border-gray-900 rounded-md">Write
@@ -230,7 +231,7 @@
                         class="px-2 p-1 text-center hover:bg-gray-800 hover:text-white border-[1px] border-gray-900 rounded-md">Login</a>
                     {% endif %}
                 </div>
-                <hr class="bg-black my-3">
+                <hr class="my-3 border-t-[1px] border-gray-800 ">
                 <div class="flex flex-col mt-4">
 
                     <a href="/" class="">
@@ -240,7 +241,7 @@
                     <a href="/post-blogs" class="">
                         <div class="p-1 hover:bg-blue-100 text-lg font-normal  rounded-sm flex items-center"><span
                                 class="text-gray-700 mr-4"><i class="fa-solid fa-book"></i></span> All Posts</div>
-                    </a>             
+                    </a>
                     <a href="#" class="">
                         <div class="p-1 hover:bg-blue-100  text-lg font-normal rounded-sm flex items-center"><span
                                 class="text-gray-700 mr-4"><i class="fa-solid fa-circle-info"></i></span>About</div>
@@ -253,9 +254,6 @@
             {% block body %}
             {% endblock body %}
         </div>
-        <!-- <div class="w-auto  hidden lg:block bg-gray-200">
-            <div class="">dfkajfdksjalf</div>
-        </div> -->
     </div>
     {% block js %}
     {% endblock js %}

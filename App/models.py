@@ -35,7 +35,6 @@ class Post(models.Model):
     like=models.IntegerField(default=0)
     category=models.ForeignKey(PostCategory, verbose_name="Post_Categories", on_delete=models.SET_NULL,null=True,blank=True)
     tags=models.ManyToManyField(Tag, verbose_name="Post_Tags")
-    # saved field tells which user saved this post
     def __str__(self) -> str:
         return self.title
     class Meta:
@@ -75,3 +74,9 @@ class AuthorFollower(models.Model):
     Author=models.ForeignKey(BlogUser, verbose_name="Author", on_delete=models.CASCADE)
     follower=models.ForeignKey(User, verbose_name="Follower", on_delete=models.CASCADE)
     
+class SavedPost(models.Model):
+    saved_post=models.ForeignKey(PostCategory, on_delete=models.CASCADE)
+    user=models.ForeignKey(BlogUser, on_delete=models.CASCADE)
+    
+    def __str__(self) -> str:
+        return self.save_base+ "  "+ self.user.user.first_name

@@ -141,7 +141,7 @@
         <div class="posts">
             {% for post in Related_posts %}
             <div class="card flex  flex-col space-y-1 mt-2 outline outline-gray-400 rounded-lg p-2 outline-1">
-                <a href="#" class="">
+                <a href="{% url 'App:Author Profile' post.author_id %}" class="post-author-lin">
                     <span class="upper-body flex space-x-2 items-center">
                         <span class="w-10 h-10 rounded-full overflow-hidden"><img
                                 src="/media/{{post.author.profileImg}}" alt=""></span>
@@ -152,6 +152,7 @@
                         </span>
                     </span>
                 </a>
+                <a href="{% url 'App:Blog Post' post.id %}" class="post-link "></a>
                 <div class="main-body px-1">
                     <p class="font-semibold text-lg">{{post.title}}</p>
                     <div class="preview card-text ">{{post.content|safe | truncatechars_html:150}}</div>
