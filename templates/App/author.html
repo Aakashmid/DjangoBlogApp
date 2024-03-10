@@ -22,9 +22,14 @@
             <div class="px-2">
                 {% if request.user == Author.user %}
                 {% else %}
-                <button id="followBtn" onclick="ChangeFollowers(this)"
-                    class=" text-white w-2/3 bg-blue-950 rounded-3xl p-2">Follow</button>
+                {% if userFollower %}
+                <button  onclick="ChangeFollowers(this)"
+                    class=" follow-btn text-black w-2/3 outline outline-2 outline-blue-950 rounded-3xl p-2">Following</button>
+                {% else %}
+                <button  onclick="ChangeFollowers(this)"
+                    class=" follow-btn text-white w-2/3 bg-blue-950 rounded-3xl p-2">Follow</button>
                 <!-- hover:outline-2 hover:outline hover:outline-blue-950 hover:bg-white hover:text-black -->
+                {% endif %}
                 {% endif %}
             </div>
             <div class="">
@@ -147,6 +152,11 @@
                     element.classList.remove('text-white', 'bg-blue-950');
                     element.classList.add('text-black', 'outline', 'outline-2', 'outline-blue-950');
                 }
+                else if (element.innerText == 'Follow') {
+                    element.classList.remove('outline');
+                    element.classList.add('text-white', 'bg-blue-950');
+                }
+
             },
             //here error is error return by the url 
             error: function (error) {
@@ -161,8 +171,6 @@
             SenAjaxchangeFollower(followBtn, "IncreaseFollower");
         }
         else if (followBtn.innerText == "Following") {
-            followBtn.classList.remove('outline');
-            followBtn.classList.add('text-white', 'bg-blue-950');
             SenAjaxchangeFollower(followBtn, "DecreaseFollower");
         }
         {% else %}
@@ -186,13 +194,13 @@
             },
             //here  data is response return by server 
             success: function (data) {
-                element.innerText = data.btnText;
-                if (data.followerCount != undefined) {
-                    followCount.innerText = data.followerCount;
+                console.log();
+                if (data.Result=='Post_saved') {
+                    document.getElementById(element.id).innerHTML='<i class="fa-solid fa-bookmark fa-lg"></i>';
                 }
-                if (element.innerText == "Following") {
-                    element.classList.remove('text-white', 'bg-blue-950');
-                    element.classList.add('text-black', 'outline', 'outline-2', 'outline-blue-950');
+                else if( data.Result=='Post_unsaved'){
+                    document.getElementById(element.id).innerHTML='<i class="fa-regular fa-bookmark fa-lg"></i>';
+                    
                 }
             },
             //here error is error return by the url 

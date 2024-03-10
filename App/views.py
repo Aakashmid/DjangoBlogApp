@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib.auth import login,logout,authenticate
 from django.contrib import messages
-from .models import Post,Comment,PostLike,CommentLike,PostReadedUser ,BlogUser,AuthorFollower,Tag,PostCategory
+from .models import Post,Comment,PostLike,CommentLike,PostReadedUser ,BlogUser,AuthorFollower,Tag,PostCategory,SavedPost
 from .templatetags import extraFilter
 from django.db.models import Q
 from django.http import JsonResponse
@@ -131,7 +131,6 @@ def Create_post(request):
 
 def Read_post(request,id):
     post=Post.objects.get(id=id)
-    print(f'Id of post is {id}')
     if request.method=="POST":
         action=request.POST.get('action')
         post=Post.objects.get(pk=id)
@@ -237,13 +236,14 @@ def post_comment(request):
             messages.success(request," Reply posted successfully ")
         return redirect(f'/post-blogs/{post.id}/')
     
-def profile(request,author_id=None):
-    if author_id:
+def profile(request,user_id=None):     
+    if user_id:
         if request.method=="POST":
-            if request.POST['action']:
-                action=request.POST.get('action')
+            action=request.POST.get('action',None)
+            post_id=request.POST.get('Post_id',None)
+            if action is not None:
                 if action=='IncreaseFollower':
-                    Author=BlogUser.objects.get(user=author_id)
+                    Author=BlogUser.objects.get(user=user_id)
                     Follower=request.user 
                     # AuthFollRel is object storing AuthorFollower object which keeps information of author and follower data
                     
@@ -258,7 +258,7 @@ def profile(request,author_id=None):
                         response=JsonResponse({'btnText':"Following",'followerCount':Author.followers})
                         return response   
                 elif action=="DecreaseFollower":
-                    Author=BlogUser.objects.get(user=author_id)
+                    Author=BlogUser.objects.get(user=user_id)
                     Follower=request.user
                     if AuthorFollower.objects.filter(Author=Author,follower=Follower).exists():
                         Author.followers-=1
@@ -272,7 +272,7 @@ def profile(request,author_id=None):
                         return response
 
                 else:
-                    Author=BlogUser.objects.get(user=author_id)
+                    Author=BlogUser.objects.get(user=user_id)
                     # if not request.user.is_anonymous
                     Follower=request.user
                     if AuthorFollower.objects.filter(Author=Author,follower=Follower).exists():
@@ -281,17 +281,34 @@ def profile(request,author_id=None):
                     else:
                         response=JsonResponse({'btnText':"Follow"})
                         return response
-            elif request.POST['Post_id']:
-                pass
-                response=JsonResponse({})
-                return response    
+            elif post_id is not None:
+                # post_id=int(post_id)
+                print('Saving post ')
+                post=Post.objects.get(id=post_id)
+                current_user=BlogUser.objects.get(user=request.user)
+                if not SavedPost.objects.filter(saved_post=post,user=current_user).exists():
+                    SavedPost.objects.create(saved_post=post,user=current_user)
+                
+                    response=JsonResponse({'Result':'Post_saved'})
+                    return response
+                else:
+                    SavedPost.objects.get(saved_post=post,user=current_user).delete()
+                    response=JsonResponse({'Result':'Post_unsaved'})
+                    return response
+            else:
+                return HttpResponseRedirect(reverse('App:Author profile',args=(user_id)))
+
         # If user  want to see author page
         else:
             # here author id is blogser object pk 
-            bloguser=BlogUser.objects.get(pk=author_id)
-            allPosts=Post.objects.filter(author=author_id)
+            bloguser=BlogUser.objects.get(pk=user_id)
+            allPosts=Post.objects.filter(author=user_id)
+            if AuthorFollower.objects.filter(follower=request.user,Author=bloguser).exists():
+                userFollower=True
+            else:
+                userFollower=False
             # here Author is author of post
-            return render(request,'App/author.html',{"Author":bloguser,'Posts':allPosts})
+            return render(request,'App/author.html',{"Author":bloguser,'Posts':allPosts,'userFollower':userFollower})
             # return render(request,'App/author.html',{'Posts':allPosts})
     else:
         bloguser=BlogUser.objects.get(user=request.user)

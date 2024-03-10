@@ -15,6 +15,6 @@ urlpatterns = [
     path('post-blogs/<int:id>/',views.Read_post,name="Blog Post"),
     path('post-comment/',views.post_comment,name="Post Comment"),
     path('profile/',views.profile,name="User Profile"),
-    path('Author/profile/<int:author_id>/',views.profile,name="Author Profile"),
+    path('Author/profile/<int:user_id>/',views.profile,name="Author Profile"),
     path('profile/change-profile/',views.Change_profile,name="Profile Change"),
 ]

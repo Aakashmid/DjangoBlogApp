@@ -75,7 +75,7 @@ class AuthorFollower(models.Model):
     follower=models.ForeignKey(User, verbose_name="Follower", on_delete=models.CASCADE)
     
 class SavedPost(models.Model):
-    saved_post=models.ForeignKey(PostCategory, on_delete=models.CASCADE)
+    saved_post=models.ForeignKey(Post, on_delete=models.CASCADE)
     user=models.ForeignKey(BlogUser, on_delete=models.CASCADE)
     
     def __str__(self) -> str:
