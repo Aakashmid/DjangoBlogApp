@@ -34,7 +34,7 @@ class Post(models.Model):
     author=models.ForeignKey(BlogUser, on_delete=models.CASCADE)
     like=models.IntegerField(default=0)
     category=models.ForeignKey(PostCategory, verbose_name="Post_Categories", on_delete=models.SET_NULL,null=True,blank=True)
-    tags=models.ManyToManyField(Tag, verbose_name="Post_Tags")
+    tags=models.ManyToManyField(Tag, verbose_name="Post_Tags",blank=True)
     def __str__(self) -> str:
         return self.title
     class Meta:

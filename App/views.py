@@ -116,13 +116,33 @@ def Create_post(request):
         title=request.POST.get('post_title')
         content=request.POST.get('blog_content')
         cat=request.POST.get('category')
-        category=PostCategory.objects.get(name=cat)
+        if cat!="":
+            category=PostCategory.objects.get(name=cat)
+        else:
+            category=None   
+        Tags=request.POST.get('tags')
+        Tagnames=[]
+        for tag in Tags.split():
+            if tag[0]=='#':
+                Tagnames.append(tag[1:])
+            else:
+                Tagnames.append(tag[0:])
+        
+        Tags=[]  
+        for tagname in Tagnames:
+            if not Tag.objects.filter(name=tagname).exists():
+                tag=Tag.objects.create(name=tagname)
+                Tags.append(tag)
+            else:
+                tag=Tag.objects.get(name=tagname)
+                Tags.append(tag)
+        
         # author=request.user.first_name+" "+request.user.last_name
         author=BlogUser.objects.get(user=request.user)
         author.save()
-        # print(author)
-        post=Post(author=author,title=title,content=content,category=category)
-        post.save()
+        # Create post 
+        post=Post.objects.create(author=author,title=title,content=content,category=category)
+        post.tags.add(*Tags)
         messages.success(request,"Blog is posted successfuly !!")
         return redirect('/')
     categories=PostCategory.objects.all()
