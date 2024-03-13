@@ -80,25 +80,27 @@
     <!-- navigation bar  -->
     <div id="navigation_bar"
         class="lg:hidden transform translate-x-full  duration-200 fixed right-0 top-0 bg-gray-100 px-2  z-30 w-[72%]  h-full scroll-auto ">
-        <div class=" flex justify-between items-center px-1 py-3">
-            <p class="font-semibold text-lg text-black">My Blog</p>
+        <div class=" flex justify-between items-center px-1 py-2">
+            <span class="">
+                <p class="font-semibold text-lg text-black ml-3 items-center">BlogBlend</p>
+            </span>
             <span id="navigation_close" onclick="hide_navigation()"
                 class="text-2xl font-semibold active:text-gray-500 active:bg-white cursor-pointer rounded-sm ">&times;</span>
         </div>
-        <div class=" mb-6 p-2">
+        <div class=" w-full mb-6 p-2">
             {% if user.is_authenticated %}
-            <div class="p-2 mx-auto flex flex-col justify-start space-y-1">
-                <div class="w-14 h-14 outline outline-white rounded-full overflow-hidden">
+            <div class="p-2  mx-auto flex flex-col  items-center space-y-1">
+                <div class="w-20 h-20 outline outline-white rounded-full overflow-hidden">
                     <img src="/media/{{User.profileImg}}" class="" alt="">
                 </div>
                 <a href="/profile" class="">
                     <!-- <p class="font-semibold text-lg">{{user.first_name}} {{user.last_name}}</p> -->
                     <p class="font-semibold text-lg">{{user.first_name}} {{user.last_name}} </p>
-                    <p class="text-sm">View profile</p>
+                    <p class="text-sm font-light">View profile</p>
                 </a>
             </div>
             {% else %}
-            <div class="p-2 mx-auto  h-28 border-black rounded-sm border-[1px]">
+            <div class="p-2 mx-auto  h-28 border-black rounded-md border-[1px]">
                 <p>This is my blog website includes</p>
             </div>
             {% endif %}
