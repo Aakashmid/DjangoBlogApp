@@ -36,11 +36,11 @@
                         class="fa-regular fa-eye"></i></span></span>
         </div>
         <p class="">
-            <!-- <span class="flex space-x-2">
+            <span class="flex space-x-2">
                 {% for tag in post.tags.all %}
                 <a href="" class="hover:text-blue-600 hover:underline">#{{tag.name}}</a>
                 {% endfor %}
-            </span> -->
+            </span>
         </p>
         <div class="no-tailwind-base">
             {{post.content|safe}}
