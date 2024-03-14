@@ -35,6 +35,13 @@
             <span class="">{{post.read_count}} <span class="text-gray-600"><i
                         class="fa-regular fa-eye"></i></span></span>
         </div>
+        <p class="">
+            <span class="flex space-x-2">
+                {% for tag in post.tags.all %}
+                <a href="" class="hover:text-blue-600 hover:underline">#{{tag.name}}</a>
+                {% endfor %}
+            </span>
+        </p>
         <div class="no-tailwind-base">
             {{post.content|safe}}
         </div>
@@ -152,11 +159,12 @@
                         </span>
                     </span>
                 </a>
-                <a href="{% url 'App:Blog Post' post.id %}" class="post-link "></a>
-                <div class="main-body px-1">
-                    <p class="font-semibold text-lg">{{post.title}}</p>
-                    <div class="preview card-text ">{{post.content|safe | truncatechars_html:150}}</div>
-                </div>
+                <a href="{% url 'App:Blog Post' post.id %}" class="post-link ">
+                    <div class="main-body px-1">
+                        <p class="font-semibold text-lg">{{post.title}}</p>
+                        <div class="preview card-text ">{{post.content|safe | truncatechars_html:150}}</div>
+                    </div>
+                </a>
 
             </div>
             {% endfor %}
@@ -165,6 +173,7 @@
 
 
 </div>
+<div class="h-6"></div>
 
 {% endblock body %}
 

@@ -136,8 +136,7 @@ def Create_post(request):
             else:
                 tag=Tag.objects.get(name=tagname)
                 Tags.append(tag)
-        
-        # author=request.user.first_name+" "+request.user.last_name
+    
         author=BlogUser.objects.get(user=request.user)
         author.save()
         # Create post 
@@ -223,7 +222,7 @@ def Read_post(request,id):
     if post:
         comments=Comment.objects.filter(Q(parent=None) & Q(post=post))
         replies=Comment.objects.filter(post=post).exclude(parent=None)
-        related_posts=Post.objects.filter(category=post.category)
+        related_posts=Post.objects.filter(category=post.category)[:4]
         # Author=BlogUser.objects.get(user=post.author)
         CommentsDict={}
         replyDict={}
