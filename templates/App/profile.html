@@ -42,9 +42,37 @@ Profile
         </span>
         <hr class="mx-3 bg-gray-900 ">
         <!-- Home section -->
-        <div class="Home-page p-3">
+        <div class="Home-page py-3 px-2">
             <div class="">
-                <h1 class="text-lg ">Here display saved blog post </h1>
+                <h1 class="text-lg font-semibold">Your Reading list : </h1>
+                {% for post in saved_posts %}
+                <div class="card border-gray-600 border-[1px] rounded-md shadow-md p-2 mt-2">
+                    <div class="upper-part flex-col ">
+                        <div class="flex items-center space-x-2">
+                            <div class="author-profile-image w-8 rounded-full h-8 overflow-hidden">
+                                <img src="/media/{{post.author.profileImg}}" class="" alt="">
+                            </div>
+                            <a href="{% url 'App:Author Profile' post.author_id %}"
+                                class="author-name flex flex-col  font-sans font-medium">
+                                <p class="">
+                                    {{post.author.user.first_name}} {{post.author.user.last_name}}
+                                </p>
+                                <p class="text-xs">{{post.publish_time}}</p>
+                            </a>
+                        </div>
+                    </div>
+    
+                    <a href="/post-blogs/{{post.id}}/">
+                        <div class="card-body mt-1">
+                            <h2 class="title font-semibold text-lg">{{post.title}}</h2>
+                            <div class="preview card-text">
+                                <p class="text-[17px]">{{post.content|safe | truncatechars_html:150}}
+                            </div>
+                        </div>
+                    </a>
+                    <div class="footer-part flex justify-between"></div>
+                </div>
+                {% endfor %}
             </div>
         </div>
 

@@ -1909,6 +1909,12 @@ video {
     margin-bottom: calc(1rem * var(--tw-space-y-reverse));
   }
 
+  .lg\:space-y-6 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-y-reverse: 0;
+    margin-top: calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));
+    margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));
+  }
+
   .lg\:px-36 {
     padding-left: 9rem;
     padding-right: 9rem;

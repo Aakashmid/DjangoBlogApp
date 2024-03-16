@@ -53,19 +53,20 @@
 <div class="container">
     <div class="">
         <div class="form">
-            <form action="/create-post/" class="p-3 flex-col space-y-2 lg:space-y-4 w-full" method="post">
+            <form action="/create-post/" class="p-3 flex-col space-y-3 lg:space-y-4 w-full" method="post"
+                enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="title">
                     <label for="post_title" class="text-lg">Title</label>
                     <input type="text" name="post_title"
-                        class="text-lg w-full  border-[1px] rounded border-gray-600 p-1 outline-gray-300  outline-offset-2 outline-2" id="post_title"
-                        placeholder="Enter title of blog here..." required>
+                        class="text-lg w-full  border-[1px] rounded border-gray-600 p-1 outline-gray-300  outline-offset-2 outline-2"
+                        id="post_title" placeholder="Enter title of blog here..." required>
                 </div>
                 <div class="flex flex-col md:flex-row space-y-4 md:justify-between md:items-center">
                     <span class="Category-dropDown flex space-x-2">
                         <span class="flex items-center space-x-4">
-                            <a class=" font-semibold text-lg " id="trigger_cat_dropdown"
-                                onclick="toggleDropDown()" role="button">Select
+                            <a class=" font-semibold text-lg " id="trigger_cat_dropdown" onclick="toggleDropDown()"
+                                role="button">Select
                                 Category</a>
                             <p class="" id="selectedOp"></p>
                         </span>
@@ -73,7 +74,8 @@
                             class="hidden w-fit absolute z-10 bg-gray-100 font-normal max-h-52 overflow-y-auto p-2 rounded-md"
                             onclick="selectOption(event)">
                             {% for cat in Categories %}
-                            <li class="cursor-pointer hover:bg-white active:bg-blue-200 px-1 text-lg" data-value="{{cat.name}}">
+                            <li class="cursor-pointer hover:bg-white active:bg-blue-200 px-1 text-lg"
+                                data-value="{{cat.name}}">
                                 {{cat.name}}</li>
                             {% endfor %}
                         </ul>
@@ -81,10 +83,15 @@
                     </span>
                     <!-- Tag selector -->
                     <span class="flex space-x-3 items-center">
-                        <p class="text-lg">Tags  </p>
-                        <input type="text" name="tags" id="tags" class=" w-full lg:w-96 border-[1px] rounded border-gray-600 p-1 outline-gray-300  outline-offset-2 outline-1" placeholder="#tag_name #tag2_name #tag3_name....." value="">
+                        <p class="text-lg">Tags </p>
+                        <input type="text" name="tags" id="tags"
+                            class=" w-full lg:w-96 border-[1px] rounded border-gray-600 p-1 outline-gray-300  outline-offset-2 outline-1"
+                            placeholder="#tag_name #tag2_name #tag3_name....." value="">
                     </span>
-                  
+                </div>
+                <div class="">
+                    <label for="thumbnail" class="text-lg">Select Thumbnail (If Any) : </label>
+                    <input type="file" id="thumbnail" name="thumbnail"  accept="image/*" value="">
                 </div>
                 <div class="no-tailwind-base">
                     <textarea required name="blog_content" id="blog_content" class="">

@@ -79,4 +79,4 @@ class SavedPost(models.Model):
     user=models.ForeignKey(BlogUser, on_delete=models.CASCADE)
     
     def __str__(self) -> str:
-        return self.save_base+ "  "+ self.user.user.first_name
+        return self.saved_post.title+ "  "+ self.user.user.first_name

@@ -334,9 +334,12 @@ def profile(request,user_id=None):
             # return render(request,'App/author.html',{'Posts':allPosts})
     else:
         bloguser=BlogUser.objects.get(user=request.user)
-        allPosts=Post.objects.filter(author=bloguser)
+        save_post_obj=SavedPost.objects.filter(user=bloguser)[:10]
+        SavedPosts=[]
+        for post in save_post_obj:
+            SavedPosts.append(post.saved_post)
         # Here User is authenticated user
-        return render(request,'App/profile.html',{"User":bloguser,'Posts':allPosts})
+        return render(request,'App/profile.html',{"User":bloguser,'saved_posts':SavedPosts})
     
 def Change_profile(request):
     if request.method=="POST":
