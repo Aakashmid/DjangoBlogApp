@@ -302,17 +302,17 @@ def profile(request,user_id=None):
                         return response
             elif post_id is not None:
                 # post_id=int(post_id)
-                print('Saving post ')
                 post=Post.objects.get(id=post_id)
                 current_user=BlogUser.objects.get(user=request.user)
                 if not SavedPost.objects.filter(saved_post=post,user=current_user).exists():
                     SavedPost.objects.create(saved_post=post,user=current_user)
-                
                     response=JsonResponse({'Result':'Post_saved'})
+                    print('Saving post ')
                     return response
                 else:
                     SavedPost.objects.get(saved_post=post,user=current_user).delete()
                     response=JsonResponse({'Result':'Post_unsaved'})
+                    print("Unsaving post")
                     return response
             else:
                 return HttpResponseRedirect(reverse('App:Author profile',args=(user_id)))
@@ -322,8 +322,11 @@ def profile(request,user_id=None):
             # here author id is blogser object pk 
             bloguser=BlogUser.objects.get(pk=user_id)
             allPosts=Post.objects.filter(author=user_id)
-            if AuthorFollower.objects.filter(follower=request.user,Author=bloguser).exists():
-                userFollower=True
+            if not request.user.is_anonymous:
+                if AuthorFollower.objects.filter(follower=request.user,Author=bloguser).exists():
+                    userFollower=True
+                else:
+                    userFollower=False
             else:
                 userFollower=False
             # here Author is author of post

@@ -183,6 +183,7 @@
     // })
 
     function SavePost(element) {
+        {% if user.is_authenticated %}
         let post_id = element.id.slice(9);
         $.ajax({
             type: "Post",
@@ -208,6 +209,9 @@
                 console.log("Error:", error);
             }
         });
+        {% else %}
+        showLogin();
+        {% endif %}
     }
 </script>
 {% endblock js %}

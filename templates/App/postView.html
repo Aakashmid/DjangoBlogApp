@@ -147,7 +147,7 @@
         <h3 class="font-semibod text-xl p-2">Related posts :</h3>
         <div class="posts">
             {% for post in Related_posts %}
-            <div class="card flex  flex-col space-y-1 mt-2 outline outline-gray-400 rounded-lg p-2 outline-1">
+            <div class="card flex  flex-col space-y-1 mt-2 outline outline-gray-400 rounded-lg p-2 outline-1 xl:w-[45%] xl:float-left xl:mx-2">
                 <a href="{% url 'App:Author Profile' post.author_id %}" class="post-author-lin">
                     <span class="upper-body flex space-x-2 items-center">
                         <span class="w-10 h-10 rounded-full overflow-hidden"><img
