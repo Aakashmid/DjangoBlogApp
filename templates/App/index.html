@@ -33,11 +33,19 @@
                 </div>
 
                 <a href="/post-blogs/{{post.id}}/">
-                    <div class="card-body mt-1">
-                        <h2 class="title font-bold text-lg">{{post.title}}</h2>
-                        <div class="preview card-text">
-                            <p class="text-[17px]">{{post.content|safe | truncatechars_html:150}}
+                    <div class=" flex justify-between items-center ">
+                        <div class="flex flex-col  break-words    {% if post.thImg != '' %} w-[80%] {% else %}w-auto {% endif %} ">
+                            <h1 id="title{{post.id}}" class="title font-semibold text-xl">{{post.title}}</h1>
+                            <p class="blog-content">
+                            <div class="preview block lg:hidden">{{post.content|safe|truncatechars_html:50}}</div>
+                            <div class="preview hidden lg:block">{{post.content|safe|truncatechars_html:100}}</div>
+                            </p>
+                        </div> 
+                        {% if post.thImg != '' %}
+                        <div class="w-14 h-14 float-end overflow-hidden rounded-md">
+                            <img src="/media/{{post.thImg}}" alt="">
                         </div>
+                        {% endif %}
                     </div>
                 </a>
                 <div class="footer-part flex justify-between"></div>
