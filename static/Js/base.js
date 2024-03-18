@@ -22,8 +22,8 @@ function hide_navigation() {
     var span_close = document.getElementById('close_modals');
     var nav = document.getElementById('navigation_bar');
     var loginform = document.getElementById('login_modal');
-    var imageModal=document.getElementsByClassName('image-box')[0];
-    if (imageModal){
+    var imageModal = document.getElementsByClassName('image-box')[0];
+    if (imageModal) {
         document.getElementsByClassName('image-box')[0].classList.remove('block');
         document.getElementsByClassName('image-box')[0].classList.add('hidden');
     }
@@ -139,9 +139,9 @@ if (alert) {
 
 
 let previews = document.getElementsByClassName('preview');
-    Array.from(previews).forEach((element) => {
-        element.innerHTML = element.innerText;
-    })
+Array.from(previews).forEach((element) => {
+    element.innerHTML = element.innerText;
+})
 
 //Show category on hovering or click categoring link
 

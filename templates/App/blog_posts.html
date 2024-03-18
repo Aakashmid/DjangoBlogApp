@@ -44,14 +44,22 @@
                     <div class="">
                     </div>
                 </div>
-                <div class="px-2">
-                    <a href="{% url 'App:Blog Post' post.id %}" id="card_link" class="flex flex-col ">
-                        <h1 id="title{{post.id}}" class="title font-semibold text-xl">{{post.title}}</h1>
-                        <p class="blog-content">
-                            <div class="preview">{{post.content|safe|truncatechars_html:100}}</div>
-                        </p>
-                    </a>
-                </div>
+                <a href="{% url 'App:Blog Post' post.id %}" id="card_link" class="">
+                    <div class="px-2 flex justify-between items-center ">
+                        <div class="flex flex-col  break-words    {% if post.thImg != '' %} w-[80%] {% else %}w-auto {% endif %} ">
+                            <h1 id="title{{post.id}}" class="title font-semibold text-xl">{{post.title}}</h1>
+                            <p class="blog-content">
+                            <div class="preview block lg:hidden">{{post.content|safe|truncatechars_html:50}}</div>
+                            <div class="preview hidden lg:block">{{post.content|safe|truncatechars_html:100}}</div>
+                            </p>
+                        </div> 
+                        {% if post.thImg != '' %}
+                        <div class="w-14 h-14 float-end overflow-hidden rounded-md">
+                            <img src="/media/{{post.thImg}}" alt="">
+                        </div>
+                        {% endif %}
+                    </div>
+                </a>
             </div>
             <hr class="my-1 bg-gray-800">
             {% endfor %}

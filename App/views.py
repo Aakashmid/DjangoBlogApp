@@ -116,11 +116,14 @@ def Create_post(request):
         title=request.POST.get('post_title')
         content=request.POST.get('blog_content')
         cat=request.POST.get('category')
+        Tags=request.POST.get('tags')
+        thumImg=request.FILES.get('thumbnail')
         if cat!="":
             category=PostCategory.objects.get(name=cat)
         else:
             category=None   
-        Tags=request.POST.get('tags')
+
+        # Adding tags
         Tagnames=[]
         for tag in Tags.split():
             if tag[0]=='#':
@@ -137,11 +140,15 @@ def Create_post(request):
                 tag=Tag.objects.get(name=tagname)
                 Tags.append(tag)
     
+            
         author=BlogUser.objects.get(user=request.user)
         author.save()
         # Create post 
         post=Post.objects.create(author=author,title=title,content=content,category=category)
         post.tags.add(*Tags)
+        if thumImg is not None:
+            post.thImg=thumImg
+            post.save()
         messages.success(request,"Blog is posted successfuly !!")
         return redirect('/')
     categories=PostCategory.objects.all()

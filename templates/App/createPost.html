@@ -31,6 +31,14 @@
 
     function toggleDropDown() {
         document.getElementById('Categories').classList.toggle('hidden');
+        let angle_icon=document.getElementsByClassName('angle-icon')[0];
+        if (angle_icon.innerHTML==='<i class="fa-solid fa-angle-down fa-sm" aria-hidden="true"></i>') {
+         angle_icon.innerHTML='<i class="fa-solid fa-angle-up fa-sm" ></i>';
+        }
+        else{
+            angle_icon.innerHTML='<i class="fa-solid fa-angle-down fa-sm" ></i>';
+        }
+        
     }
     function selectOption(event) {
         var selectOption = event.target;
@@ -57,7 +65,7 @@
                 enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="title">
-                    <label for="post_title" class="text-lg">Title</label>
+                    <label for="post_title" class="text-lg font-medium">Title</label>
                     <input type="text" name="post_title"
                         class="text-lg w-full  border-[1px] rounded border-gray-600 p-1 outline-gray-300  outline-offset-2 outline-2"
                         id="post_title" placeholder="Enter title of blog here..." required>
@@ -65,13 +73,13 @@
                 <div class="flex flex-col md:flex-row space-y-4 md:justify-between md:items-center">
                     <span class="Category-dropDown flex space-x-2">
                         <span class="flex items-center space-x-4">
-                            <a class=" font-semibold text-lg " id="trigger_cat_dropdown" onclick="toggleDropDown()"
+                            <a class=" font-medium text-lg " id="trigger_cat_dropdown" onclick="toggleDropDown()"
                                 role="button">Select
-                                Category</a>
+                                Category <span class="angle-icon mx-1"><i class="fa-solid fa-angle-down fa-sm"></i></span> </a>
                             <p class="" id="selectedOp"></p>
                         </span>
                         <ul id="Categories"
-                            class="hidden w-fit absolute z-10 bg-gray-100 font-normal max-h-52 overflow-y-auto p-2 rounded-md"
+                            class="hidden w-fit top-[185px] md:top-[207px] absolute z-10 bg-gray-100 font-normal max-h-52 overflow-y-auto p-2 rounded-md"
                             onclick="selectOption(event)">
                             {% for cat in Categories %}
                             <li class="cursor-pointer hover:bg-white active:bg-blue-200 px-1 text-lg"
@@ -83,14 +91,14 @@
                     </span>
                     <!-- Tag selector -->
                     <span class="flex space-x-3 items-center">
-                        <p class="text-lg">Tags </p>
+                        <p class="text-lg font-medium">Tags </p>
                         <input type="text" name="tags" id="tags"
                             class=" w-full lg:w-96 border-[1px] rounded border-gray-600 p-1 outline-gray-300  outline-offset-2 outline-1"
                             placeholder="#tag_name #tag2_name #tag3_name....." value="">
                     </span>
                 </div>
                 <div class="">
-                    <label for="thumbnail" class="text-lg">Select Thumbnail (If Any) : </label>
+                    <label for="thumbnail" class="text-lg font-medium">Select Thumbnail (If Any) : </label>
                     <input type="file" id="thumbnail" name="thumbnail"  accept="image/*" value="">
                 </div>
                 <div class="no-tailwind-base">
