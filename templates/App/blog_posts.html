@@ -28,31 +28,32 @@
             {% for post in allPosts %}
             <div class="card  flex flex-col  space-y-1  border-gray-800 rounded-md shadow-xl py-3 bg-gray-50">
                 <div class="upper-part flex-col space-y-1 px-2 ">
-                    <div class="flex space-x-2 items-center">
-
-                        <div class="w-8 h-8 overflow-hidden rounded-full">
-                            <img src="/media/{{post.author.profileImg}}" class="" alt="">
+                    <a href="{% url 'App:Author Profile' post.author_id %}" class="author-name">
+                        <div class="flex items-center space-x-2">
+                            <div class="author-profile-image w-8 rounded-full h-8 overflow-hidden">
+                                <img src="/media/{{post.author.profileImg}}" class="" alt="">
+                            </div>
+                            <span class="flex flex-col  font-sans ">
+                                <p class="font-normal">
+                                    {{post.author.user.first_name}} {{post.author.user.last_name}}
+                                </p>
+                                <p class="text-xs font-light">Posted on {{post.publish_time}}</p>
+                            </span>
                         </div>
-
-                        <a href="{% url 'App:Author Profile' post.author_id %}" class="author-name font-sans">
-                            <p class="">
-                                {{post.author.user.first_name}} {{post.author.user.last_name}}
-                            </p>
-                            <p class="text-xs">Posted on {{post.publish_time}}</p>
-                        </a>
-                    </div>
+                    </a>
                     <div class="">
                     </div>
                 </div>
                 <a href="{% url 'App:Blog Post' post.id %}" id="card_link" class="">
                     <div class="px-2 flex justify-between items-center ">
-                        <div class="flex flex-col  break-words    {% if post.thImg != '' %} w-[80%] {% else %}w-auto {% endif %} ">
+                        <div
+                            class="flex flex-col  break-words    {% if post.thImg != '' %} w-[80%] {% else %}w-auto {% endif %} ">
                             <h1 id="title{{post.id}}" class="title font-semibold text-xl">{{post.title}}</h1>
                             <p class="blog-content">
                             <div class="preview block lg:hidden">{{post.content|safe|truncatechars_html:50}}</div>
                             <div class="preview hidden lg:block">{{post.content|safe|truncatechars_html:100}}</div>
                             </p>
-                        </div> 
+                        </div>
                         {% if post.thImg != '' %}
                         <div class="w-14 h-14 float-end overflow-hidden rounded-md">
                             <img src="/media/{{post.thImg}}" alt="">

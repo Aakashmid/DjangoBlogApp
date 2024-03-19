@@ -15,11 +15,13 @@ Profile
                 <span onclick="ShowEditForm()" class="z-0 w-auto float-right font-medium rounded-md text-sm  text-white bg-gray-800 p-2 hover:bg-gray-950 active:outline active:outline-1
                 "><i class="fa-solid fa-pen"></i></span>
                 <span class="flex space-x-5 items-center ">
-                    <div class="h-20 rounded-full w-20 outline outline-4 outline-gray-100 overflow-hidden" onclick="showimage()">
-                        <img src='/media/{{User.profileImg}}' alt="..."
-                            class=" ">
+                    <div class="h-20 rounded-full w-20 outline outline-4 outline-gray-100 overflow-hidden"
+                        onclick="showimage()">
+                        <img src='/media/{{User.profileImg}}' alt="..." class=" ">
                     </div>
-                    <div class="hidden image-box overflow-hidden absolute border-[1px] top-1/3 left-1/2 rounded-lg transform  -translate-y-3/4 -translate-x-1/2 w-[250px] lg:w-[300px]  lg:h-[300px] h-[250px]"><img src="/media/{{User.profileImg}}" alt=".."></div>
+                    <div
+                        class="hidden image-box overflow-hidden absolute border-[1px] top-1/3 left-1/2 rounded-lg transform  -translate-y-3/4 -translate-x-1/2 w-[250px] lg:w-[300px]  lg:h-[300px] h-[250px]">
+                        <img src="/media/{{User.profileImg}}" alt=".."></div>
                     <span class="">
                         <h1 class="text-2xl font-semibold ">{{user.first_name}} {{user.last_name}}</h1>
                         <span class="flex space-x-8 mt-2">
@@ -48,26 +50,36 @@ Profile
                 {% for post in saved_posts %}
                 <div class="card border-gray-600 border-[1px] rounded-md shadow-md p-2 mt-2">
                     <div class="upper-part flex-col ">
-                        <div class="flex items-center space-x-2">
-                            <div class="author-profile-image w-8 rounded-full h-8 overflow-hidden">
-                                <img src="/media/{{post.author.profileImg}}" class="" alt="">
+                        <a href="{% url 'App:Author Profile' post.author_id %}" class="author-name">
+                            <div class="flex items-center space-x-2">
+                                <div class="author-profile-image w-8 rounded-full h-8 overflow-hidden">
+                                    <img src="/media/{{post.author.profileImg}}" class="" alt="">
+                                </div>
+                                <span class="flex flex-col  font-sans ">
+                                    <p class="font-normal">
+                                        {{post.author.user.first_name}} {{post.author.user.last_name}}
+                                    </p>
+                                    <p class="text-xs font-light">{{post.publish_time}}</p>
+                                </span>
                             </div>
-                            <a href="{% url 'App:Author Profile' post.author_id %}"
-                                class="author-name flex flex-col  font-sans font-medium">
-                                <p class="">
-                                    {{post.author.user.first_name}} {{post.author.user.last_name}}
-                                </p>
-                                <p class="text-xs">{{post.publish_time}}</p>
-                            </a>
-                        </div>
+                        </a>
                     </div>
-    
-                    <a href="/post-blogs/{{post.id}}/">
-                        <div class="card-body mt-1">
-                            <h2 class="title font-semibold text-lg">{{post.title}}</h2>
-                            <div class="preview card-text">
-                                <p class="text-[17px]">{{post.content|safe | truncatechars_html:150}}
+
+                    <a href="{% url 'App:Blog Post' post.id %}">
+                        <div class=" flex justify-between items-center ">
+                            <div
+                                class="flex flex-col  break-words    {% if post.thImg != '' %} w-[80%] {% else %}w-auto {% endif %} ">
+                                <h1 id="title{{post.id}}" class="title font-semibold text-xl">{{post.title}}</h1>
+                                <p class="blog-content">
+                                <div class="preview block lg:hidden">{{post.content|safe|truncatechars_html:50}}</div>
+                                <div class="preview hidden lg:block">{{post.content|safe|truncatechars_html:100}}</div>
+                                </p>
                             </div>
+                            {% if post.thImg != '' %}
+                            <div class="w-14 h-14 float-end overflow-hidden rounded-md">
+                                <img src="/media/{{post.thImg}}" alt="">
+                            </div>
+                            {% endif %}
                         </div>
                     </a>
                     <div class="footer-part flex justify-between"></div>
@@ -97,38 +109,46 @@ Profile
     <div class="p-4">
         <button class="active:bg-gray-300 hover:bg-gray-300 font-thin  p-2 rounded" onclick="profilePage()"><i
                 class="fa-solid fa-angle-up fa-rotate-270 fa-xl"></i></button>
-        <form action="{% url 'App:Profile Change' %}" method="post" class=" flex flex-col " enctype="multipart/form-data">
+        <form action="{% url 'App:Profile Change' %}" method="post" class=" flex flex-col "
+            enctype="multipart/form-data">
             {% csrf_token %}
             <div class="flex justify-center py-2">
-                <div class="h-28 w-28 rounded-full overflow-hidden"><img src='/media/{{User.profileImg}}' alt=".." class="">
+                <div class="h-28 w-28 rounded-full overflow-hidden"><img src='/media/{{User.profileImg}}' alt=".."
+                        class="">
                 </div>
                 <label for="imageInput"
                     class="icon-edit relative -left-[28px] top-[80px] bg-black rounded-full px-1 w-6 h-6 text-white"><i
                         class="fa-solid fa-plus"></i></label>
-                <input hidden type="file"  id="imageInput" name="imageInput" accept="image/*" value="/media/{{User.profileImg}}">
+                <input hidden type="file" id="imageInput" name="imageInput" accept="image/*"
+                    value="/media/{{User.profileImg}}">
             </div>
 
             <div class="px-4 py-2">
                 <label for="name" class=" text-lg w-full font-medium">Name</label>
                 <input type="text" name="fullname" id="fullname"
-                    class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 px-2 py-[6px]" value="{{user.first_name}} {{user.last_name}}">
+                    class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 px-2 py-[6px]"
+                    value="{{user.first_name}} {{user.last_name}}">
             </div>
             <div class="px-4 py-2">
                 <label for="username" class=" text-lg w-full font-medium">Username</label>
-                <input type="text" name="username" 
-                    class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 px-2 py-[6px]" value="{{user.username}}">
+                <input type="text" name="username"
+                    class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 px-2 py-[6px]"
+                    value="{{user.username}}">
             </div>
             <div class="px-4 py-2">
                 <label for="Email" class=" text-lg w-full font-medium">Email</label>
                 <input type="email" id="Email" name="Email"
-                    class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 px-2 py-[6px]" value="{{user.email}}">
+                    class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 px-2 py-[6px]"
+                    value="{{user.email}}">
             </div>
             <div class="px-4 py-2">
                 <label for="Bio" class=" text-lg w-full font-medium">Bio</label>
                 {% if User.Bio %}
-                <textarea name="Bio" id="Bio" class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 px-2 py-[6px] h-28">{{User.Bio}}</textarea>
+                <textarea name="Bio" id="Bio"
+                    class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 px-2 py-[6px] h-28">{{User.Bio}}</textarea>
                 {% else %}
-                <textarea name="Bio" id="Bio" class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 px-2 py-[6px] h-28" >Write about you so people can know about you more </textarea>
+                <textarea name="Bio" id="Bio"
+                    class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 px-2 py-[6px] h-28">Write about you so people can know about you more </textarea>
                 {% endif %}
             </div>
             <button type="submit"
@@ -163,7 +183,7 @@ Profile
 
 
     //underline element clicked
-    function changeLinkAppearence(element) {  
+    function changeLinkAppearence(element) {
         element.classList.add('underline');
         //here profile-link is class given link element  
         links = document.getElementsByClassName('profile-link');
@@ -194,15 +214,15 @@ Profile
 
 
     //show profile pitcher
-    function showimage(){
+    function showimage() {
         span_close.classList.remove('hidden');
         span_close.classList.add('block');
         document.getElementsByClassName('image-box')[0].classList.remove('hidden');
         document.getElementsByClassName('image-box')[0].classList.add('block');
         document.body.classList.remove('overflow-hidden');
     }
-    span_close=document.getElementById('close_modals');
-    span_close.onclick=function(){
+    span_close = document.getElementById('close_modals');
+    span_close.onclick = function () {
         document.getElementsByClassName('image-box')[0].classList.remove('block');
         document.getElementsByClassName('image-box')[0].classList.add('hidden');
     }
