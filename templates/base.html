@@ -143,7 +143,7 @@
             <div id="categories" class=" absolute top-[433px] mx-auto w-fit bg-gray-300 rounded text-black p-2 hidden">
                 <ul class="h-44 overflow-y-scroll px-6 " onmouseleave="hidecatDiv()">
                     {% for cat in ForAllCategories %}
-                    <li class="p-1 active:bg-gray-200"><a href="{% url 'App:Blogs-By-Cat' cat.name %}"
+                    <li class="p-1 active:bg-gray-200"><a href="{% url 'App:Blogs By Category' cat.name %}"
                             class="text-[17px]  active:text-black active:font-semibold">{{cat.name}}</a></li>
                     {% endfor %}
                 </ul>

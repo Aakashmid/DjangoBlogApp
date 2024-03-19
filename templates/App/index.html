@@ -57,7 +57,7 @@
             <h3 class="font-semibold text-lg">Search posts by category :</h3>
             <div class="tags-box w-full p-2 mt-2">
                 {% for cat in Categories %}
-                <span class="bg-gray-200 lg:text-lg p-2 rounded-xl mr-2 my-1 lg:my-2 float-left"><a href="{% url 'App:Blogs-By-Cat' cat.name %}" class="">{{cat.name}}</a></span>
+                <span class="bg-gray-200 lg:text-lg p-2 rounded-xl mr-2 my-1 lg:my-2 float-left"><a href="{% url 'App:Blogs By Category' cat.name %}" class="">{{cat.name}}</a></span>
                 {% endfor %}
             </div>
         </div>
@@ -65,7 +65,7 @@
             <h3 class="font-semibold text-lg">Search posts by tags :</h3>
             <div class="tags-box w-full p-2 mt-2">
                 {% for tag in postTags %}
-                <span class="bg-gray-200 lg:text-lg p-2 rounded-xl mr-2 my-1 lg:my-2 float-left"><a href="#" class="">#{{tag.name}}</a></span>
+                <span class="bg-gray-200 lg:text-lg p-2 rounded-xl mr-2 my-1 lg:my-2 float-left"><a href="{% url 'App:Blogs by tag' tag.name %}" class="">#{{tag.name}}</a></span>
                 {% endfor %}
             </div>
         </div>
