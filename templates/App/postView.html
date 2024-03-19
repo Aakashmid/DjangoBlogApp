@@ -7,14 +7,17 @@
 <div class="container pt-2">
     <div class="main-body p-2 flex-col space-y-3 max-w-full">
         <h1 class="font-bold text-2xl">{{post.title}}</h1>
-        <div class="post-header flex space-x-2">
-            <img src="{% static 'img/profile.jpg' %}" alt="..." class="w-12 h-auto rounded-3xl">
+        <div class="post-header flex space-x-2 items-center">
+            <span class="w-14 h-14 rounded-full overflow-hidden ">
+                <img src="/media/{{post.author.profileImg}}" alt="..." class=" ">
+            </span>
             <div class="flex flex-col space-y-1">
                 <p class=" ">
-                    <span class="font-normal">By </span><a href="{% url 'Author Profile' post.author_id %}"
-                        class="text-blue-500 font-medium ">  {{post.author.first_name}} {{post.author.last_name}}</a>
+                    <span class="font-normal">By </span><a href="{% url 'App:Author Profile' post.author_id %}"
+                        class="text-blue-500 font-medium "> {{post.author.user.first_name}}
+                        {{post.author.user.last_name}}</a>
                 </p>
-                <p class="time text-sm font-light">
+                <p class="time text-xs  font-light">
                     Posted on {{post.publish_time}}
                 </p>
             </div>
@@ -28,17 +31,25 @@
                     <i class="fa-regular fa-heart"></i>
                 </span>
             </span>
-            <span class="">{{comments|length}} <i class="fa-regular fa-comment"></i></span>
-            <span class="">{{post.read_count}} <span class="text-gray-600"><i class="fa-regular fa-eye"></i></span></span>
+            <span class="">{{CommentsDict|length}} <i class="fa-regular fa-comment"></i></span>
+            <span class="">{{post.read_count}} <span class="text-gray-600"><i
+                        class="fa-regular fa-eye"></i></span></span>
         </div>
+        <p class="">
+            <span class="flex space-x-2">
+                {% for tag in post.tags.all %}
+                <a href="{% url 'App:Blogs by tag' tag.name %}" class="hover:text-blue-600 hover:underline">#{{tag.name}}</a>
+                {% endfor %}
+            </span>
+        </p>
         <div class="no-tailwind-base">
             {{post.content|safe}}
         </div>
     </div>
     <div class="p-2 ">
         <h3 class="font-semibold flex space-x-3">
-            <a class="" id="comment_btn">
-                Comments({{comments|length}}) <i class="fa-regular fa-comment"></i>
+            <a role="button" class="cursor-pointer" id="comment_btn">
+                Comments({{CommentsDict|length}}) <i class="fa-regular fa-comment"></i>
             </a>
         </h3>
         <div id="comment-block" class="hidden">
@@ -60,11 +71,13 @@
 
             <!-- Comments  -->
             <div class="All-comments flex flex-col space-y-2  px-2 mt-2">
-                {% for comment in comments %}
+                {% for comment,commentAuthor in CommentsDict.items %}
                 <div class="">
                     <div class="flex space-x-2">
-                        <img src="{% static 'img/profile.jpg' %}" alt=".." class="w-7 h-auto rounded-full">
-                        <p class="user ">{{comment.user.first_name}} {{comment.user.last_name}}<span class="font-light text-sm">
+                        <img src="/media/{{commentAuthor.profileImg}}" alt=".."
+                            class="w-7 h-auto aspect-square rounded-full">
+                        <p class="user ">{{comment.user.first_name}} {{comment.user.last_name}}<span
+                                class="font-light text-sm">
                                 . {{comment.timeStamp|naturaltime}}
                             </span>
                         </p>
@@ -129,22 +142,53 @@
             </div>
         </div>
     </div>
+    <hr class="mt-2 mb-3 bg-gray-600   w-auto mx-2">
+    <div class="related-post-container p-2">
+        <h3 class="font-semibod text-xl p-2">Related posts :</h3>
+        <div class="posts">
+            {% for post in Related_posts %}
+            <div class="card flex  flex-col space-y-1 mt-2 outline outline-gray-400 rounded-lg p-2 outline-1 xl:w-[45%] xl:float-left xl:mx-2">
+                <a href="{% url 'App:Author Profile' post.author_id %}" class="post-author-lin">
+                    <span class="upper-body flex space-x-2 items-center">
+                        <span class="w-10 h-10 rounded-full overflow-hidden"><img
+                                src="/media/{{post.author.profileImg}}" alt=""></span>
+                        <span class="flex flex-col">
+                            <p class="font-normal">By <span class=" text-blue-700"> {{post.author.user.first_name}}
+                                    {{post.author.user.last_name}}</span></p>
+                            <p class="text-xs font-light ">{{post.publish_time}}</p>
+                        </span>
+                    </span>
+                </a>
+                <a href="{% url 'App:Blog Post' post.id %}" class="post-link ">
+                    <div class="main-body px-1">
+                        <p class="font-semibold text-lg">{{post.title}}</p>
+                        <div class="preview card-text ">{{post.content|safe | truncatechars_html:150}}</div>
+                    </div>
+                </a>
+
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+
 </div>
+<div class="h-6"></div>
 
 {% endblock body %}
 
 {% block js %}
 <script>
     function likeButton_state() {
-        if ({{user.is_authenticated|lower}}){
-            let likeBtns = document.getElementsByClassName('like');
-            for (let i = 0; i < likeBtns.length; i++) {
-                let element = likeBtns[i];
-                if (localStorage.getItem(element.id + "{{user.username}}")) {
-                    element.innerHTML = localStorage.getItem(element.id+"{{user.username}}");
-                }
+        {% if user.is_authenticated %}
+        let likeBtns = document.getElementsByClassName('like');
+        for (let i = 0; i < likeBtns.length; i++) {
+            let element = likeBtns[i];
+            if (localStorage.getItem(element.id + "{{user.username}}")) {
+                element.innerHTML = localStorage.getItem(element.id + "{{user.username}}");
             }
         }
+        {% endif %}
     }
     likeButton_state();
 
@@ -182,7 +226,8 @@
 
     function changeLikeState(likeBtn) {
         //lower method is used because in js True is in lower form (true)
-    if ({{ user.is_authenticated|lower }}) {
+        // if ({{ user.is_authenticated | lower }}) {
+        {% if user.is_authenticated %}
         // let likeBtn = document.getElementById(elem.id);
         // // console.log( elem.id.slice(12));
         if (likeBtn.innerHTML.trim() == `<i class="fa-regular fa-thumbs-up " aria-hidden="true"></i>`) {
@@ -195,32 +240,32 @@
             localStorage.setItem(likeBtn.id + "{{user.username}}", likeBtn.innerHTML);
             changeLikeCount("CommentlikeDecrease", likeBtn);
         }
-    }
-    else {
+        {% else %}
         showLogin();
-    }
+        {% endif %}
     }
 
     // When post like is clicked
     function changeLikeStatePost(likeBtn) {
         //check user is logged in or not
-        if({{user.is_authenticated|lower}}){
-            
-            if (likeBtn.innerHTML.trim() == `<i class="fa-regular fa-heart" aria-hidden="true"></i>`) {
-                likeBtn.innerHTML = `<i class="fa-solid fa-heart" style="color: #f7022b;"></i>`;
-                changeLikeCount('PostLikeIncrease', likeBtn);
-                localStorage.setItem(likeBtn.id + "{{user.username}}", likeBtn.innerHTML);
-            }
-            else {
-                likeBtn.innerHTML = `<i class="fa-regular fa-heart"></i>`;
-                changeLikeCount('PostLikeDecrease', likeBtn);
-                localStorage.setItem(likeBtn.id + "{{user.username}}", likeBtn.innerHTML);
-            }
+        {% if user.is_authenticated %}
+
+        if (likeBtn.innerHTML.trim() == `<i class="fa-regular fa-heart" aria-hidden="true"></i>`) {
+            likeBtn.innerHTML = `<i class="fa-solid fa-heart" style="color: #f7022b;"></i>`;
+            changeLikeCount('PostLikeIncrease', likeBtn);
+            localStorage.setItem(likeBtn.id + "{{user.username}}", likeBtn.innerHTML);
         }
-        else{
-            showLogin();
+        else {
+            likeBtn.innerHTML = `<i class="fa-regular fa-heart"></i>`;
+            changeLikeCount('PostLikeDecrease', likeBtn);
+            localStorage.setItem(likeBtn.id + "{{user.username}}", likeBtn.innerHTML);
         }
+
+        {% else %}
+        showLogin();
+        {% endif %}
     }
+
 
     //when document is ready
     $(document).ready(function () {
@@ -279,6 +324,8 @@
         }
 
         // funtion to increase readcount if user stay for while
+
+        {% if user.is_authenticated %}
         setTimeout(readIncrease, 120000);
         function readIncrease() {
             $.ajax({
@@ -294,6 +341,7 @@
                 }
             });
         }
+        {% endif %}
     });
 </script>
 {% endblock js %}

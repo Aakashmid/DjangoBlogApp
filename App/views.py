@@ -1,8 +1,9 @@
-from django.shortcuts import render,redirect,HttpResponse
+from django.shortcuts import render,redirect,HttpResponse,HttpResponseRedirect
+from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib.auth import login,logout,authenticate
 from django.contrib import messages
-from .models import Post,Comment,PostLike,CommentLike,PostReadedUser ,BlogUser,AuthorFollower
+from .models import Post,Comment,PostLike,CommentLike,PostReadedUser ,BlogUser,AuthorFollower,Tag,PostCategory,SavedPost
 from .templatetags import extraFilter
 from django.db.models import Q
 from django.http import JsonResponse
@@ -10,8 +11,11 @@ from django.utils import timezone
 from datetime import datetime, timedelta
 # Create your views here.
 def home(request):
-    allPosts=Post.objects.filter(Q(read_count__gte=10))
-    parms={"allPosts":allPosts}
+    # incomplet , write logic for showing recent posts
+    allPosts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=2)).order_by('-read_count')[:10]
+    postTags=Tag.objects.all()[:8]
+    postCats=PostCategory.objects.all()[:10]
+    parms={"allPosts":allPosts,'postTags':postTags,'Categories':postCats}
     return render(request,'App/index.html',parms)
 
 
@@ -22,7 +26,7 @@ def Create_account(request):
         username=request.POST.get('username')
         password=request.POST.get('password')
         email=request.POST.get('email')
-        if User.objects.filter(username=username):
+        if User.objects.filter(username=username).exists():
             messages.error(request,"This username is taken !!")
             return redirect('/')
         else:
@@ -61,55 +65,104 @@ def Logout_hand(request):
     messages.success(request,"Successsfully logout !!")
     return redirect('/')
     
-def Show_post_blogs(request,filterOrder=None):
-
+def Show_post_blogs(request,filterOrder=None,category=None,tagName=None):
+    # Handling search query 
     if request.method=="POST":
-        search=request.POST.get('SearchQuery')
-        if search:
+        if request.POST['SearchQuery']:
+            search=request.POST.get('SearchQuery')
             allPosts=Post.objects.all()
             Posts=[]
             for post in allPosts:
-                if search in  post.title.lower() or search in post.content.lower():
+                if search.lower() in  post.title.lower() or search.lower() in post.content.lower()   or search.lower() == post.category.name.lower():
                     Posts.append(post)
-            params={"allPosts":Posts}
+            params={"allPosts":Posts,'Search':"Search_result_page"}
             return render(request,'App/blog_posts.html',params)
-
-    elif filterOrder : 
-            ids=['trend','new','old','mostreaded']
-            if filterOrder==ids[0]:
-                #write query for selecting trending posts
-                allPosts=Post.objects.filter(Q(read_count__gte=50)& Q(publish_time__gte=timezone.now()-timedelta(days=3)))[:20]
-                params={"allPosts":allPosts}
-                return render(request,'App/blog_posts.html',params)
-            elif filterOrder==ids[1]:
-                allPosts=Post.objects.all().order_by('-publish_time')
-                params={"allPosts":allPosts}
-                return render(request,'App/blog_posts.html',params)
-            
-            elif filterOrder==ids[2]:
-                allPosts=Post.objects.all().order_by('publish_time')
-                params={"allPosts":allPosts}
-                return render(request,'App/blog_posts.html',params)
-            elif filterOrder==ids[3]:
-                allPosts=Post.objects.all().order_by('-read_count')[:20]
-                # allPosts=Post.objects.filter(Q())
-                params={"allPosts":allPosts}
-                return render(request,'App/blog_posts.html',params)
-    else:
+    elif category is not  None:
+        cat=PostCategory.objects.get(name=category)
+        Posts=Post.objects.filter(category=cat)
+        params={"allPosts":Posts}
+        return render(request,'App/blog_posts.html',params)
+        
+    elif tagName is not None:
         allPosts=Post.objects.all()
-        params={'allPosts':allPosts}
+        Posts=[]
+        for post in allPosts:
+            for tag in post.tags.all():
+                if tagName==tag.name:
+                    Posts.append(post)
+                    break
+        return render(request,'App/blog_posts.html',{'allPosts':Posts})
+    elif filterOrder : 
+        ids=['trend','new','old','mostreaded']
+        if filterOrder==ids[0]:
+            #write query for selecting trending posts
+            allPosts=Post.objects.filter(Q(read_count__gte=0)& Q(publish_time__gte=timezone.now()-timedelta(days=6)))[:20]
+            # allPosts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=3)).order_by('-read_count')[:4]
+        elif filterOrder==ids[1]:
+            allPosts=Post.objects.all().order_by('-publish_time')
+        elif filterOrder==ids[2]:
+            allPosts=Post.objects.all().order_by('publish_time')
+        elif filterOrder==ids[3]:
+            allPosts=Post.objects.all().order_by('-read_count')[:20]
+            # allPosts=Post.objects.filter(Q())
+        if request.user.is_anonymous:
+            user=""
+        else:
+            user=BlogUser.objects.get(user=request.user)  #user is current user
+        params={'allPosts':allPosts,'User':user}
+        return render(request,'App/blog_posts.html',params)
+    else:
+        if request.user.is_anonymous:
+            user=""
+        else:
+            user=BlogUser.objects.get(user=request.user)  #user is current user
+        allPosts=Post.objects.all()
+        params={'allPosts':allPosts,'User':user}
         return render(request,'App/blog_posts.html',params)
 
 def Create_post(request):
     if request.method=="POST":
         title=request.POST.get('post_title')
         content=request.POST.get('blog_content')
-        # author=request.user.first_name+" "+request.user.last_name
-        post=Post(author=request.user,title=title,content=content)
-        post.save()
+        cat=request.POST.get('category')
+        Tags=request.POST.get('tags')
+        thumImg=request.FILES.get('thumbnail')
+        if cat!="":
+            category=PostCategory.objects.get(name=cat)
+        else:
+            category=None   
+
+        # Adding tags
+        Tagnames=[]
+        for tag in Tags.split():
+            if tag[0]=='#':
+                Tagnames.append(tag[1:])
+            else:
+                Tagnames.append(tag[0:])
+        
+        Tags=[]  
+        for tagname in Tagnames:
+            if not Tag.objects.filter(name=tagname).exists():
+                tag=Tag.objects.create(name=tagname)
+                Tags.append(tag)
+            else:
+                tag=Tag.objects.get(name=tagname)
+                Tags.append(tag)
+    
+            
+        author=BlogUser.objects.get(user=request.user)
+        author.save()
+        # Create post 
+        post=Post.objects.create(author=author,title=title,content=content,category=category)
+        post.tags.add(*Tags)
+        if thumImg is not None:
+            post.thImg=thumImg
+            post.save()
         messages.success(request,"Blog is posted successfuly !!")
         return redirect('/')
-    return render(request,'App/createPost.html')
+    categories=PostCategory.objects.all()
+    params={'Categories':categories}
+    return render(request,'App/createPost.html',params)
 
 def Read_post(request,id):
     post=Post.objects.get(id=id)
@@ -147,7 +200,6 @@ def Read_post(request,id):
             comment=Comment.objects.get(sno=comment_sno)
             if not CommentLike.objects.filter(user=request.user,comment=comment).exists():
                 comment.like+=1
-                print("increase like by 1")
                 comment.save()
                 # Create object like and save it ,that keep detailw which user liked  comment
                 Like=CommentLike.objects.create(user=request.user,comment=comment)
@@ -186,13 +238,18 @@ def Read_post(request,id):
     if post:
         comments=Comment.objects.filter(Q(parent=None) & Q(post=post))
         replies=Comment.objects.filter(post=post).exclude(parent=None)
+        related_posts=Post.objects.filter(category=post.category)[:4]
+        # Author=BlogUser.objects.get(user=post.author)
+        CommentsDict={}
         replyDict={}
         for reply in replies:
             if reply.parent.sno not in replyDict.keys():
                 replyDict[reply.parent.sno]=[reply]
             else:
                 replyDict[reply.parent.sno].append(reply)
-        return render(request,'App/postView.html',{"post":post,"comments":comments,'replies':replyDict})
+        for comment in comments:
+            CommentsDict[comment]=BlogUser.objects.get(user=comment.user)
+        return render(request,'App/postView.html',{"post":post,"CommentsDict":CommentsDict,'replies':replyDict,'Related_posts':related_posts})  #User is logged in user or current user
     else:
         return redirect('/post-blogs/')
 
@@ -214,46 +271,123 @@ def post_comment(request):
             messages.success(request," Reply posted successfully ")
         return redirect(f'/post-blogs/{post.id}/')
     
-def profile(request,author_id=None):
-    if author_id:
+def profile(request,user_id=None):     
+    if user_id:
         if request.method=="POST":
-            action=request.POST.get('action')
-            if action=='IncreaseFollower':
-                Author=BlogUser.objects.get(user=author_id)
-                Follower=request.user
-                # if AuthorFollower.objects.filter(Author=Author,follower=Follower).():  
-                # AuthFollRel is object storing AuthorFollower object which keeps information of author and follower data
-                Author.followers+=1
-                Author.save()
-                AuthFollRel=AuthorFollower.objects.create(Author=Author,follower=Follower)
-                AuthFollRel.save()
-                response=JsonResponse({'btnText':"Following",'followerCount':Author.followers})
-                return response
-            elif action=="DecreaseFollower":
-                Author=BlogUser.objects.get(user=author_id)
-                Follower=request.user
-                Author.followers-=1
-                Author.save()
-                AuthFollRel=AuthorFollower.objects.get(Author=Author,follower=Follower)
-                AuthFollRel.delete()
-                response=JsonResponse({'btnText':"Follow",'followerCount':Author.followers})
-                return response
-            else:
-                Author=BlogUser.objects.get(user=author_id)
-                Follower=request.user
-                if AuthorFollower.objects.filter(Author=Author,follower=Follower).exists():
-                    print('Hellow')
-                    response=JsonResponse({'btnText':"Following"})
+            action=request.POST.get('action',None)
+            post_id=request.POST.get('Post_id',None)
+            if action is not None:
+                if action=='IncreaseFollower':
+                    Author=BlogUser.objects.get(user=user_id)
+                    Follower=request.user 
+                    # AuthFollRel is object storing AuthorFollower object which keeps information of author and follower data
+                    
+                    if not AuthorFollower.objects.filter(Author=Author,follower=Follower).exists():
+                        Author.followers+=1
+                        Author.save()
+                        AuthFollRel=AuthorFollower.objects.create(Author=Author,follower=Follower)
+                        AuthFollRel.save()
+                        response=JsonResponse({'btnText':"Following",'followerCount':Author.followers})
+                        return response
+                    else:
+                        response=JsonResponse({'btnText':"Following",'followerCount':Author.followers})
+                        return response   
+                elif action=="DecreaseFollower":
+                    Author=BlogUser.objects.get(user=user_id)
+                    Follower=request.user
+                    if AuthorFollower.objects.filter(Author=Author,follower=Follower).exists():
+                        Author.followers-=1
+                        Author.save()
+                        AuthFollRel=AuthorFollower.objects.get(Author=Author,follower=Follower)
+                        AuthFollRel.delete()
+                        response=JsonResponse({'btnText':"Follow",'followerCount':Author.followers})
+                        return response
+                    else:
+                        response=JsonResponse({'btnText':"Follow",'followerCount':Author.followers})
+                        return response
+
+                else:
+                    Author=BlogUser.objects.get(user=user_id)
+                    # if not request.user.is_anonymous
+                    Follower=request.user
+                    if AuthorFollower.objects.filter(Author=Author,follower=Follower).exists():
+                        response=JsonResponse({'btnText':"Following"})
+                        return response
+                    else:
+                        response=JsonResponse({'btnText':"Follow"})
+                        return response
+            elif post_id is not None:
+                # post_id=int(post_id)
+                post=Post.objects.get(id=post_id)
+                current_user=BlogUser.objects.get(user=request.user)
+                if not SavedPost.objects.filter(saved_post=post,user=current_user).exists():
+                    SavedPost.objects.create(saved_post=post,user=current_user)
+                    response=JsonResponse({'Result':'Post_saved'})
+                    print('Saving post ')
                     return response
                 else:
-                    response=JsonResponse({'btnText':"Follow"})
+                    SavedPost.objects.get(saved_post=post,user=current_user).delete()
+                    response=JsonResponse({'Result':'Post_unsaved'})
+                    print("Unsaving post")
                     return response
+            else:
+                return HttpResponseRedirect(reverse('App:Author profile',args=(user_id)))
+
+        # If user  want to see author page
         else:
-            # here author id is user.id of author user
-            bloguser=BlogUser.objects.get(user=author_id)
-            allPosts=Post.objects.filter(author=author_id)
-            return render(request,'App/author.html',{"User":bloguser,'Posts':allPosts})
+            # here author id is blogser object pk 
+            bloguser=BlogUser.objects.get(pk=user_id)
+            allPosts=Post.objects.filter(author=user_id)
+            if not request.user.is_anonymous:
+                if AuthorFollower.objects.filter(follower=request.user,Author=bloguser).exists():
+                    userFollower=True
+                else:
+                    userFollower=False
+            else:
+                userFollower=False
+            # here Author is author of post
+            return render(request,'App/author.html',{"Author":bloguser,'Posts':allPosts,'userFollower':userFollower})
+            # return render(request,'App/author.html',{'Posts':allPosts})
     else:
         bloguser=BlogUser.objects.get(user=request.user)
-        allPosts=Post.objects.filter(author=request.user)
-        return render(request,'App/profile.html',{"User":bloguser,'Posts':allPosts})
+        save_post_obj=SavedPost.objects.filter(user=bloguser)[:10]
+        SavedPosts=[]
+        for post in save_post_obj:
+            SavedPosts.append(post.saved_post)
+        # Here User is authenticated user
+        return render(request,'App/profile.html',{"User":bloguser,'saved_posts':SavedPosts})
+    
+def Change_profile(request):
+    if request.method=="POST":
+        username=request.POST.get('username')
+        name=request.POST.get('fullname')
+        email=request.POST.get('Email')
+        bio=request.POST.get('Bio')
+        profilImage=request.FILES.get('imageInput')
+        if User.objects.filter(username=username).exclude(username=request.user.username):
+            messages.error(request,'This username is taken !!')
+            return HttpResponseRedirect(reverse('App:User Profile'))
+        else:
+            firstname=name.split(' ')[0]
+        # here length is storing how many word is list name is
+            length= len(name.split(' '))
+            lastname=""
+            for i in range(1,length):
+                if i!=1:
+                    lastname+=" "+name.split(' ')[i]
+                else:
+                    lastname+=name.split(' ')[i]
+            user=request.user
+            user.first_name=firstname
+            user.last_name=lastname
+            user.username=username
+            user.email=email
+            user.save()
+            bloguser=BlogUser.objects.get(user=user)
+            if profilImage is not None:
+                bloguser.profileImg=profilImage
+            bloguser.Bio=bio
+            bloguser.save()
+            messages.success(request,"Changed profile successfully !!")
+            return HttpResponseRedirect(reverse('App:User Profile'))
+        

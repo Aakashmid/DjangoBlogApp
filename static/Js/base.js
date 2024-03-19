@@ -1,5 +1,5 @@
-function showhidecat(){
-    let catDiv=document.getElementById('categories');
+function showhidecat() {
+    let catDiv = document.getElementById('categories');
     if (catDiv.classList.contains('block')) {
         catDiv.classList.remove('block');
         catDiv.classList.add('hidden');
@@ -9,8 +9,8 @@ function showhidecat(){
         catDiv.classList.add('block');
     }
 }
-function hidecatDiv(){
-    let catDiv=document.getElementById('categories');
+function hidecatDiv() {
+    let catDiv = document.getElementById('categories');
     if (catDiv.classList.contains('block')) {
         catDiv.classList.remove('block');
         catDiv.classList.add('hidden');
@@ -22,7 +22,11 @@ function hide_navigation() {
     var span_close = document.getElementById('close_modals');
     var nav = document.getElementById('navigation_bar');
     var loginform = document.getElementById('login_modal');
-
+    var imageModal = document.getElementsByClassName('image-box')[0];
+    if (imageModal) {
+        document.getElementsByClassName('image-box')[0].classList.remove('block');
+        document.getElementsByClassName('image-box')[0].classList.add('hidden');
+    }
     if (nav.classList.contains('-translate-x-0')) {
         nav.classList.remove('-translate-x-0');
         nav.classList.add('translate-x-full');
@@ -97,7 +101,7 @@ function closeLoginModal() {
         span_close.classList.add('hidden');
         document.body.classList.remove('overflow-hidden');
     }
-  
+
 }
 
 
@@ -128,13 +132,16 @@ if (alert) {
     var alert_btn = document.getElementById('dismiss_alert');
     alert_btn.onclick = function () {
         var alert = document.getElementById('alert');
-        if (alert.classList.contains('flex')) {
-            alert.classList.remove('flex');
-            alert.classList.add('hidden');
-        }
+        alert.classList.toggle('hidden');
+
     }
 }
 
+
+let previews = document.getElementsByClassName('preview');
+Array.from(previews).forEach((element) => {
+    element.innerHTML = element.innerText;
+})
 
 //Show category on hovering or click categoring link
 

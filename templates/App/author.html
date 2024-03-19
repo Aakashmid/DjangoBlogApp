@@ -6,22 +6,31 @@
         <div class="h-24 w-full bg-gray-800"></div>
         <div class="py-3 px-4 flex flex-col space-y-6">
             <div class="flex space-x-3 items-center  ">
-                <span class=""><img class="w-auto h-20 rounded-full " src="{% static 'img/profile.jpg' %}"
-                        alt="..."></span>
+                <div class="h-20 rounded-full w-20 outline outline-4 outline-gray-100 overflow-hidden">
+                    <img src='/media/{{Author.profileImg}}' alt="..." class=" ">
+                </div>
                 <div class="flex flex-col space-y-1">
-                    <span class="Author-name font-semibold text-black text-2xl">{{User.user.first_name}}
-                        {{User.user.last_name}}</span>
+                    <span class="Author-name font-semibold text-black text-2xl">{{Author.user.first_name}}
+                        {{Author.user.last_name}}</span>
                     <span class="font-normal">
                         <span id="follow_count" class="follower-count">
-                            {{User.followers}}
+                            {{Author.followers}}
                         </span>
                         Followers</span> <!-- Here user is author who's profile is viewing -->
                 </div>
             </div>
             <div class="px-2">
-                <button id="followBtn" onclick="ChangeFollowers(this)"
-                    class=" text-white w-2/3 bg-blue-950 rounded-3xl p-2"></button>
+                {% if request.user == Author.user %}
+                {% else %}
+                {% if userFollower %}
+                <button  onclick="ChangeFollowers(this)"
+                    class=" follow-btn text-black w-2/3 outline outline-2 outline-blue-950 rounded-3xl p-2">Following</button>
+                {% else %}
+                <button  onclick="ChangeFollowers(this)"
+                    class=" follow-btn text-white w-2/3 bg-blue-950 rounded-3xl p-2">Follow</button>
                 <!-- hover:outline-2 hover:outline hover:outline-blue-950 hover:bg-white hover:text-black -->
+                {% endif %}
+                {% endif %}
             </div>
             <div class="">
                 <div class="flex space-x-4 items-center">
@@ -42,26 +51,35 @@
                 {% for post in Posts %}
                 <div class="Card-blog-post flex mt-4 flex-col space-y-1 px-1">
                     <div class="upper-part">Posted on {{post.publish_time}} </div>
-                    <div class="main-body flex w-full">
-                        <a href="{{post.id}}/" id="card_link" class="flex flex-col w-[80%] ">
+                    <div class="main-body flex w-full items-center">
+                        <a href="{% url 'App:Blog Post' post.id %}" id="card_link" class="flex flex-col w-[80%] ">
                             <h1 id="title{{post.id}}" class="title font-semibold text-xl">{{post.title}}</h1>
                             <p class="blog-content">
                                 <div class="preview text-lg">{{post.content|safe|truncatechars_html:100}}</div>
                             </p>
                         </a>
                         <span class="img-container w-[20%]">
-                            <img src="{% static 'img/profile.jpg' %}" class="rounded w-20 h-auto " alt="">
+                            <img src="{% static 'img/profile.jpg' %} " class="rounded w-20 h-auto float-end " alt="">
                         </span>
-
                     </div>
-                    <div class="footer-part flex items-center  justify-between">
-                        <span class="flex space-x-5 items-center">
-                            <span class="like">Like</span>
-                            <span class="like">Read</span>
+                    <div class="footer-part flex items-center justify-between py-2">
+                        <span class="flex space-x-4 items-center ">
+                            <a href="" class="">Like</a>
+                            <a href="" class="">Comment</a>
                         </span>
-                        <span class="flex space-x-5 items-center ">
-                            <span class="like">Save</span>
-                            <span class="like text-2xl font-bold">...</span>
+                        <span class="flex space-x-6 items-center mx-3">
+                            <a role="button" class="bookmark" onclick="SavePost(this)" id="Save_post{{post.id}}"><i
+                                    class="fa-regular fa-bookmark fa-lg"></i></a>
+                            <a role="button" class="three-dots cursor-pointer"><i
+                                    class="fa-solid fa-ellipsis fa-lg"></i></a>
+                            <span id="Option_box{{post.id}}"
+                                class="absolute bg-white  hidden p-2 border-gray-500 border rounded ">
+                                <ul class="flex flex-col">
+                                    <li class="" id="follow_op">
+                                        Follow
+                                    </li>
+                                </ul>
+                            </span>
                         </span>
                     </div>
                 </div>
@@ -74,7 +92,9 @@
                 {% endif %}
             </div>
             <div class="px-4 py-2 about-page hidden text-lg">
-                <p class="">{{User.Bio}}</p>
+                {% if Author.Bio|length > 0 %}
+                <p class="">{{Author.Bio}}</p>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -116,7 +136,7 @@
         followCount = document.getElementById('follow_count');
         $.ajax({
             type: "Post",
-            url: "{% url 'Author Profile' User.user_id %}",
+            url: "{% url 'App:Author Profile' Author.user_id %}",
             data: { 'action': action },
             dataType: "json",
             headers: {
@@ -132,6 +152,11 @@
                     element.classList.remove('text-white', 'bg-blue-950');
                     element.classList.add('text-black', 'outline', 'outline-2', 'outline-blue-950');
                 }
+                else if (element.innerText == 'Follow') {
+                    element.classList.remove('outline');
+                    element.classList.add('text-white', 'bg-blue-950');
+                }
+
             },
             //here error is error return by the url 
             error: function (error) {
@@ -140,24 +165,53 @@
         });
     }
     function ChangeFollowers(followBtn) {
+        {% if user.is_authenticated %}
+
         if (followBtn.innerText == "Follow") {
-            // followBtn.innerText = "Following";
-            // followBtn.classList.remove('text-white','bg-blue-950');
-            // followBtn.classList.add('text-black','outline','outline-2','outline-blue-950');
             SenAjaxchangeFollower(followBtn, "IncreaseFollower");
         }
         else if (followBtn.innerText == "Following") {
-            followBtn.classList.remove('outline');
-            followBtn.classList.add('text-white', 'bg-blue-950');
             SenAjaxchangeFollower(followBtn, "DecreaseFollower");
         }
+        {% else %}
+        showLogin();
+        {% endif %}
     }
-    btn = document.getElementById('followBtn');
-    SenAjaxchangeFollower(btn);
-    //for changing post.content innerhtml to innertext
-    let previews = document.getElementsByClassName('preview');
-    Array.from(previews).forEach((element) => {
-        element.innerHTML = element.innerText;
-    })
+
+    // document.getElementsByClassName('three-dots')[0].addEventListener('click',function(){
+    //     document.getElementsByClassName('Option_box').classList.toggle('hidden');
+    // })
+
+    function SavePost(element) {
+        {% if user.is_authenticated %}
+        let post_id = element.id.slice(9);
+        $.ajax({
+            type: "Post",
+            url: "{% url 'App:Author Profile' Author.user_id %}",
+            data: { 'Post_id': post_id },
+            dataType: "json",
+            headers: {
+                "X-CSRFToken": '{{ csrf_token }}'
+            },
+            //here  data is response return by server 
+            success: function (data) {
+                console.log();
+                if (data.Result=='Post_saved') {
+                    document.getElementById(element.id).innerHTML='<i class="fa-solid fa-bookmark fa-lg"></i>';
+                }
+                else if( data.Result=='Post_unsaved'){
+                    document.getElementById(element.id).innerHTML='<i class="fa-regular fa-bookmark fa-lg"></i>';
+                    
+                }
+            },
+            //here error is error return by the url 
+            error: function (error) {
+                console.log("Error:", error);
+            }
+        });
+        {% else %}
+        showLogin();
+        {% endif %}
+    }
 </script>
 {% endblock js %}
