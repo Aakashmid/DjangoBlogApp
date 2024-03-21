@@ -73,8 +73,11 @@ def Show_post_blogs(request,filterOrder=None,category=None,tagName=None):
             allPosts=Post.objects.all()
             Posts=[]
             for post in allPosts:
-                if search.lower() in  post.title.lower() or search.lower() in post.content.lower()   or search.lower() == post.category.name.lower():
+                if search.lower() in  post.title.lower() or search.lower() in post.content.lower() :
                     Posts.append(post)
+                if post.category is not None:
+                    if post.category.name.lower()==search.lower():
+                        Posts.append(post)
             params={"allPosts":Posts,'Search':"Search_result_page"}
             return render(request,'App/blog_posts.html',params)
     elif category is not  None:

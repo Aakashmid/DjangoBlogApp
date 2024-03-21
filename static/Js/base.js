@@ -60,11 +60,15 @@ function searchBar_Show() {
     if (searchBar.classList.contains('hidden')) {
         searchBar.classList.remove('hidden');
         searchBar.classList.add('block');
+        // var element = document.getElementById("targetElement");
+        // searchBar.scrollIntoView();
+        // searchBar.focus()
     }
     else if (searchBar.classList.contains('block')) {
         searchBar.classList.remove('block');
         searchBar.classList.add('hidden');
     }
+    searchBar.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 // show login form
