@@ -28,7 +28,6 @@
                 {% else %}
                 <button  onclick="ChangeFollowers(this)"
                     class=" follow-btn text-white w-2/3 bg-blue-950 rounded-3xl p-2">Follow</button>
-                <!-- hover:outline-2 hover:outline hover:outline-blue-950 hover:bg-white hover:text-black -->
                 {% endif %}
                 {% endif %}
             </div>
@@ -50,18 +49,24 @@
                 {% if Posts %}
                 {% for post in Posts %}
                 <div class="Card-blog-post flex mt-4 flex-col space-y-1 px-1">
-                    <div class="upper-part">Posted on {{post.publish_time}} </div>
-                    <div class="main-body flex w-full items-center">
-                        <a href="{% url 'App:Blog Post' post.id %}" id="card_link" class="flex flex-col w-[80%] ">
-                            <h1 id="title{{post.id}}" class="title font-semibold text-xl">{{post.title}}</h1>
-                            <p class="blog-content">
-                                <div class="preview text-lg">{{post.content|safe|truncatechars_html:100}}</div>
-                            </p>
-                        </a>
-                        <span class="img-container w-[20%]">
-                            <img src="{% static 'img/profile.jpg' %} " class="rounded w-20 h-auto float-end " alt="">
-                        </span>
-                    </div>
+                    <div class="upper-part text-sm">Posted on {{post.publish_time}} </div>
+                    <a href="{% url 'App:Blog Post' post.id %}">
+                        <div class=" flex justify-between items-center ">
+                            <div
+                                class="flex flex-col  break-words    {% if post.thImg != '' %} w-[80%] {% else %}w-auto {% endif %} ">
+                                <h1 id="title{{post.id}}" class="title font-semibold text-xl">{{post.title}}</h1>
+                                <p class="blog-content">
+                                <div class="preview block lg:hidden">{{post.content|safe|truncatechars_html:50}}</div>
+                                <div class="preview hidden lg:block">{{post.content|safe|truncatechars_html:100}}</div>
+                                </p>
+                            </div>
+                            {% if post.thImg != '' %}
+                            <div class="w-14 h-14 lg:w-16 lg:h-16 float-end overflow-hidden rounded-md">
+                                <img src="/media/{{post.thImg}}" alt="">
+                            </div>
+                            {% endif %}
+                        </div>
+                    </a>
                     <div class="footer-part flex items-center justify-between py-2">
                         <span class="flex space-x-4 items-center ">
                             <a href="" class="">Like</a>
