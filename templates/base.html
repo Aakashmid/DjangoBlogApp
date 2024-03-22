@@ -24,7 +24,7 @@
 
 <body class="">
     <span id="close_modals" class="w-full h-[100%] fixed top-0 bg-black opacity-30 hidden"></span>
-    <nav
+    <nav id="nav_tag"
         class="lg:px-36 bg-white text-white py-3 px-2 outline outline-1 outline-gray-400 flex justify-between items-center fixed  top-0 w-full z-20">
         <a href="/" class="">
             <div class="">
@@ -32,10 +32,10 @@
             </div>
         </a>
         <div class="flex items-center space-x-1">
-            <div class="search p-1  rounded-sm" onclick="searchBar_Show()">
+            <a role="button" class="search p-1  rounded-sm" onclick="searchBar_Show()">
                 <span class="text-black p-1 hover:text-gray-600 cursor-pointer"><i
                         class="fa-solid fa-magnifying-glass fa-xl"></i></span>
-            </div>
+            </a>
             <div class="">
                 {% if user.is_authenticated %}
                 <a id="Create_postBtn"
