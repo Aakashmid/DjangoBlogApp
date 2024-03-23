@@ -44,6 +44,7 @@
                     <div class="">
                     </div>
                 </div>
+                {% comment %} Card main body {% endcomment %}
                 <a href="{% url 'App:Blog Post' post.id %}" id="card_link" class="">
                     <div class="px-2 flex justify-between ">
                         <div
@@ -61,6 +62,26 @@
                         {% endif %}
                     </div>
                 </a>
+                <div class="footer-part flex items-center justify-between px-3 py-2">
+                    <span class="flex space-x-4 items-center ">
+                        <a href="" class=""><i class="fa-regular fa-thumbs-up "></i></a>
+                        <a href="" class=""><i class="fa-regular fa-comment "></i></a>
+                    </span>
+                    <span class="flex space-x-6 items-center mx-3">
+                        <a role="button" class="bookmark" onclick="SavePost(this)" id="Save_post{{post.id}}"><i
+                                class="fa-regular fa-bookmark fa-lg"></i></a>
+                        <a role="button" class="three-dots cursor-pointer"><i
+                                class="fa-solid fa-ellipsis fa-lg"></i></a>
+                        <span id="Option_box{{post.id}}"
+                            class="absolute bg-white  hidden p-2 border-gray-500 border rounded ">
+                            <ul class="flex flex-col">
+                                <li class="" id="follow_op">
+                                    Follow
+                                </li>
+                            </ul>
+                        </span>
+                    </span>
+                </div>
             </div>
             <hr class="my-1 bg-gray-800">
             {% endfor %}

@@ -12,7 +12,7 @@ from datetime import datetime, timedelta
 # Create your views here.
 def home(request):
     # incomplet , write logic for showing recent posts
-    allPosts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=2)).order_by('-read_count')[:10]
+    allPosts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=5)).order_by('-read_count')[:10]
     postTags=Tag.objects.all()[:8]
     postCats=PostCategory.objects.all()[:10]
     parms={"allPosts":allPosts,'postTags':postTags,'Categories':postCats}

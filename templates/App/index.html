@@ -6,6 +6,8 @@
 
 {% block body %}
 <div class="container ">
+    {% if user.is_authenticated %}
+    {% else %}
     <div class="w-[92%] p-3   mb-5 mt-2  jumbotron mx-auto border-[1px] rounded-md text-white bg-gray-800 ">
         <p class="text-lg mt-2">Welcome to BlogBlend , your destination for curated insights and inspiration. Dive into
             thought-provoking articles on career, mindfulness, and creativity. Unleash your potential with us. Explore
@@ -13,17 +15,18 @@
 
     </div>
     <hr>
+    {% endif %}
     <h1 class="ml-4 font text-xl font-semibold mt-4">Recent Posts :</h3>
         <div class="mt-4 flex flex-col space-y-2 px-2">
             {% for post in allPosts %}
-            <div class="card border-gray-600 border-[1px] rounded-md shadow-md p-3">
+            <div class="card border-gray-600 border-[1px] rounded-md shadow-md px-3 pt-2">
                 <div class="upper-part flex-col   ">
                     <a href="{% url 'App:Author Profile' post.author_id %}" class="author-name ">
                         <div class="flex items-center space-x-2">
                             <div class="author-profile-image w-8 rounded-full h-8 overflow-hidden">
                                 <img src="/media/{{post.author.profileImg}}" class="" alt="">
                             </div>
-                            <span class="flex flex-col font-sans ">
+                            <span class="flex flex-col  font-sans ">
                                 <p class="font-normal">
                                     {{post.author.user.first_name}} {{post.author.user.last_name}}
                                 </p>
@@ -39,8 +42,8 @@
                             class="flex flex-col  break-words    {% if post.thImg != '' %} w-[80%] {% else %}w-auto {% endif %} ">
                             <h1 id="title{{post.id}}" class="title font-semibold text-xl">{{post.title}}</h1>
                             <p class="blog-content">
-                            <div class="preview block lg:hidden">{{post.content|safe|truncatechars_html:50}}</div>
-                            <div class="preview hidden lg:block">{{post.content|safe|truncatechars_html:100}}</div>
+                            <div class="preview block lg:hidden"> {% if post.thImg != ''%} {{post.content|safe|truncatechars_html:45}} {% else %} {{post.content|safe|truncatechars_html:50}} {% endif %}</div>
+                            <div class="preview hidden lg:block">{{post.content|safe|truncatechars_html:150}}</div>
                             </p>
                         </div>
                         {% if post.thImg != '' %}
@@ -50,12 +53,36 @@
                         {% endif %}
                     </div>
                 </a>
-                <div class="footer-part flex justify-between"></div>
+                <div class="footer-part flex items-center justify-between py-2">
+                    <span class="flex space-x-4 items-center ">
+                        <a href="" class=""><i class="fa-regular fa-thumbs-up "></i></a>
+                        <a href="" class=""><i class="fa-regular fa-comment "></i></a>
+                    </span>
+                    <span class="flex space-x-6 items-center mx-3">
+                        <a role="button" class="bookmark" onclick="SavePost(this)" id="Save_post{{post.id}}"><i
+                                class="fa-regular fa-bookmark fa-lg"></i></a>
+                        <a role="button" class="three-dots cursor-pointer"><i
+                                class="fa-solid fa-ellipsis fa-lg"></i></a>
+                        <span id="Option_box{{post.id}}"
+                            class="absolute bg-white  hidden p-2 border-gray-500 border rounded ">
+                            <ul class="flex flex-col">
+                                <li class="" id="follow_op">
+                                    Follow
+                                </li>
+                            </ul>
+                        </span>
+                    </span>
+                </div>
             </div>
             {% endfor %}
 
         </div>
-        <div class="tags-container ml-4 mt-6">
+        <div class="mt-2">
+            <span class="float-end "><a href="{% url 'App:Blogs'%}"
+                    class="p-2 text-lg font-medium lg:hover:underline   active:text-blue-600 rounded">More posts
+                    >></a></span>
+        </div>
+        <div class="tags-container ml-4 mt-6 clear-end">
             <h3 class="font-semibold text-lg">Search posts by category :</h3>
             <div class="tags-box w-full p-2 mt-2">
                 {% for cat in Categories %}
