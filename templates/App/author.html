@@ -187,12 +187,12 @@
     //     document.getElementsByClassName('Option_box').classList.toggle('hidden');
     // })
 
-    function SavePost(element) {
+     {% comment %} function SavePost(element) {
         {% if user.is_authenticated %}
         let post_id = element.id.slice(9);
         $.ajax({
             type: "Post",
-            url: "{% url 'App:Author Profile' Author.user_id %}",
+            url: "{% url 'App:Author Profile' user.id %}",
             data: { 'Post_id': post_id },
             dataType: "json",
             headers: {
@@ -217,6 +217,6 @@
         {% else %}
         showLogin();
         {% endif %}
-    }
+    } {% endcomment %}
 </script>
 {% endblock js %}

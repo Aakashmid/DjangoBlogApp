@@ -148,3 +148,42 @@ Array.from(previews).forEach((element) => {
 
 //Show category on hovering or click categoring link
 
+
+
+//Save post function
+
+
+// function SavePost(element) {
+//     if (isAuthenticated===true) {
+        
+//         let post_id = element.id.slice(9);
+//         $.ajax({
+//             type: "Post",
+//             url: "{% url 'App:Author Profile' Author %}",
+//             data: { 'Post_id': post_id },
+//             dataType: "json",
+//             headers: {
+//                 "X-CSRFToken": '{{ csrf_token }}'
+//             },
+//             //here  data is response return by server 
+//             success: function (data) {
+//                 console.log();
+//                 if (data.Result=='Post_saved') {
+//                     document.getElementById(element.id).innerHTML='<i class="fa-solid fa-bookmark fa-lg"></i>';
+//                 }
+//                 else if( data.Result=='Post_unsaved'){
+//                     document.getElementById(element.id).innerHTML='<i class="fa-regular fa-bookmark fa-lg"></i>';
+                    
+//                 }
+//             },
+//             //here error is error return by the url 
+//             error: function (error) {
+//                 console.log("Error:", error);
+//             }
+//         });
+//     }
+//     else{
+//         showLogin();
+//     }
+    
+// }
