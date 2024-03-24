@@ -296,8 +296,19 @@
         showLogin();
         {% endif %}
     }
-    function showSavePostModel(text){
-
+    function showSavePostModel(text,post_id){
+        let box_post=document.getElementById('SavePost_popover'+post_id);
+        if(text ==='Saved'){
+            box_post.innerText='Post Saved';
+        }
+        else{
+            box_post.innerText='Post unsaved';
+        }
+        setTimeout(() => {
+            box_post.classList.toggle('hidden');
+        }, 1000);
+        box_post.classList.toggle('hidden');
+     
     }
     </script>
 </body>
