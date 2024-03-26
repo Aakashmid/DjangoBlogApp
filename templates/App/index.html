@@ -62,8 +62,13 @@
                         Post saved
                     </span>
                     <span class="flex space-x-6 items-center mx-3">
-                        <a role="button" class="bookmark" onclick="SavePost(this)" id="Save_post{{post.id}}"><i
-                                class="fa-regular fa-bookmark fa-lg"></i></a>
+                        <a role="button" class="bookmark" onclick="SavePost(this)" id="Save_post{{post.id}}">
+                            {% if post.id  in request.session.postList %}
+                            <i class="fa-solid fa-bookmark fa-lg"></i>
+                            {% else %}
+                            <i class="fa-regular fa-bookmark fa-lg"></i>
+                            {% endif %}
+                        </a>
                         <a role="button" class="three-dots cursor-pointer"><i
                                 class="fa-solid fa-ellipsis fa-lg"></i></a>
                         <span id="Option_box{{post.id}}"

@@ -3,6 +3,7 @@ from .models import Post,Comment,PostLike,CommentLike,BlogUser,AuthorFollower,Po
 from django_summernote.admin import SummernoteModelAdmin
 from django.contrib.admin import AdminSite
 from .models import User
+
 # import django
 # Register your models here.
 
@@ -32,3 +33,4 @@ blog_site.register(BlogUser)
 blog_site.register(AuthorFollower)
 blog_site.register(PostCategory)
 blog_site.register(Tag)
+

@@ -15,7 +15,12 @@ def home(request):
     allPosts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=5)).order_by('-read_count')[:10]
     postTags=Tag.objects.all()[:8]
     postCats=PostCategory.objects.all()[:10]
-    parms={"allPosts":allPosts,'postTags':postTags,'Categories':postCats}
+    if request.session.get('postList'):
+        print(request.session['postList'])
+    else:
+        print([])
+
+    parms={"allPosts":allPosts,'postTags':postTags,'Categories':postCats,}
     return render(request,'App/index.html',parms)
 
 
@@ -278,7 +283,7 @@ def profile(request,user_id=None):
     if user_id:
         if request.method=="POST":
             action=request.POST.get('action',None)
-            post_id=request.POST.get('Post_id',None)
+            post_id=request.POST.get('Post_id',None)  # for saving post in reading list
             if action is not None:
                 if action=='IncreaseFollower':
                     Author=BlogUser.objects.get(user=user_id)
@@ -321,18 +326,21 @@ def profile(request,user_id=None):
                         return response
             elif post_id is not None:
                 # post_id=int(post_id)
-                post=Post.objects.get(id=post_id)
-                current_user=BlogUser.objects.get(user=request.user)
-                if not SavedPost.objects.filter(saved_post=post,user=current_user).exists():
-                    SavedPost.objects.create(saved_post=post,user=current_user)
-                    response=JsonResponse({'Result':'Post_saved'})
-                    print('Saving post ')
-                    return response
+                if 'postList' in request.session:
+                    if int(post_id) not in request.session['postList']:
+                        request.session['postList'].append(int(post_id))
+                        response=JsonResponse({'Result':'Post_saved'})
+                        request.session.modified=True
+                        return response
+                    else:
+                        request.session['postList'].remove(int(post_id))
+                        request.session.modified=True
+                        response=JsonResponse({'Result':'Post_unsaved'})
+                        return response
                 else:
-                    SavedPost.objects.get(saved_post=post,user=current_user).delete()
-                    response=JsonResponse({'Result':'Post_unsaved'})
-                    print("Unsaving post")
-                    return response
+                    request.session['postList']=[int(post_id)]
+                    request.session.modified=True
+                    return JsonResponse({'Result':'Post_saved'})
             else:
                 return HttpResponseRedirect(reverse('App:Author profile',args=(user_id)))
 
@@ -355,8 +363,9 @@ def profile(request,user_id=None):
         bloguser=BlogUser.objects.get(user=request.user)
         save_post_obj=SavedPost.objects.filter(user=bloguser)[:10]
         SavedPosts=[]
-        for post in save_post_obj:
-            SavedPosts.append(post.saved_post)
+        # for post_id in  request.session['postList']:
+        #     # post=Post.objects.get
+        #     SavedPosts.append()
         # Here User is authenticated user
         return render(request,'App/profile.html',{"User":bloguser,'saved_posts':SavedPosts})
     
@@ -393,4 +402,4 @@ def Change_profile(request):
             bloguser.save()
             messages.success(request,"Changed profile successfully !!")
             return HttpResponseRedirect(reverse('App:User Profile'))
-        
+
