@@ -48,7 +48,7 @@ Profile
             <div class="">
                 <h1 class="text-lg font-semibold">Your Reading list : </h1>
                 {% for post in saved_posts %}
-                <div class="card border-gray-600 border-[1px] rounded-md shadow-md p-2 mt-2">
+                <div class="card border-gray-600 border-[1px] rounded-md shadow-md p-2 mt-2 min-h-[120px] xl:min-h-[130px]">
                     <div class="upper-part flex-col ">
                         <a href="{% url 'App:Author Profile' post.author_id %}" class="author-name">
                             <div class="flex items-center space-x-2">
@@ -82,7 +82,35 @@ Profile
                             {% endif %}
                         </div>
                     </a>
-                    <div class="footer-part flex justify-between"></div>
+                    <div class="footer-part flex items-center justify-between pb-1 pt-2 px-2">
+                        <span class="flex space-x-4 items-center ">
+                            <a href="" class=""><i class="fa-regular fa-thumbs-up fa-md "></i></a>
+                            <a href="" class=""><i class="fa-regular fa-comment fa-md"></i></a>
+                        </span>
+                        <span class="p-2 hidden relative top-8 left-1/3 md:left-[40%] lg:left-[43%] text-black font-semibold rounded shadow-green-100 bg-gray-100" id="SavePost_popover{{post.id}}">
+                            Post saved
+                        </span>
+                        <span class="flex space-x-6 items-center mx-3">
+                            <a role="button" class="bookmark" onclick="SavePost(this)" id="Save_post{{post.id}}">
+                                {% if post.id  in request.session.postList %}
+                                <i class="fa-solid fa-bookmark fa-lg"></i>
+                                {% else %}
+                                <i class="fa-regular fa-bookmark fa-lg"></i>
+                                {% endif %}
+                            </a>
+                            <a role="button" class="three-dots cursor-pointer"><i
+                                    class="fa-solid fa-ellipsis fa-lg"></i></a>
+                            <span id="Option_box{{post.id}}"
+                                class="absolute bg-white  hidden p-2 border-gray-500 border rounded ">
+                                <ul class="flex flex-col">
+                                    <li class="" id="follow_op">
+                                        Follow
+                                    </li>
+                                </ul>
+                            </span>
+                        </span>
+                       
+                    </div>
                 </div>
                 {% endfor %}
             </div>
@@ -90,8 +118,8 @@ Profile
 
         <!-- About Section -->
         <div class="about-page hidden p-3">
-            <div class="flex flex-col space-y-6">
-                <div class="">
+            <div class="flex flex-col ">
+                <div class="min-h-12 pb-4">
                     <p class="text-lg font-serif">{{User.Bio}} </p>
                 </div>
                 <span class="flex space-x-8 relative bottom-0">
@@ -106,7 +134,7 @@ Profile
 
 <!-- Profile edit form/page -->
 <div id="profile_edit_form" class="hidden profile-edit-form">
-    <div class="p-4">
+    <div class="px-2 py-3">
         <button class="active:bg-gray-300 hover:bg-gray-300 font-thin  p-2 rounded" onclick="profilePage()"><i
                 class="fa-solid fa-angle-up fa-rotate-270 fa-xl"></i></button>
         <form action="{% url 'App:Profile Change' %}" method="post" class=" flex flex-col "
@@ -126,29 +154,29 @@ Profile
             <div class="px-4 py-2">
                 <label for="name" class=" text-lg w-full font-medium">Name</label>
                 <input type="text" name="fullname" id="fullname"
-                    class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 px-2 py-[6px]"
+                    class="text-lg rounded bg-white w-full outline outline-0 border-[2px] px-2 py-[6px] focus:outline-2 focus:outline-blue-400"
                     value="{{user.first_name}} {{user.last_name}}">
             </div>
             <div class="px-4 py-2">
                 <label for="username" class=" text-lg w-full font-medium">Username</label>
                 <input type="text" name="username"
-                    class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 px-2 py-[6px]"
+                    class="text-lg rounded bg-white w-full outline outline-0 border-[2px] px-2 py-[6px] focus:outline-2 focus:outline-blue-400"
                     value="{{user.username}}">
             </div>
             <div class="px-4 py-2">
                 <label for="Email" class=" text-lg w-full font-medium">Email</label>
                 <input type="email" id="Email" name="Email"
-                    class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 px-2 py-[6px]"
+                    class="text-lg rounded bg-white w-full outline outline-0 border-[2px] px-2 py-[6px] focus:outline-2 focus:outline-blue-400"
                     value="{{user.email}}">
             </div>
             <div class="px-4 py-2">
                 <label for="Bio" class=" text-lg w-full font-medium">Bio</label>
                 {% if User.Bio %}
                 <textarea name="Bio" id="Bio"
-                    class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 px-2 py-[6px] h-28">{{User.Bio}}</textarea>
+                    class="text-lg rounded bg-white w-full outline outline-0 border-[2px] px-2 py-[6px] h-32 focus:outline-2 focus:outline-blue-400">{{User.Bio}}</textarea>
                 {% else %}
                 <textarea name="Bio" id="Bio"
-                    class="text-lg rounded bg-white w-full outline outline-1 outline-gray-800 px-2 py-[6px] h-28">Write about you so people can know about you more </textarea>
+                    class="text-lg rounded bg-white w-full outline outline-0 border-[2px] px-2 py-[6px] h-32 focus:outline-2 focus:outline-blue-400">Write about you so people can know about you more </textarea>
                 {% endif %}
             </div>
             <button type="submit"
@@ -157,7 +185,7 @@ Profile
         </form>
     </div>
 </div>
-
+<div class="h-10 w-full "></div>
 {% endblock body %}
 {% block js%}
 <script>
