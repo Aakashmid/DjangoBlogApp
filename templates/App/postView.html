@@ -28,21 +28,31 @@
                     {{post.like}}
                 </span>
                 <span id="postlike{{post.id}}" onclick="changeLikeStatePost(this)" class="like like-icon">
-                    <i class="fa-regular fa-heart"></i>
+                    <i class="fa-regular fa-heart fa-lg"></i>
                 </span>
             </span>
-            <span class="">{{CommentsDict|length}} <i class="fa-regular fa-comment"></i></span>
+            <span class="">{{CommentsDict|length}} <i class="fa-regular fa-comment fa-lg"></i></span>
             <span class="">{{post.read_count}} <span class="text-gray-600"><i
-                        class="fa-regular fa-eye"></i></span></span>
+                        class="fa-regular fa-eye fa-lg"></i></span></span>
+            <span class="">
+                <a role="button" class="bookmark" onclick="SavePost(this)" id="Save_post{{post.id}}">
+                    {% if post.id in request.session.postList %}
+                    <i class="fa-solid fa-bookmark fa-lg"></i>
+                    {% else %}
+                    <i class="fa-regular fa-bookmark fa-lg"></i>
+                    {% endif %}
+                </a>
+            </span>
         </div>
         <p class="">
             <span class="flex space-x-2">
                 {% for tag in post.tags.all %}
-                <a href="{% url 'App:Blogs by tag' tag.name %}" class="hover:text-blue-600 hover:underline">#{{tag.name}}</a>
+                <a href="{% url 'App:Blogs by tag' tag.name %}"
+                    class="hover:text-blue-600 hover:underline">#{{tag.name}}</a>
                 {% endfor %}
             </span>
         </p>
-        
+
         <hr class="mt-2 mb-3 bg-gray-600   w-auto ">
         <div class="no-tailwind-base">
             {{post.content|safe}}
@@ -148,37 +158,68 @@
     <div class="related-post-container p-2">
         <h3 class="font-semibod text-xl p-2">Related posts :</h3>
         <div class="posts">
-            {% for post in Related_posts %}
-            <div class="card flex  flex-col space-y-1 mt-2 outline outline-gray-400 rounded-lg p-2 outline-1 xl:w-[45%] xl:float-left xl:mx-2">
-                <a href="{% url 'App:Author Profile' post.author_id %}" class="post-author-lin">
+            {% for postr in Related_posts %}
+            <div
+                class="card flex  flex-col space-y-1 mt-2 outline outline-gray-400 rounded-lg p-2 outline-1 xl:w-[45%] xl:float-left xl:mx-2">
+                <a href="{% url 'App:Author Profile' postr.author_id %}" class="post-author-lin">
                     <span class="upper-body flex space-x-2 items-center">
-                        <span class="w-8 h-8 rounded-full overflow-hidden"><img
-                                src="/media/{{post.author.profileImg}}" alt=""></span>
+                        <span class="w-8 h-8 rounded-full overflow-hidden"><img src="/media/{{postr.author.profileImg}}"
+                                alt=""></span>
                         <span class="flex flex-col">
-                            <p class="font-normal">By <span class=" text-blue-700"> {{post.author.user.first_name}}
-                                    {{post.author.user.last_name}}</span></p>
-                            <p class="text-xs font-light ">{{post.publish_time}}</p>
+                            <p class="font-normal">By <span class=" text-blue-700"> {{postr.author.user.first_name}}
+                                    {{postr.author.user.last_name}}</span></p>
+                            <p class="text-xs font-light ">{{postr.publish_time}}</p>
                         </span>
                     </span>
                 </a>
-                <a href="{% url 'App:Blog Post' post.id %}" id="card_link" class="">
+                <a href="{% url 'App:Blog Post' postr.id %}" id="card_link" class="">
                     <div class="px-1 flex justify-between ">
                         <div
-                            class="flex flex-col  break-words    {% if post.thImg != '' %} w-[80%] {% else %}w-auto {% endif %} ">
-                            <h1 id="title{{post.id}}" class="title font-semibold text-xl">{{post.title}}</h1>
+                            class="flex flex-col  break-words    {% if postr.thImg != '' %} w-[80%] {% else %}w-auto {% endif %} ">
+                            <h1 id="title{{postr.id}}" class="title font-semibold text-xl">{{postr.title}}</h1>
                             <p class="blog-content">
-                            <div class="preview block ">{{post.content|safe|truncatechars_html:50}}</div>
-                            
+                            <div class="preview block ">{{postr.content|safe|truncatechars_html:50}}</div>
+
                             </p>
                         </div>
-                        {% if post.thImg != '' %}
+                        {% if postr.thImg != '' %}
                         <div class="w-14 h-14 lg:w-20 lg:h-16 float-end overflow-hidden rounded-md">
-                            <img src="/media/{{post.thImg}}" alt="">
+                            <img src="/media/{{postr.thImg}}" alt="">
                         </div>
                         {% endif %}
                     </div>
                 </a>
+                <div class="footer-part flex items-center justify-between  px-2">
+                    <span class="flex space-x-4 items-center ">
+                        <a href="" class=""><i class="fa-regular fa-thumbs-up fa-md "></i></a>
+                        <a href="" class=""><i class="fa-regular fa-comment fa-md"></i></a>
+                    </span>
+                    <span
+                        class="p-2 hidden fixed top-16 left-1/2  transform duration-300 -translate-y-full -translate-x-1/2 w-32 text-center text-white font-semibold rounded shadow-green-100 bg-black"
+                        id="SavePost_popover">
+                        Post saved
+                    </span>
+                    <span class="flex space-x-6 items-center mx-3">
+                        <a role="button" class="bookmark" onclick="SavePost(this)" id="Save_post{{postr.id}}">
+                            {% if postr.id in request.session.postList %}
+                            <i class="fa-solid fa-bookmark fa-lg"></i>
+                            {% else %}
+                            <i class="fa-regular fa-bookmark fa-lg"></i>
+                            {% endif %}
+                        </a>
+                        <a role="button" class="three-dots cursor-pointer"><i
+                                class="fa-solid fa-ellipsis fa-lg"></i></a>
+                        <span id="Option_box{{postr.id}}"
+                            class="absolute bg-white  hidden p-2 border-gray-500 border rounded ">
+                            <ul class="flex flex-col">
+                                <li class="" id="follow_op">
+                                    Follow
+                                </li>
+                            </ul>
+                        </span>
+                    </span>
 
+                </div>
             </div>
             {% endfor %}
         </div>
@@ -263,13 +304,13 @@
         //check user is logged in or not
         {% if user.is_authenticated %}
 
-        if (likeBtn.innerHTML.trim() == `<i class="fa-regular fa-heart" aria-hidden="true"></i>`) {
-            likeBtn.innerHTML = `<i class="fa-solid fa-heart" style="color: #f7022b;"></i>`;
+        if (likeBtn.innerHTML.trim() == `<i class="fa-regular fa-heart fa-lg" aria-hidden="true"></i>`) {
+            likeBtn.innerHTML = `<i class="fa-solid fa-heart fa-lg" style="color: #f7022b;"></i>`;
             changeLikeCount('PostLikeIncrease', likeBtn);
             localStorage.setItem(likeBtn.id + "{{user.username}}", likeBtn.innerHTML);
         }
         else {
-            likeBtn.innerHTML = `<i class="fa-regular fa-heart"></i>`;
+            likeBtn.innerHTML = `<i class="fa-regular fa-heart fa-lg"></i>`;
             changeLikeCount('PostLikeDecrease', likeBtn);
             localStorage.setItem(likeBtn.id + "{{user.username}}", likeBtn.innerHTML);
         }

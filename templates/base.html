@@ -264,52 +264,56 @@
     <script src="{% static 'Js/base.js' %}"></script>
     <script>
         function SavePost(element) {
-        {% if user.is_authenticated %}
-        let post_id = element.id.slice(9);
-        $.ajax({
-            type: "Post",
-            url: "{% url 'App:Author Profile' user.id %}",
-            data: { 'Post_id': post_id },
-            dataType: "json",
-            headers: {
-                "X-CSRFToken": '{{ csrf_token }}'
-            },
-            //here  data is response return by server 
-            success: function (data) {
-                console.log();
-                if (data.Result=='Post_saved') {
-                    
-                    document.getElementById(element.id).innerHTML='<i class="fa-solid fa-bookmark fa-lg"></i>';
-                    showSavePostModel('Saved',post_id);
+            {% if user.is_authenticated %}
+            let post_id = element.id.slice(9);
+            $.ajax({
+                type: "Post",
+                url: "{% url 'App:Author Profile' user.id %}",
+                data: { 'Post_id': post_id },
+                dataType: "json",
+                headers: {
+                    "X-CSRFToken": '{{ csrf_token }}'
+                },
+                //here  data is response return by server 
+                success: function (data) {
+                    console.log();
+                    if (data.Result == 'Post_saved') {
+
+                        document.getElementById(element.id).innerHTML = '<i class="fa-solid fa-bookmark fa-lg"></i>';
+                        showSavePostModel('Saved');
+                    }
+                    else if (data.Result == 'Post_unsaved') {
+                        document.getElementById(element.id).innerHTML = '<i class="fa-regular fa-bookmark fa-lg"></i>';
+                        showSavePostModel('Unsaved');
+                    }
+                },
+                //here error is error return by the url 
+                error: function (error) {
+                    console.log("Error:", error);
                 }
-                else if( data.Result=='Post_unsaved'){
-                    document.getElementById(element.id).innerHTML='<i class="fa-regular fa-bookmark fa-lg"></i>';
-                    showSavePostModel('Unsaved',post_id);
-                }
-            },
-            //here error is error return by the url 
-            error: function (error) {
-                console.log("Error:", error);
+            });
+            {% else %}
+            showLogin();
+            {% endif %}
+        }
+        function showSavePostModel(text) {
+            let box_post = document.getElementById('SavePost_popover');
+            if (text === 'Saved') {
+                box_post.innerText = 'Post Saved';
+            } else {
+                box_post.innerText = 'Post unsaved';
             }
-        });
-        {% else %}
-        showLogin();
-        {% endif %}
-    }
-    function showSavePostModel(text,post_id){
-        let box_post=document.getElementById('SavePost_popover'+post_id);
-        if(text ==='Saved'){
-            box_post.innerText='Post Saved';
-        }
-        else{
-            box_post.innerText='Post unsaved';
-        }
-        setTimeout(() => {
+
+            // Toggle classes after a delay
+            setTimeout(() => {
+                box_post.classList.toggle('-translate-y-full');
+                box_post.classList.toggle('hidden');
+            }, 1000);
+
+            // Immediate toggle
             box_post.classList.toggle('hidden');
-        }, 1000);
-        box_post.classList.toggle('hidden');
-     
-    }
+            box_post.classList.toggle('-translate-y-full');
+        }
     </script>
 </body>
 
