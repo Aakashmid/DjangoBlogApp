@@ -90,10 +90,10 @@ Profile
                             <a href="" class=""><i class="fa-regular fa-comment fa-md"></i></a>
                         </span>
                         <span
-                        class="p-2 hidden fixed top-16 left-1/2  transform duration-300 -translate-y-full -translate-x-1/2 w-32 text-center text-white font-semibold rounded shadow-green-100 bg-black"
-                        id="SavePost_popover">
-                        Post saved
-                    </span>
+                            class="p-2 hidden fixed top-16 left-1/2  transform duration-300 -translate-y-full -translate-x-1/2 w-32 text-center text-white font-semibold rounded shadow-green-100 bg-black"
+                            id="SavePost_popover">
+                            Post saved
+                        </span>
                         <span class="flex space-x-6 items-center mx-3">
                             <a role="button" class="bookmark" onclick="SavePost(this)" id="Save_post{{post.id}}">
                                 {% if post.id in request.session.postList %}

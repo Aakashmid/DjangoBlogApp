@@ -15,22 +15,14 @@ class BlogAdminArea(admin.AdminSite):
 
 
 # class postAdmin(admin.ModelAdmin):
-    
+
 blog_site=BlogAdminArea()
 
 # class SummerAdmin(SummernoteModelAdmin):
 #     summernote_fields='content'
     
-
 # registering models
 # blog_site.register(Post, SummerAdmin)
-blog_site.register(Post)
-blog_site.register(Comment)
-blog_site.register(User)
-blog_site.register(PostLike)
-blog_site.register(CommentLike)
-blog_site.register(BlogUser)
-blog_site.register(AuthorFollower)
-blog_site.register(PostCategory)
-blog_site.register(Tag)
+blog_site.register([Post,Comment,User,BlogUser,AuthorFollower,PostCategory,CommentLike,PostLike,Tag])
+
 
