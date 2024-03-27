@@ -13,13 +13,13 @@ class BlogAdminArea(admin.AdminSite):
     site_header="Blog admin area"
     site_title="Blog adminstrations | Admin panel"
 
-
+# modelAdmin define how form of class is represented
 # class postAdmin(admin.ModelAdmin):
 
 blog_site=BlogAdminArea()
 
-# class SummerAdmin(SummernoteModelAdmin):
-#     summernote_fields='content'
+class SummerAdmin(SummernoteModelAdmin):
+    summernote_fields='content'
     
 # registering models
 # blog_site.register(Post, SummerAdmin)
