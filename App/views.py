@@ -9,6 +9,7 @@ from django.db.models import Q
 from django.http import JsonResponse
 from django.utils import timezone
 from datetime import datetime, timedelta
+from django.core.paginator import Paginator
 # Create your views here.
 def home(request):
     # incomplet , write logic for showing recent posts
@@ -84,13 +85,12 @@ def Show_post_blogs(request,filterOrder=None,category=None,tagName=None):
                     if post.category.name.lower()==search.lower():
                         Posts.append(post)
             params={"allPosts":Posts,'Search':"Search_result_page"}
-            return render(request,'App/blog_posts.html',params)
+
     elif category is not  None:
         cat=PostCategory.objects.get(name=category)
         Posts=Post.objects.filter(category=cat)
         params={"allPosts":Posts}
-        return render(request,'App/blog_posts.html',params)
-        
+
     elif tagName is not None:
         allPosts=Post.objects.all()
         Posts=[]
@@ -99,34 +99,29 @@ def Show_post_blogs(request,filterOrder=None,category=None,tagName=None):
                 if tagName==tag.name:
                     Posts.append(post)
                     break
-        return render(request,'App/blog_posts.html',{'allPosts':Posts})
+        params={'allPosts':Posts}
     elif filterOrder : 
         ids=['trend','new','old','mostreaded']
         if filterOrder==ids[0]:
             #write query for selecting trending posts
             allPosts=Post.objects.filter(Q(read_count__gte=0)& Q(publish_time__gte=timezone.now()-timedelta(days=6)))[:20]
-            # allPosts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=3)).order_by('-read_count')[:4]
         elif filterOrder==ids[1]:
             allPosts=Post.objects.all().order_by('-publish_time')
         elif filterOrder==ids[2]:
             allPosts=Post.objects.all().order_by('publish_time')
         elif filterOrder==ids[3]:
             allPosts=Post.objects.all().order_by('-read_count')[:20]
-            # allPosts=Post.objects.filter(Q())
-        if request.user.is_anonymous:
-            user=""
-        else:
-            user=BlogUser.objects.get(user=request.user)  #user is current user
-        params={'allPosts':allPosts,'User':user}
-        return render(request,'App/blog_posts.html',params)
+        params={'allPosts':allPosts}
     else:
-        if request.user.is_anonymous:
-            user=""
-        else:
-            user=BlogUser.objects.get(user=request.user)  #user is current user
         allPosts=Post.objects.all()
-        params={'allPosts':allPosts,'User':user}
-        return render(request,'App/blog_posts.html',params)
+        params={'allPosts':allPosts}
+    
+    # Adding pagination on blogposts page
+    paginator=Paginator(params['allPosts'],3)
+    page_num=request.GET.get('page')
+    posts=paginator.get_page(page_num)
+    params['allPosts']=posts
+    return render(request,'App/blog_posts.html',params)
 
 def Create_post(request):
     if request.method=="POST":
