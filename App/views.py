@@ -16,10 +16,10 @@ def home(request):
     allPosts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=5)).order_by('-read_count')[:10]
     postTags=Tag.objects.all()[:8]
     postCats=PostCategory.objects.all()[:10]
-    if request.session.get('postList'):
-        print(request.session['postList'])
-    else:
-        print([])
+    # if request.session.get('postList'):
+    #     print(request.session['postList'])
+    # else:
+    #     print([])
 
     parms={"allPosts":allPosts,'postTags':postTags,'Categories':postCats,}
     return render(request,'App/index.html',parms)

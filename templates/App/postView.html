@@ -37,9 +37,9 @@
             <span class="">
                 <a role="button" class="bookmark" onclick="SavePost(this)" id="Save_post{{post.id}}">
                     {% if post.id in request.session.postList %}
-                    <i class="fa-solid fa-bookmark fa-lg"></i>
+                    <i id="saveIcon{{post.id}}" class="fa-solid fa-bookmark fa-lg"></i>
                     {% else %}
-                    <i class="fa-regular fa-bookmark fa-lg"></i>
+                    <i id="saveIcon{{post.id}}" class="fa-regular fa-bookmark fa-lg"></i>
                     {% endif %}
                 </a>
             </span>
@@ -157,10 +157,11 @@
     <hr class="mt-2 mb-3 bg-gray-600   w-auto mx-2">
     <div class="related-post-container p-2">
         <h3 class="font-semibod text-xl p-2">Related posts :</h3>
-        <div class="posts">
+        <div class="posts pt-4">
             {% for postr in Related_posts %}
+            {% if postr.id != post.id %}
             <div
-                class="card flex  flex-col space-y-1 mt-2 outline outline-gray-400 rounded-lg p-2 outline-1 xl:w-[45%] xl:float-left xl:mx-2">
+                class="card flex  flex-col space-y-1 mt-2 outline outline-gray-400 rounded-lg p-2 outline-1 xl:w-9/12 xl:mx-auto">
                 <a href="{% url 'App:Author Profile' postr.author_id %}" class="post-author-lin">
                     <span class="upper-body flex space-x-2 items-center">
                         <span class="w-8 h-8 rounded-full overflow-hidden"><img src="/media/{{postr.author.profileImg}}"
@@ -189,7 +190,7 @@
                         {% endif %}
                     </div>
                 </a>
-                <div class="footer-part flex items-center justify-between  px-2">
+                <div class="footer-part flex items-center justify-between  px-2 py-1">
                     <span class="flex space-x-4 items-center ">
                         <a href="" class=""><i class="fa-regular fa-thumbs-up fa-md "></i></a>
                         <a href="" class=""><i class="fa-regular fa-comment fa-md"></i></a>
@@ -202,9 +203,9 @@
                     <span class="flex space-x-6 items-center mx-3">
                         <a role="button" class="bookmark" onclick="SavePost(this)" id="Save_post{{postr.id}}">
                             {% if postr.id in request.session.postList %}
-                            <i class="fa-solid fa-bookmark fa-lg"></i>
+                            <i id="saveIcon{{postr.id}}" class="fa-solid fa-bookmark text-sm "></i>
                             {% else %}
-                            <i class="fa-regular fa-bookmark fa-lg"></i>
+                            <i id="saveIcon{{postr.id}}" class="fa-regular fa-bookmark text-sm "></i>
                             {% endif %}
                         </a>
                         <a role="button" class="three-dots cursor-pointer"><i
@@ -221,6 +222,7 @@
 
                 </div>
             </div>
+            {% endif %}
             {% endfor %}
         </div>
     </div>

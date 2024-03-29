@@ -279,11 +279,19 @@
                     console.log();
                     if (data.Result == 'Post_saved') {
 
-                        document.getElementById(element.id).innerHTML = '<i class="fa-solid fa-bookmark fa-lg"></i>';
+                        // document.getElementById(element.id).innerHTML = '<i class="fa-solid fa-bookmark fa-lg"></i>';
+                        let icon=document.getElementById('saveIcon'+post_id);
+                        icon.classList.remove('fa-regular');
+                        icon.classList.add('fa-solid');
+                        document.getElementById(element.id).innerHTML = icon.outerHTML;
                         showSavePostModel('Saved');
                     }
                     else if (data.Result == 'Post_unsaved') {
-                        document.getElementById(element.id).innerHTML = '<i class="fa-regular fa-bookmark fa-lg"></i>';
+                        // document.getElementById(element.id).innerHTML = '<i class="fa-regular fa-bookmark fa-lg"></i>';
+                        let icon=document.getElementById('saveIcon'+post_id);
+                        icon.classList.remove('fa-solid');
+                        icon.classList.add('fa-regular');
+                        document.getElementById(element.id).innerHTML = icon.outerHTML;
                         showSavePostModel('Unsaved');
                     }
                 },

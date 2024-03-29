@@ -1368,6 +1368,10 @@ video {
   padding-top: 0.5rem;
 }
 
+.pt-4 {
+  padding-top: 1rem;
+}
+
 .text-center {
   text-align: center;
 }
@@ -1512,11 +1516,6 @@ video {
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
-}
-
-.text-blue-50 {
-  --tw-text-opacity: 1;
-  color: rgb(239 246 255 / var(--tw-text-opacity));
 }
 
 .underline {
@@ -1774,6 +1773,11 @@ video {
   color: rgb(37 99 235 / var(--tw-text-opacity));
 }
 
+.active\:text-blue-950:active {
+  --tw-text-opacity: 1;
+  color: rgb(23 37 84 / var(--tw-text-opacity));
+}
+
 .active\:text-gray-500:active {
   --tw-text-opacity: 1;
   color: rgb(107 114 128 / var(--tw-text-opacity));
@@ -1782,11 +1786,6 @@ video {
 .active\:text-white:active {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
-}
-
-.active\:text-blue-950:active {
-  --tw-text-opacity: 1;
-  color: rgb(23 37 84 / var(--tw-text-opacity));
 }
 
 .active\:outline:active {
@@ -1942,6 +1941,11 @@ video {
     margin-right: 0.5rem;
   }
 
+  .xl\:mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
   .xl\:min-h-\[130px\] {
     min-height: 130px;
   }
@@ -1952,5 +1956,9 @@ video {
 
   .xl\:w-\[45\%\] {
     width: 45%;
+  }
+
+  .xl\:w-9\/12 {
+    width: 75%;
   }
 }
