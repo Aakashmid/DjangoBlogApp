@@ -97,10 +97,10 @@ Profile
                         <span class="flex space-x-6 items-center mx-3">
                             <a role="button" class="bookmark" onclick="SavePost(this)" id="Save_post{{post.id}}">
                                 {% if post.id in request.session.postList %}
-                            <i id="saveIcon" class="fa-solid fa-bookmark text-sm lg:text-lg"></i>
-                            {% else %}
-                            <i id="saveIcon" class="fa-regular fa-bookmark text-sm lg:text-lg"></i>
-                            {% endif %}
+                                <i id="saveIcon{{post.id}}" class="fa-solid fa-bookmark  text-md lg:text-lg"></i>
+                                {% else %}
+                                <i id="saveIcon{{post.id}}" class="fa-regular fa-bookmark  text-md lg:text-lg"></i>
+                                {% endif %}
                             </a>
                             <a role="button" class="three-dots cursor-pointer"><i
                                     class="fa-solid fa-ellipsis fa-lg"></i></a>
