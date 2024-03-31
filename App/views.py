@@ -246,10 +246,11 @@ def Read_post(request,id):
         CommentsDict={}
         replyDict={}
         for reply in replies:
+            replyUser=BlogUser.objects.get(user=reply.user)
             if reply.parent.sno not in replyDict.keys():
-                replyDict[reply.parent.sno]=[reply]
+                replyDict[reply.parent.sno]=[{replyUser:reply}]
             else:
-                replyDict[reply.parent.sno].append(reply)
+                replyDict[reply.parent.sno].append({replyUser:reply})
         for comment in comments:
             CommentsDict[comment]=BlogUser.objects.get(user=comment.user)
         return render(request,'App/postView.html',{"post":post,"CommentsDict":CommentsDict,'replies':replyDict,'Related_posts':related_posts})  #User is logged in user or current user
