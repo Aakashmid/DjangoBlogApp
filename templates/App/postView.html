@@ -66,8 +66,11 @@
         </h3>
         <div id="comment-block" class="hidden">
             <!-- Comment input -->
-            <div class="comment-input">
-                <form action="/post-comment" method="get" class="py-2">
+            <div class="comment-input flex space-x-3">
+                <span class="w-10 h-10 overflow-hidden rounded-full ">
+                    <img src="/media/{{User.profileImg}}" alt="">
+                </span>
+                <form action="/post-comment" method="get" class="py-2  w-full">
                     {% csrf_token %}
                     <input type="hidden" name="postSno" value="{{post.id}}">
                     <input type="hidden" name="parentSno" value="">
@@ -85,72 +88,84 @@
             <div class="All-comments flex flex-col space-y-2  px-2 mt-2">
                 {% for comment,commentAuthor in CommentsDict.items %}
                 <div class="">
-                    <div class="flex space-x-2">
-                        <img src="/media/{{commentAuthor.profileImg}}" alt=".."
-                            class="w-7 h-auto aspect-square rounded-full">
-                        <p class="user ">{{comment.user.first_name}} {{comment.user.last_name}}<span
-                                class="font-light text-sm">
-                                . {{comment.timeStamp|naturaltime}}
-                            </span>
-                        </p>
-                    </div>
-                    <div class="flex flex-col ml-9 space-y-2">
-                        <p class="text-[17px] font-medium">{{comment.comment_text}}</p>
-                        <p class="flex space-x-5">
-                            <span class="flex space-x-1">
-                                <span id="like_Count{{comment.sno}}" class="like-Count">
-                                    {{comment.like}}
+                    <div class="flex space-x-2 ">
+                        <span class="w-10 h-10 overflow-hidden rounded-full">
+                            <img src="/media/{{commentAuthor.profileImg}}" alt=".." class="">
+                        </span>
+                        <div class="flex flex-col  space-y-1 w-full">
+                            <p class="user font-medium">{{comment.user.first_name}} {{comment.user.last_name}}<span
+                                    class="font-light text-xs">
+                                    . {{comment.timeStamp|naturaltime}}
                                 </span>
-                                <span onclick="changeLikeState(this)" id="comment_like{{comment.sno}}"
-                                    class="like text-[14px] cursor-pointer">
-                                    <i class="fa-regular fa-thumbs-up "></i>
+                            </p>
+                            <p class="text-[17px] font-normal">{{comment.comment_text}}</p>
+                            <p class="flex space-x-5">
+                                <span class="flex space-x-1">
+                                    <span id="like_Count{{comment.sno}}" class="like-Count">
+                                        {{comment.like}}
+                                    </span>
+                                    <span onclick="changeLikeState(this)" id="comment_like{{comment.sno}}"
+                                        class="like text-[14px] cursor-pointer">
+                                        <i class="fa-regular fa-thumbs-up "></i>
+                                    </span>
                                 </span>
-                            </span>
-                            {% if replies|get_replies:comment.sno|length > 0 %}
-                            <span class="reply text-[14px]"><a role="button" id="btn{{comment.sno}}"
-                                    class="reply-button py-1 px-3 hover:bg-gray-300   active:bg-blue-500 rounded-2xl active:text-white">Reply({{replies|get_replies:comment.sno|length}})</a></span>
-                            {% else %}
-                            <span class="reply text-[14px]"><a role="button" id="btn{{comment.sno}}"
-                                    class="reply-button py-1 px-3 hover:bg-gray-300   active:bg-blue-500 rounded-2xl active:text-white">Reply</a></span>
-                            {% endif %}
-                        </p>
-                        <div class="reply-section hidden " id="replyForm{{comment.sno}}">
-                            <!-- Reply input -->
-                            <form action="/post-comment" method="get" class="">
-                                {% csrf_token %}
-                                <input type="hidden" name="postSno" value="{{post.id}}">
-                                <input type="hidden" name="parentSno" value="{{comment.sno}}">
-                                <div class="">
-                                    <div class="flex space-x-1 items-center">
-                                        <img src="{% static 'img/profile.jpg' %}" alt=".."
-                                            class="w-auto h-6 rounded-3xl">
-                                        <input
-                                            class="p-1 rounded  border-[1px] focus:outline focus:outline-blue-300 outline-2 w-full"
-                                            type="text" name="comment" id="reply{{comment.sno}}"
-                                            placeholder="Enter your comment here..." required>
+                                {% if replies|get_replies:comment.sno|length > 0 %}
+                                <span class="reply text-[14px]"><a role="button" id="btn{{comment.sno}}"
+                                        class="reply-button py-1 px-3 hover:bg-gray-300   active:bg-blue-500 rounded-2xl active:text-white">Reply({{replies|get_replies:comment.sno|length}})</a></span>
+                                {% else %}
+                                <span class="reply text-[14px]"><a role="button" id="btn{{comment.sno}}"
+                                        class="reply-button py-1 px-3 hover:bg-gray-300   active:bg-blue-500 rounded-2xl active:text-white">Reply</a></span>
+                                {% endif %}
+                            </p>
+                            <div class="reply-section hidden " id="replyForm{{comment.sno}}">
+                                <!-- Reply input -->
+                                <form action="/post-comment" method="get" class="">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="postSno" value="{{post.id}}">
+                                    <input type="hidden" name="parentSno" value="{{comment.sno}}">
+                                    <div class="">
+                                        <div class="flex space-x-1 items-center">
+                                            <div class="w-8 h-8 rounded-full overflow-hidden">
+                                                <img src="/media/{{User.profileImg}}" alt=".." class="">
+                                            </div>
+                                            <input
+                                                class="p-1 rounded  border-[1px] focus:outline focus:outline-blue-300 outline-2 w-full"
+                                                type="text" name="comment" id="reply{{comment.sno}}"
+                                                placeholder="Enter your comment here..." required>
+                                        </div>
+                                        <div class="flex mt-2  space-x-2 w-full justify-end">
+                                            <button id="cancel{{comment.sno}}" type="button"
+                                                class="cancel-reply hover:bg-gray-300  active:bg-blue-500 active:text-white py-1 px-3 text-[15px] rounded-2xl">Cancel</button>
+                                            <button type="submit"
+                                                class="py-1 px-3 bg-blue-500 text-[15px]   rounded-2xl text-white  ">
+                                                Reply
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div class="flex mt-2  space-x-2 w-full justify-end">
-                                        <button id="cancel{{comment.sno}}" type="button"
-                                            class="cancel-reply hover:bg-gray-300  active:bg-blue-500 active:text-white py-1 px-3 text-[15px] rounded-2xl">Cancel</button>
-                                        <button type="submit"
-                                            class="py-1 px-3 bg-blue-500 text-[15px]   rounded-2xl text-white  ">
-                                            Reply
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                            <div class="all-replies mt-1 flex flex-col space-y-2 bg-gray-50 py-2 px-1 ">
-                                {% for replyUser,reply in replies|get_replies:comment.sno %}
-                                <div class="flex flex-col space-y-1">
-                                    <span class="flex space-x-1">
-                                        <img src="{% static 'img/profile.jpg' %}" alt=".." class="w-auto h-6 rounded-3xl">
+                                </form>
+                                <div class="all-replies mt-1 flex flex-col space-y-2 bg-gray-50 py-2 px-1 ">
+                                    {% for allreply in replies|get_replies:comment.sno %}
+                                    {% for replyUser,reply in allreply.items %}
+                                    <div class="flex flex-col space-y-1">
+                                        <span class="flex space-x-2 ">
+                                            <span class="w-8 h-8 rounded-full overflow-hidden">
+                                                <img src="/media/{{replyUser.profileImg}}" alt=".." class="">
+                                            </span>
+                                            <div class="flex flex-col space-y-1">
+                                                <p class="user font-medium">{{reply.user.first_name}}
+                                                    {{reply.user.last_name}}<span class="font-light text-xs">
+                                                        . {{reply.timeStamp|naturaltime}}
+                                                    </span>
+                                                </p>
+                                                <p class="text-sm">{{reply.comment_text}}</p>
+                                                <div class="footer-part"></div>
+                                            </div>
+                                        </span>
 
-                                    </span>
-                                    <span class="">
-                                        <p class="text-sm">{{reply.comment_text}}</p>
-                                    </span>
+                                    </div>
+                                    {% endfor %}
+                                    {% endfor%}
                                 </div>
-                                {% endfor%}
                             </div>
                         </div>
                     </div>

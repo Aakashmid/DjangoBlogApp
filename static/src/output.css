@@ -881,6 +881,10 @@ video {
   min-height: 120px;
 }
 
+.w-10 {
+  width: 2.5rem;
+}
+
 .w-11\/12 {
   width: 91.666667%;
 }
@@ -1932,15 +1936,6 @@ video {
 }
 
 @media (min-width: 1280px) {
-  .xl\:float-left {
-    float: left;
-  }
-
-  .xl\:mx-2 {
-    margin-left: 0.5rem;
-    margin-right: 0.5rem;
-  }
-
   .xl\:mx-auto {
     margin-left: auto;
     margin-right: auto;
@@ -1950,15 +1945,11 @@ video {
     min-height: 130px;
   }
 
-  .xl\:w-\[25\%\] {
-    width: 25%;
-  }
-
-  .xl\:w-\[45\%\] {
-    width: 45%;
-  }
-
   .xl\:w-9\/12 {
     width: 75%;
+  }
+
+  .xl\:w-\[25\%\] {
+    width: 25%;
   }
 }
