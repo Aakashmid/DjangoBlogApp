@@ -225,6 +225,8 @@ def Read_post(request,id):
                 response=JsonResponse({'likeCount':comment.like})
                 return response
         
+    elif request.method=="PUT":
+        pass
     # for increase readcount when user visit blog for sometime check also user is new or old
     if request.method=="PATCH":    
         if not PostReadedUser.objects.filter(user=request.user,post=post).exists():
