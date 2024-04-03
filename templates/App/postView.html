@@ -30,9 +30,9 @@
                 <span id="postlike{{post.id}}" onclick="changeLikeStatePost(this)" class="like like-icon">
                     <a role="button" class="" onclick="LikePost({{post.id}})" id="LikePostLink{{post.id}}">
                         {% if post.id in request.session.LikedPosts %}
-                        <i id="LikePost{{post.id}}" class="fa-solid fa-heart fa-lg"></i>
+                        <i id="LikePost{{post.id}}" class="fa-solid fa-heart fa-lg " style="color: #f7022b;"></i>
                         {% else %}
-                        <i id="LikePost{{post.id}}" class="fa-regular fa-heart fa-lg"></i>
+                        <i id="LikePost{{post.id}}" class="fa-regular fa-heart fa-lg" style="color: #f7022b;"></i>
                         {% endif %}
                     </a>
                 </span>

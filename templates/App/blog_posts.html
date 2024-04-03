@@ -64,7 +64,13 @@
                 </a>
                 <div class="footer-part flex items-center justify-between px-3 py-1">
                     <span class="flex space-x-4 items-center ">
-                        <a href="" class=""><i class="fa-regular fa-thumbs-up "></i></a>
+                        <a role="button" class="" onclick="LikePost({{post.id}})" id="LikePostLink{{post.id}}">
+                            {% if post.id in request.session.LikedPosts %}
+                            <i id="LikePost{{post.id}}" class="fa-solid fa-thumbs-up text-md lg:text-lg"></i>
+                            {% else %}
+                            <i id="LikePost{{post.id}}" class="fa-regular fa-thumbs-up text-md lg:text-lg"></i>
+                            {% endif %}
+                        </a>
                         <a href="" class=""><i class="fa-regular fa-comment "></i></a>
                     </span>
                     <span
