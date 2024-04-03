@@ -16,11 +16,8 @@ def home(request):
     allPosts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=5)).order_by('-read_count')[:10]
     postTags=Tag.objects.all()[:8]
     postCats=PostCategory.objects.all()[:10]
-    # if request.session.get('postList'):
-    #     print(request.session['postList'])
-    # else:
-    #     print([])
-
+    if not allPosts.exists():
+        allPosts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=20)) 
     parms={"allPosts":allPosts,'postTags':postTags,'Categories':postCats,}
     return render(request,'App/index.html',parms)
 
@@ -224,7 +221,7 @@ def Read_post(request,id):
                     return response
                 response=JsonResponse({'likeCount':comment.like})
                 return response
-        
+
     elif request.method=="PUT":
         pass
     # for increase readcount when user visit blog for sometime check also user is new or old

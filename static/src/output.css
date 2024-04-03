@@ -753,10 +753,6 @@ video {
   margin-left: 1rem;
 }
 
-.ml-9 {
-  margin-left: 2.25rem;
-}
-
 .mr-2 {
   margin-right: 0.5rem;
 }
@@ -799,10 +795,6 @@ video {
 
 .hidden {
   display: none;
-}
-
-.aspect-square {
-  aspect-ratio: 1 / 1;
 }
 
 .h-0 {
@@ -861,10 +853,6 @@ video {
   height: 250px;
 }
 
-.h-auto {
-  height: auto;
-}
-
 .h-full {
   height: 100%;
 }
@@ -915,10 +903,6 @@ video {
 
 .w-6 {
   width: 1.5rem;
-}
-
-.w-7 {
-  width: 1.75rem;
 }
 
 .w-8 {
