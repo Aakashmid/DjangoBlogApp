@@ -263,6 +263,7 @@
     {% endblock js %}
     <script src="{% static 'Js/base.js' %}"></script>
     <script>
+        $(document).ready(function() {
         function SavePost(element) {
             {% if user.is_authenticated %}
             let post_id = element.id.slice(9);
@@ -276,6 +277,7 @@
                 },
                 //here  data is response return by server 
                 success: function (data) {
+                    console.log();
                     if (data.Result == 'Post_saved') {
 
                         // document.getElementById(element.id).innerHTML = '<i class="fa-solid fa-bookmark fa-lg"></i>';
@@ -325,33 +327,27 @@
         LikePost = (post_id) => {
             {% if user.is_authenticated %}
             $.ajax({
-                type: "Put",
-                url: "{% url 'App:Blog Post'  post_id %}",
-                data: { 'Post_id': post_id },
-                dataType: "json",
+                type: "Post",
+                url: "{% url 'App:User Profile' %}",
+                data: { 'post_id': post_id },
                 headers: {
                     "X-CSRFToken": '{{ csrf_token }}'
                 },
                 //here  data is response return by server 
                 success: function (data) {
-                    console.log();
-                    if (data.Result == 'Post_saved') {
-
-                        // document.getElementById(element.id).innerHTML = '<i class="fa-solid fa-bookmark fa-lg"></i>';
-                        let icon = document.getElementById('saveIcon' + post_id);
-                        icon.classList.remove('fa-regular');
-                        icon.classList.add('fa-solid');
-                        document.getElementById(element.id).innerHTML = icon.outerHTML;
-                        showSavePostModel('Saved');
+                    // console.log(data.Success);
+                    // console.log("Successfully");
+                    let Icon=document.getElementById("LikePost"+post_id);
+                    if(Icon.classList.contains('fa-regular')){
+                        Icon.classList.remove('fa-regular');
+                        Icon.classList.add('fa-solid');
                     }
-                    else if (data.Result == 'Post_unsaved') {
-                        // document.getElementById(element.id).innerHTML = '<i class="fa-regular fa-bookmark fa-lg"></i>';
-                        let icon = document.getElementById('saveIcon' + post_id);
-                        icon.classList.remove('fa-solid');
-                        icon.classList.add('fa-regular');
-                        document.getElementById(element.id).innerHTML = icon.outerHTML;
-                        showSavePostModel('Unsaved');
+                    else{
+                        Icon.classList.remove('fa-solid');
+                        Icon.classList.add('fa-regular');
                     }
+                    document.getElementById('LikePostLink'+post_id).innerHTML=Icon.outerHTML;
+                  
                 },
                 //here error is error return by the url 
                 error: function (error) {
@@ -363,6 +359,7 @@
             {% endif %}
         }
         // LikePost();
+    });
     </script>
 </body>
 

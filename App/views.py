@@ -10,6 +10,7 @@ from django.http import JsonResponse
 from django.utils import timezone
 from datetime import datetime, timedelta
 from django.core.paginator import Paginator
+import json
 # Create your views here.
 def home(request):
     # incomplet , write logic for showing recent posts
@@ -18,6 +19,8 @@ def home(request):
     postCats=PostCategory.objects.all()[:10]
     if not allPosts.exists():
         allPosts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=20)) 
+  
+            
     parms={"allPosts":allPosts,'postTags':postTags,'Categories':postCats,}
     return render(request,'App/index.html',parms)
 
@@ -222,8 +225,6 @@ def Read_post(request,id):
                 response=JsonResponse({'likeCount':comment.like})
                 return response
 
-    elif request.method=="PUT":
-        pass
     # for increase readcount when user visit blog for sometime check also user is new or old
     if request.method=="PATCH":    
         if not PostReadedUser.objects.filter(user=request.user,post=post).exists():
@@ -354,6 +355,22 @@ def profile(request,user_id=None):
             # here Author is author of post
             return render(request,'App/author.html',{"Author":bloguser,'Posts':allPosts,'userFollower':userFollower})
             # return render(request,'App/author.html',{'Posts':allPosts})
+    elif request.method=="POST":
+        post_id=request.POST.get('post_id')
+        if "LikedPosts" in request.session:
+            if int(post_id) not in request.session['LikedPosts']:
+                request.session['LikedPosts'].append(int(post_id))
+                request.session.modified=True
+                return JsonResponse({'Success':"Successfull"})
+            else:
+                request.session.modified=True
+                request.session['LikedPosts'].remove(int(post_id))
+                return JsonResponse({'Success':"Successfull"})
+        else:
+            request.session['LikedPosts']=[int(post_id)]
+            request.session.modified=True
+            return JsonResponse({'Success':"Successfull"})
+
     else:
         bloguser=BlogUser.objects.get(user=request.user)
         SavedPosts=[]
