@@ -334,8 +334,9 @@
                     },
                     //here  data is response return by server 
                     success: function (data) {
-                        // console.log(data.Success);
-                        // console.log("Successfully");
+                        if(document.getElementById("postlike_count"+post_id)){
+                            document.getElementById("postlike_count"+post_id).innerText=data.like_count;
+                        }
                         let Icon = document.getElementById("LikePost" + post_id);
                         if (Icon.classList.contains('fa-regular')) {
                             Icon.classList.remove('fa-regular');

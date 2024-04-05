@@ -81,3 +81,6 @@ class SavedPost(models.Model):
     
     def __str__(self) -> str:
         return self.saved_post.title+ "  "+ self.user.user.first_name
+
+
+

@@ -10,9 +10,13 @@ from django.http import JsonResponse
 from django.utils import timezone
 from datetime import datetime, timedelta
 from django.core.paginator import Paginator
+from django.contrib import sessions
 import json
 # Create your views here.
 def home(request):
+    # session_data = request.session.items()
+    # print(session_data.get())
+
     # incomplet , write logic for showing recent posts
     allPosts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=5)).order_by('-read_count')[:10]
     postTags=Tag.objects.all()[:8]
@@ -357,15 +361,21 @@ def profile(request,user_id=None):
             # return render(request,'App/author.html',{'Posts':allPosts})
     elif request.method=="POST":
         post_id=request.POST.get('post_id')
+        post=Post.objects.get(id=post_id)
         if "LikedPosts" in request.session:
             if int(post_id) not in request.session['LikedPosts']:
                 request.session['LikedPosts'].append(int(post_id))
                 request.session.modified=True
-                return JsonResponse({'Success':"Successfull"})
+                # PostLike.objects.create(post=post,user=request.user)
+                post.like+=1
+                post.save()
+                return JsonResponse({'Success':"Successfull","like_count":post.like})
             else:
                 request.session.modified=True
                 request.session['LikedPosts'].remove(int(post_id))
-                return JsonResponse({'Success':"Successfull"})
+                post.like-=1
+                post.save()
+                return JsonResponse({'Success':"Successfull ","like_count":post.like})
         else:
             request.session['LikedPosts']=[int(post_id)]
             request.session.modified=True
