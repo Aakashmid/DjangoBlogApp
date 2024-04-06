@@ -76,7 +76,7 @@
                 <span class="w-10 h-10 overflow-hidden rounded-full ">
                     <img src="/media/{{User.profileImg}}" alt="">
                 </span>
-                <form action="/post-comment" method="get" class="py-2  w-full">
+                <form action="/post-comment"  method="get" class="py-2  w-full">
                     {% csrf_token %}
                     <input type="hidden" name="postSno" value="{{post.id}}">
                     <input type="hidden" name="parentSno" value="">
@@ -84,8 +84,8 @@
                         <input
                             class="p-1 rounded  border-[1px] border-gray-600 focus:outline focus:outline-blue-200 outline-2 outline-offset-1"
                             type="text" name="comment" id="comment" placeholder="Enter your comment here..." required>
-                        <button type="submit"
-                            class="p-1 bg-blue-400 active:bg-white active:text-black active:outline-blue-500 outline-1 outline text-gray-100 rounded  w-[25%]">Comment</button>
+                        <button
+                            class="p-1 bg-blue-400 active:bg-white active:text-black active:outline-blue-500 outline-1 outline text-gray-100 rounded  w-[25%]" {% if not user.is_authenticated%} onclick="showLogin()"   type="button"{% else %} type="submit" {% endif %}>Comment</button>
                     </div>
                 </form>
             </div>
@@ -142,7 +142,7 @@
                                         <div class="flex mt-2  space-x-2 w-full justify-end">
                                             <button id="cancel{{comment.sno}}" type="button"
                                                 class="cancel-reply hover:bg-gray-300  active:bg-blue-500 active:text-white py-1 px-3 text-[15px] rounded-2xl">Cancel</button>
-                                            <button type="submit"
+                                            <button {% if not user.is_authenticated%} onclick="showLogin()"   type="button"{% else %} type="submit" {% endif %}
                                                 class="py-1 px-3 bg-blue-500 text-[15px]   rounded-2xl text-white  ">
                                                 Reply
                                             </button>
