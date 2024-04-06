@@ -59,8 +59,19 @@ def Login_hand(request):
         authenticated_user=authenticate(username=username,password=password)
         if authenticated_user:
             login(request,authenticated_user)
+            user=BlogUser.objects.get(user=authenticated_user)
+            if user.session_data=={} or 'LikedPosts' not in user.session_data:
+                user.session_data=serialize_session(request.session)
+            else:
+                deserialize_data=json.loads(user.session_data)  #deserialize
+                request.session.clear()
+                for key,value in deserialize_data.items():
+                    request.session[key] =value
+                    request.session.modified=True
+                print(request.session)
             # print(f"First name of user is {authenticated_user.username} ")
             # print(authenticated_user.first_name)
+            print(request.session)
             messages.success(request,"Successsfully logged in user !!")
             return redirect('/')
         else:
@@ -71,6 +82,10 @@ def Login_hand(request):
 def Logout_hand(request):
     # user=request.user
     # print(user)
+    print(request.session)
+    user=BlogUser.objects.get(user=request.user)
+    user.session_data= serialize_session(request.session)
+    user.save()
     logout(request)
     messages.success(request,"Successsfully logout !!")
     return redirect('/')
@@ -424,3 +439,11 @@ def Change_profile(request):
             messages.success(request,"Changed profile successfully !!")
             return HttpResponseRedirect(reverse('App:User Profile'))
 
+
+
+# function for serailize session data
+def serialize_session(session):
+    serialized_data = {}
+    for key, value in session.items():
+        serialized_data[key] = value
+    return json.dumps(serialized_data)
