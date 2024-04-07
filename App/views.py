@@ -359,7 +359,7 @@ def profile(request,user_id=None):
             else:
                 return HttpResponseRedirect(reverse('App:Author profile',args=(user_id)))
 
-        # If user  want to see author page
+        # Author.html 
         else:
             # here author id is blogser object pk 
             bloguser=BlogUser.objects.get(pk=user_id)
@@ -403,7 +403,10 @@ def profile(request,user_id=None):
         if len(postIds)>0:
             for id in postIds:
                 SavedPosts.append(Post.objects.get(id=id))
-        return render(request,'App/profile.html',{"User":bloguser,'saved_posts':SavedPosts})
+        User=BlogUser.objects.get(user=request.user)
+        UsersPosts=Post.objects.filter(author=User) if Post.objects.filter(author=User).exists() else []
+        context={"User":bloguser,'saved_posts':SavedPosts,'UsersPosts':UsersPosts}
+        return render(request,'App/profile.html',context=context)
     
 def Change_profile(request):
     if request.method=="POST":
@@ -439,7 +442,10 @@ def Change_profile(request):
             messages.success(request,"Changed profile successfully !!")
             return HttpResponseRedirect(reverse('App:User Profile'))
 
-
+def update_post(request,post_id=None):
+    if post_id is not None:
+        return render(request,'App/updatePost.html')
+    # if request.method==""
 
 # function for serailize session data
 def serialize_session(session):

@@ -18,4 +18,5 @@ urlpatterns = [
     path('profile/',views.profile,name="User Profile"),
     path('Author/profile/<int:user_id>/',views.profile,name="Author Profile"),
     path('profile/change-profile/',views.Change_profile,name="Profile Change"),
+    path('profile/update-post/<int:post_id>',views.update_post,name="Update post"),
 ]
