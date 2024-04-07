@@ -38,15 +38,16 @@ Profile
         <span class="w-full">
             <ul class="flex space-x-4 py-2 px-4">
                 <li id="profile_home" class="profile-link cursor-pointer underline underline-offset-[14px]"
-                onclick="changeLinkAppearence(this)">Home </li>
+                    onclick="changeLinkAppearence(this)">Home </li>
                 <li id="profile_about" class="profile-link cursor-pointer underline-offset-[14px]"
-                onclick="changeLinkAppearence(this)">About </li>
+                    onclick="changeLinkAppearence(this)">About </li>
             </ul>
         </span>
         <hr class="mx-3 bg-gray-900 ">
         <!-- Home section -->
         <div class="Home-page py-3 px-2">
-            <div class="border-2 rounded-lg p-4 lg:text-xl text-lg font-semibold my-2" onclick="showUsersPosts(this)">Your Posts >></div>
+            <div class="border-2 rounded-lg p-4 lg:text-xl text-lg font-semibold my-2" onclick="showUsersPosts(this)">
+                Your Posts >></div>
             <div class="Users-Posts-Container hidden">
                 {% if UsersPosts|length > 0 %}
                 {% for post in UsersPosts %}
@@ -109,17 +110,17 @@ Profile
                                 <i id="saveIcon{{post.id}}" class="fa-regular fa-bookmark  text-md lg:text-lg"></i>
                                 {% endif %}
                             </a>
-                            <a role="button" class="three-dots cursor-pointer"><i
+                            <a role="button" class="three-dots cursor-pointer" onclick="OptionPopover(this)"><i
                                     class="fa-solid fa-ellipsis fa-lg"></i></a>
 
-                                <!-- options -->
+                            <!-- options -->
                             <div id="Option_box{{post.id}}"
-                                class="absolute bg-white right-0 p-2 top-5 border-gray-500 border rounded inline-block">
-                                <ul class="flex flex-col  items-center px-2">
-                                    <li class="p-1">
+                                class="absolute bg-white right-0 p-2 hidden top-5 border-gray-500 border rounded w-36">
+                                <ul class="flex flex-col  items-center  ">
+                                    <li class="py-1 px-2 hover:bg-slate-300 active:bg-slate-300 rounded">
                                         <a href="{% url 'App:Update post' post.id %}" class="">Update post</a>
                                     </li>
-                                    <li class="p-1">
+                                    <li class="py-1 px-2 hover:bg-slate-300 active:bg-slate-300 rounded">
                                         <a href="" class="">Remove post</a>
                                     </li>
                                 </ul>
@@ -136,7 +137,8 @@ Profile
                     New Post</a>
                 {% endif %}
             </div>
-            <div class="border-2 rounded-lg p-4 lg:text-xl text-lg font-semibold" onclick="showReadingList(this)">Your Reading List >></div>
+            <div class="border-2 rounded-lg p-4 lg:text-xl text-lg font-semibold" onclick="showReadingList(this)">Your
+                Reading List >></div>
             <div class="clear-end pt-4 my-2 hidden readingListContainer">
                 {% for post in saved_posts %}
                 <div
@@ -198,8 +200,8 @@ Profile
                                 <i id="saveIcon{{post.id}}" class="fa-regular fa-bookmark  text-md lg:text-lg"></i>
                                 {% endif %}
                             </a>
-                            <a role="button" class="three-dots cursor-pointer"><i
-                                    class="fa-solid fa-ellipsis fa-lg"></i></a>
+                            <a role="button" class="three-dots cursor-pointer" id="options{{post.id}}" onclick="OptionPopover(this)"><i
+                                class="fa-solid fa-ellipsis fa-lg"></i></a>
                             <span id="Option_box{{post.id}}"
                                 class="absolute bg-white  hidden p-2 border-gray-500 border rounded ">
                                 <ul class="flex flex-col">
@@ -287,7 +289,7 @@ Profile
 </div>
 <div class="h-10 w-full "></div>
 {% endblock body %}
-{% block js%}
+{% block js %}
 <script>
     //show edit profile form
     function ShowEditForm() {
@@ -355,10 +357,10 @@ Profile
         document.getElementsByClassName('image-box')[0].classList.add('hidden');
     }
 
-    showReadingList=()=>{
+    showReadingList = () => {
         document.getElementsByClassName('readingListContainer')[0].classList.toggle('hidden');
     }
-    showUsersPosts=()=>{
+    showUsersPosts = () => {
         document.getElementsByClassName('Users-Posts-Container')[0].classList.toggle('hidden');
     }
 

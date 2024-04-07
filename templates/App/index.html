@@ -74,13 +74,13 @@
                     <span class="flex space-x-6 items-center mx-3">
                         <a role="button" class="bookmark" onclick="SavePost(this)" id="Save_post{{post.id}}">
                             {% if post.id in request.session.postList %}
-                    <i id="saveIcon{{post.id}}" class="fa-solid fa-bookmark text-md lg:text-lg"></i>
-                    {% else %}
-                    <i id="saveIcon{{post.id}}" class="fa-regular fa-bookmark text-md lg:text-lg"></i>
-                    {% endif %}
+                            <i id="saveIcon{{post.id}}" class="fa-solid fa-bookmark text-md lg:text-lg"></i>
+                            {% else %}
+                            <i id="saveIcon{{post.id}}" class="fa-regular fa-bookmark text-md lg:text-lg"></i>
+                            {% endif %}
                         </a>
-                        <a role="button" class="three-dots cursor-pointer"><i
-                                class="fa-solid fa-ellipsis fa-lg"></i></a>
+                        <a role="button" class="three-dots cursor-pointer" id="options{{post.id}}" onclick="OptionPopover(this)"><i
+                            class="fa-solid fa-ellipsis fa-lg"></i></a>
                         <span id="Option_box{{post.id}}"
                             class="absolute bg-white  hidden p-2 border-gray-500 border rounded ">
                             <ul class="flex flex-col">
