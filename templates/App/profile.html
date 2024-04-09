@@ -110,7 +110,7 @@ Profile
                                 <i id="saveIcon{{post.id}}" class="fa-regular fa-bookmark  text-md lg:text-lg"></i>
                                 {% endif %}
                             </a>
-                            <a role="button" class="three-dots cursor-pointer" onclick="OptionPopover(this)"><i
+                            <a role="button" class="three-dots cursor-pointer" id="options{{post.id}}" onclick="OptionPopover(this)"><i
                                     class="fa-solid fa-ellipsis fa-lg"></i></a>
 
                             <!-- options -->
@@ -121,7 +121,7 @@ Profile
                                         <a href="{% url 'App:Update post' post.id %}" class="">Update post</a>
                                     </li>
                                     <li class="py-1 px-2 hover:bg-slate-300 active:bg-slate-300 rounded">
-                                        <a href="" class="">Remove post</a>
+                                        <a href="{% url 'App:Delete post' post.id %}" class="" >Remove post</a>
                                     </li>
                                 </ul>
                             </div>
@@ -363,6 +363,7 @@ Profile
     showUsersPosts = () => {
         document.getElementsByClassName('Users-Posts-Container')[0].classList.toggle('hidden');
     }
+
 
 </script>
 

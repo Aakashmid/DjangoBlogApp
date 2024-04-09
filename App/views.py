@@ -445,7 +445,13 @@ def Change_profile(request):
 def update_post(request,post_id=None):
     if post_id is not None:
         return render(request,'App/updatePost.html')
-    # if request.method==""
+    if request.method=="POST":
+        pass
+def delete_post(request,post_id=None):
+    if post_id is not None:
+        post=Post.objects.get(id=post_id)
+        post.delete()
+    return redirect("url 'App:User Profile' ")
 
 # function for serailize session data
 def serialize_session(session):

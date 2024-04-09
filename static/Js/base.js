@@ -149,7 +149,5 @@ Array.from(previews).forEach((element) => {
 
 OptionPopover = (element) => {
     let post_id = element.id.slice(7);
-    console.log(element);
-    console.log(post_id);
-    // document.getElementById('Option_box' + post_id).classList.toggle('hidden');
+    document.getElementById('Option_box' + post_id).classList.toggle('hidden');
 }
