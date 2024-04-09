@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect,HttpResponse,HttpResponseRedirect
+from django.shortcuts import render,redirect,HttpResponse,HttpResponseRedirect,get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib.auth import login,logout,authenticate
@@ -402,7 +402,11 @@ def profile(request,user_id=None):
         postIds=request.session['postList'] if 'postList' in request.session else []
         if len(postIds)>0:
             for id in postIds:
-                SavedPosts.append(Post.objects.get(id=id))
+                try:
+                    SavedPosts.append(Post.objects.get(id=id))
+                except Exception as e:
+                    request.session['postList'].remove(id)
+                    request.session.modified=True
         User=BlogUser.objects.get(user=request.user)
         UsersPosts=Post.objects.filter(author=User) if Post.objects.filter(author=User).exists() else []
         context={"User":bloguser,'saved_posts':SavedPosts,'UsersPosts':UsersPosts}
@@ -444,14 +448,16 @@ def Change_profile(request):
 
 def update_post(request,post_id=None):
     if post_id is not None:
+        if request.method=="DELETE":
+            post=get_object_or_404(Post,id=post_id)
+            print(post)
+            post.delete()
+            messages.success(request,'Post Deleted')
+            return JsonResponse({'Message':"Success"})
         return render(request,'App/updatePost.html')
     if request.method=="POST":
         pass
-def delete_post(request,post_id=None):
-    if post_id is not None:
-        post=Post.objects.get(id=post_id)
-        post.delete()
-    return redirect("url 'App:User Profile' ")
+        
 
 # function for serailize session data
 def serialize_session(session):

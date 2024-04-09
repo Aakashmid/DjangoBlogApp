@@ -121,7 +121,7 @@ Profile
                                         <a href="{% url 'App:Update post' post.id %}" class="">Update post</a>
                                     </li>
                                     <li class="py-1 px-2 hover:bg-slate-300 active:bg-slate-300 rounded">
-                                        <a href="{% url 'App:Delete post' post.id %}" class="" >Remove post</a>
+                                        <a role="button" onclick="RemovePost({{post.id}})" >Remove post</a>
                                     </li>
                                 </ul>
                             </div>
@@ -364,7 +364,30 @@ Profile
         document.getElementsByClassName('Users-Posts-Container')[0].classList.toggle('hidden');
     }
 
-
-</script>
+    // Delete post
+    RemovePost=(post_id)=>{
+        {% if user.is_authenticated %}
+        $.ajax({
+            type: "Delete",
+            url: "{% url 'App:Update post' 0 %}".replace('0',post_id),
+            data: { 'post_id': post_id },
+            headers: {
+                "X-CSRFToken": '{{ csrf_token }}'
+            },
+            //here  data is response return by server 
+            success: function (data) {
+                window.location.reload();
+            },
+            //here error is error return by the url 
+            error: function (error) {
+                console.log("Error:", error);
+            }
+        });
+        {% else %}
+        showLogin();
+        {% endif %}
+    }
+        
+    </script>
 
 {% endblock js%}
