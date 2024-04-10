@@ -13,21 +13,7 @@ from django.core.paginator import Paginator
 from django.contrib import sessions
 import json
 # Create your views here.
-def home(request):
-    # updating session data of user to request.sessions   if it is     
-    # if not request.user.is_anonymous :
-    #     request.session.set_expiry(2592000)  # user is logged in for 30 days
-    #     user=BlogUser.objects.get(user=request.user)
-    #     if user.session_data=={} or 'LikedPosts' not in user.session_data:
-    #         user.session_data=serialize_session(request.session)
-    #     else:
-    #         deserialize_data=json.loads(user.session_data)  #deserialize
-    #         request.session.clear()
-    #         for key,value in deserialize_data.items():
-    #             request.session[key] =value
-    #             request.session.modified=True
-    # print(request.session.items())
-    
+def home(request):    
     # incomplet , write logic for showing recent posts
     allPosts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=5)).order_by('-read_count')[:10]
     postTags=Tag.objects.all()[:8]
@@ -72,7 +58,7 @@ def Login_hand(request):
             login(request,authenticated_user)
             request.session.set_expiry(2592000)  # user is logged in for 30 days
             user=BlogUser.objects.get(user=authenticated_user)
-            if user.session_data=={} or 'LikedPosts' not in user.session_data:
+            if user.session_data=={} :
                 user.session_data=serialize_session(request.session)
             else:
                 deserialize_data=json.loads(user.session_data)  #deserialize
@@ -91,10 +77,10 @@ def Login_hand(request):
 def Logout_hand(request):
     # user=request.user
     # print(user)
-    print(request.session.items())
     user=BlogUser.objects.get(user=request.user)
     user.session_data= serialize_session(request.session)
     user.save()
+    print(user.session_data)
     logout(request)
     messages.success(request,"Successsfully logout !!")
     return redirect('/')
@@ -467,7 +453,10 @@ def update_post(request,post_id=None):
                 request.session['SavedPosts'].remove(post.id) 
             print(request.session)
             return JsonResponse({'Message':"Deleted post"})
-        return render(request,'App/updatePost.html')
+        post=Post.objects.get(id=post_id)
+        categories=PostCategory.objects.all()
+        params={'post':post,'Categories':categories}
+        return render(request,'App/updatePost.html',params)
     if request.method=="POST":
         pass
         

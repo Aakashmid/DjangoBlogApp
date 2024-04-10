@@ -60,7 +60,6 @@
 {% block body %}
 <div class="container">
     <h1 class="text-lg text-center font-semibold">Update post</h1>
-
     <div class="">
         <div class="form">
             <form action="/create-post/" class="p-3 flex-col space-y-3 lg:space-y-4 w-full" method="post"
@@ -70,7 +69,7 @@
                     <label for="post_title" class="text-lg font-medium">Title</label>
                     <input type="text" name="post_title"
                         class="text-lg w-full  border-[1px] rounded border-gray-600 p-1 outline-gray-300  outline-offset-2 outline-2"
-                        id="post_title" placeholder="Enter title of blog here..." required>
+                        id="post_title" placeholder="Enter title of blog here..." value="{{post.title}}" required> 
                 </div>
                 <div class="flex flex-col md:flex-row space-y-4 md:justify-between md:items-center">
                     <span class="Category-dropDown flex space-x-2">
@@ -89,7 +88,7 @@
                                 {{cat.name}}</li>
                             {% endfor %}
                         </ul>
-                        <input name="category" type="hidden" id="selectedOption" value="">
+                        <input name="category" type="hidden" id="selectedOption" value="{{post.category}}">
                     </span>
                     <!-- Tag selector -->
                     <span class="flex space-x-3 items-center">
@@ -101,16 +100,17 @@
                 </div>
                 <div class="">
                     <label for="thumbnail" class="text-lg font-medium">Select Thumbnail (If Any) : </label>
+                    {% comment %} Incomplete  {% endcomment %}
                     <input type="file" id="thumbnail" name="thumbnail"  accept="image/*" value="">
                 </div>
                 <div class="no-tailwind-base">
                     <textarea required name="blog_content" id="blog_content" class="">
-                        Write your blog here...
+                        {{post.content}}
                     </textarea>
                 </div>
                 <div class="post-button">
                     <button type="submit"
-                        class="submit-post-button p-2 rounded bg-gray-700 hover:bg-gray-800 active:outline active:outline-gray-800 active:outline-2 text-white">Update</button>
+                        class="submit-post-button p-2 rounded bg-gray-700 hover:bg-gray-800 active:outline active:outline-gray-800 active:outline-2 text-white">Update Post</button>
                 </div>
             </form>
         </div>

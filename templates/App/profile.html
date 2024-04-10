@@ -104,7 +104,7 @@ Profile
                         </span>
                         <span class="flex space-x-6 items-center mx-3 relative">
                             <a role="button" class="bookmark" onclick="SavePost(this)" id="Save_post{{post.id}}">
-                                {% if post.id in request.session.postList %}
+                                {% if post.id in request.session.SavedPosts %}
                                 <i id="saveIcon{{post.id}}" class="fa-solid fa-bookmark  text-md lg:text-lg"></i>
                                 {% else %}
                                 <i id="saveIcon{{post.id}}" class="fa-regular fa-bookmark  text-md lg:text-lg"></i>
@@ -141,7 +141,7 @@ Profile
                 Reading List >></div>
             <div class="clear-end pt-4 my-2 hidden readingListContainer">
                 {% for post in saved_posts %}
-                <div
+                <div id="SavedPost{{post.id}}"
                     class="card border-gray-600 border-[1px] rounded-md shadow-md p-2 mt-2 min-h-[120px] xl:min-h-[130px]">
                     <div class="upper-part flex-col ">
                         <a href="{% url 'App:Author Profile' post.author_id %}" class="author-name">
@@ -194,7 +194,7 @@ Profile
                         </span>
                         <span class="flex space-x-6 items-center mx-3">
                             <a role="button" class="bookmark" onclick="SavePost(this)" id="Save_post{{post.id}}">
-                                {% if post.id in request.session.postList %}
+                                {% if post.id in request.session.SavedPosts %}
                                 <i id="saveIcon{{post.id}}" class="fa-solid fa-bookmark  text-md lg:text-lg"></i>
                                 {% else %}
                                 <i id="saveIcon{{post.id}}" class="fa-regular fa-bookmark  text-md lg:text-lg"></i>
