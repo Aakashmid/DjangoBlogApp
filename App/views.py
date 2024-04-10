@@ -14,9 +14,20 @@ from django.contrib import sessions
 import json
 # Create your views here.
 def home(request):
-    # session_data = request.session.items()
-    # print(session_data.get())
-
+    # updating session data of user to request.sessions   if it is     
+    # if not request.user.is_anonymous :
+    #     request.session.set_expiry(2592000)  # user is logged in for 30 days
+    #     user=BlogUser.objects.get(user=request.user)
+    #     if user.session_data=={} or 'LikedPosts' not in user.session_data:
+    #         user.session_data=serialize_session(request.session)
+    #     else:
+    #         deserialize_data=json.loads(user.session_data)  #deserialize
+    #         request.session.clear()
+    #         for key,value in deserialize_data.items():
+    #             request.session[key] =value
+    #             request.session.modified=True
+    # print(request.session.items())
+    
     # incomplet , write logic for showing recent posts
     allPosts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=5)).order_by('-read_count')[:10]
     postTags=Tag.objects.all()[:8]
@@ -59,6 +70,7 @@ def Login_hand(request):
         authenticated_user=authenticate(username=username,password=password)
         if authenticated_user:
             login(request,authenticated_user)
+            request.session.set_expiry(2592000)  # user is logged in for 30 days
             user=BlogUser.objects.get(user=authenticated_user)
             if user.session_data=={} or 'LikedPosts' not in user.session_data:
                 user.session_data=serialize_session(request.session)
@@ -68,10 +80,7 @@ def Login_hand(request):
                 for key,value in deserialize_data.items():
                     request.session[key] =value
                     request.session.modified=True
-                print(request.session)
-            # print(f"First name of user is {authenticated_user.username} ")
-            # print(authenticated_user.first_name)
-            print(request.session)
+            print(request.session.items())
             messages.success(request,"Successsfully logged in user !!")
             return redirect('/')
         else:
@@ -82,7 +91,7 @@ def Login_hand(request):
 def Logout_hand(request):
     # user=request.user
     # print(user)
-    print(request.session)
+    print(request.session.items())
     user=BlogUser.objects.get(user=request.user)
     user.session_data= serialize_session(request.session)
     user.save()
@@ -341,19 +350,19 @@ def profile(request,user_id=None):
                         return response
             elif post_id is not None:
                 # post_id=int(post_id)
-                if 'postList' in request.session:
-                    if int(post_id) not in request.session['postList']:
-                        request.session['postList'].append(int(post_id))
+                if 'SavedPosts' in request.session:
+                    if int(post_id) not in request.session['SavedPosts']:
+                        request.session['SavedPosts'].append(int(post_id))
                         response=JsonResponse({'Result':'Post_saved'})
                         request.session.modified=True
                         return response
                     else:
-                        request.session['postList'].remove(int(post_id))
+                        request.session['SavedPosts'].remove(int(post_id))
                         request.session.modified=True
                         response=JsonResponse({'Result':'Post_unsaved'})
                         return response
                 else:
-                    request.session['postList']=[int(post_id)]
+                    request.session['SavedPosts']=[int(post_id)]
                     request.session.modified=True
                     return JsonResponse({'Result':'Post_saved'})
             else:
@@ -399,13 +408,13 @@ def profile(request,user_id=None):
     else:
         bloguser=BlogUser.objects.get(user=request.user)
         SavedPosts=[]
-        postIds=request.session['postList'] if 'postList' in request.session else []
+        postIds=request.session['SavedPosts'] if 'SavedPosts' in request.session else []
         if len(postIds)>0:
             for id in postIds:
                 try:
                     SavedPosts.append(Post.objects.get(id=id))
                 except Exception as e:
-                    request.session['postList'].remove(id)
+                    request.session['SavedPosts'].remove(id)
                     request.session.modified=True
         User=BlogUser.objects.get(user=request.user)
         UsersPosts=Post.objects.filter(author=User) if Post.objects.filter(author=User).exists() else []
@@ -452,8 +461,12 @@ def update_post(request,post_id=None):
             post=get_object_or_404(Post,id=post_id)
             print(post)
             post.delete()
-            messages.success(request,'Post Deleted')
-            return JsonResponse({'Message':"Success"})
+            if post_id in request.session['LikedPosts'] :
+                request.session['LikedPosts'].remove(post.id) 
+            if post_id in request.session['SavedPosts'] :
+                request.session['SavedPosts'].remove(post.id) 
+            print(request.session)
+            return JsonResponse({'Message':"Deleted post"})
         return render(request,'App/updatePost.html')
     if request.method=="POST":
         pass

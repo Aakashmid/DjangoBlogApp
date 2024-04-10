@@ -46,12 +46,12 @@ Profile
         <hr class="mx-3 bg-gray-900 ">
         <!-- Home section -->
         <div class="Home-page py-3 px-2">
-            <div class="border-2 rounded-lg p-4 lg:text-xl text-lg font-semibold my-2" onclick="showUsersPosts(this)">
+            <div class="border-2 rounded-lg p-4 lg:text-xl text-lg font-semibold my-2 hover:bg-gray-300 active:bg-gray-300 cursor-pointer" onclick="showUsersPosts(this)">
                 Your Posts >></div>
             <div class="Users-Posts-Container hidden">
                 {% if UsersPosts|length > 0 %}
                 {% for post in UsersPosts %}
-                <div
+                <div id="MyPost{{post.id}}"
                     class="card border-gray-600 border-[1px] rounded-md shadow-md p-2 mt-2 min-h-[120px] xl:min-h-[130px]">
                     <div class="upper-part flex-col ">
                         <a href="{% url 'App:Author Profile' post.author_id %}" class="author-name">
@@ -110,8 +110,8 @@ Profile
                                 <i id="saveIcon{{post.id}}" class="fa-regular fa-bookmark  text-md lg:text-lg"></i>
                                 {% endif %}
                             </a>
-                            <a role="button" class="three-dots cursor-pointer" id="options{{post.id}}" onclick="OptionPopover(this)"><i
-                                    class="fa-solid fa-ellipsis fa-lg"></i></a>
+                            <a role="button" class="three-dots cursor-pointer" id="options{{post.id}}"
+                                onclick="OptionPopover(this)"><i class="fa-solid fa-ellipsis fa-lg"></i></a>
 
                             <!-- options -->
                             <div id="Option_box{{post.id}}"
@@ -121,7 +121,7 @@ Profile
                                         <a href="{% url 'App:Update post' post.id %}" class="">Update post</a>
                                     </li>
                                     <li class="py-1 px-2 hover:bg-slate-300 active:bg-slate-300 rounded">
-                                        <a role="button" onclick="RemovePost({{post.id}})" >Remove post</a>
+                                        <a role="button" onclick="RemovePost({{post.id}})">Remove post</a>
                                     </li>
                                 </ul>
                             </div>
@@ -137,7 +137,7 @@ Profile
                     New Post</a>
                 {% endif %}
             </div>
-            <div class="border-2 rounded-lg p-4 lg:text-xl text-lg font-semibold" onclick="showReadingList(this)">Your
+            <div class="border-2 rounded-lg p-4 lg:text-xl text-lg font-semibold mt-6 hover:bg-gray-300 active:bg-gray-300 cursor-pointer" onclick="showReadingList(this)">Your
                 Reading List >></div>
             <div class="clear-end pt-4 my-2 hidden readingListContainer">
                 {% for post in saved_posts %}
@@ -200,8 +200,8 @@ Profile
                                 <i id="saveIcon{{post.id}}" class="fa-regular fa-bookmark  text-md lg:text-lg"></i>
                                 {% endif %}
                             </a>
-                            <a role="button" class="three-dots cursor-pointer" id="options{{post.id}}" onclick="OptionPopover(this)"><i
-                                class="fa-solid fa-ellipsis fa-lg"></i></a>
+                            <a role="button" class="three-dots cursor-pointer" id="options{{post.id}}"
+                                onclick="OptionPopover(this)"><i class="fa-solid fa-ellipsis fa-lg"></i></a>
                             <span id="Option_box{{post.id}}"
                                 class="absolute bg-white  hidden p-2 border-gray-500 border rounded ">
                                 <ul class="flex flex-col">
@@ -357,6 +357,7 @@ Profile
         document.getElementsByClassName('image-box')[0].classList.add('hidden');
     }
 
+
     showReadingList = () => {
         document.getElementsByClassName('readingListContainer')[0].classList.toggle('hidden');
     }
@@ -365,29 +366,33 @@ Profile
     }
 
     // Delete post
-    RemovePost=(post_id)=>{
+    RemovePost = (post_id) => {
         {% if user.is_authenticated %}
-        $.ajax({
-            type: "Delete",
-            url: "{% url 'App:Update post' 0 %}".replace('0',post_id),
-            data: { 'post_id': post_id },
-            headers: {
-                "X-CSRFToken": '{{ csrf_token }}'
-            },
-            //here  data is response return by server 
-            success: function (data) {
-                window.location.reload();
-            },
-            //here error is error return by the url 
-            error: function (error) {
-                console.log("Error:", error);
-            }
-        });
+        let ans = confirm("You want to delete this post permanently ");
+        if (ans){
+
+            $.ajax({
+                type: "Delete",
+                url: "{% url 'App:Update post' 0 %}".replace('0', post_id),
+                data: { 'post_id': post_id },
+                headers: {
+                    "X-CSRFToken": '{{ csrf_token }}'
+                },
+                //here  data is response return by server 
+                success: function (data) {
+                    document.getElementById('MyPost' + post_id).outerHTML = "";
+                },
+                //here error is error return by the url 
+                error: function (error) {
+                    console.log("Error:", error);
+                }
+            });
+        }
         {% else %}
         showLogin();
         {% endif %}
     }
-        
-    </script>
+
+</script>
 
 {% endblock js%}

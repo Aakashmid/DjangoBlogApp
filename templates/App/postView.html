@@ -42,7 +42,7 @@
                         class="fa-regular fa-eye fa-lg"></i></span></span>
             <span class="">
                 <a role="button" class="bookmark" onclick="SavePost(this)" id="Save_post{{post.id}}">
-                    {% if post.id in request.session.postList %}
+                    {% if post.id in request.session.SavedPosts %}
                     <i id="saveIcon{{post.id}}" class="fa-solid fa-bookmark fa-lg"></i>
                     {% else %}
                     <i id="saveIcon{{post.id}}" class="fa-regular fa-bookmark fa-lg"></i>
@@ -234,7 +234,7 @@
                     </span>
                     <span class="flex space-x-6 items-center mx-3">
                         <a role="button" class="bookmark" onclick="SavePost(this)" id="Save_post{{postr.id}}">
-                            {% if postr.id in request.session.postList %}
+                            {% if postr.id in request.session.SavedPosts %}
                             <i id="saveIcon{{postr.id}}" class="fa-solid fa-bookmark  text-md lg:text-lg"></i>
                             {% else %}
                             <i id="saveIcon{{postr.id}}" class="fa-regular fa-bookmark  text-md lg:text-lg"></i>

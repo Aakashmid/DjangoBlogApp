@@ -68,7 +68,7 @@
         </div>
     </div>
     {% endfor %}
-    <div id="searchBar" class="searchBar lg:w-[60%] lg:ml-[18%]   bg-white my-2 hidden  ">
+    <div id="searchBar" class="searchBar lg:w-[60%] lg:ml-[18%] shadow-indigo-100 my-2 hidden  ">
         <form action="/post-blogs/" method="post" class="space-x-2 flex px-1">
             {% csrf_token %}
             <input type="text" name="SearchQuery" id="SearchQuery"
