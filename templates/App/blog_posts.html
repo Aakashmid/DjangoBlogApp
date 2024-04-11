@@ -103,16 +103,6 @@
             </div>
             <hr class="my-1 bg-gray-800">
             {% endfor %}
-            <div class="w-full p-4 flex space-x-1 items-center justify-center">
-                <a href="?page=1" class="p-2 text-blue-700 bg-white rounded-md  active:text-blue-950">First</a>
-                {% if allPosts.has_previous %}
-                <a href="?page={{allPosts.previous_page_number}}" class="p-2 text-blue-700 bg-white rounded-md  active:text-blue-950">Prev</a>
-                {% endif %}
-                {% if allPosts.has_next %}
-                <a href="?page={{allPosts.next_page_number}}" class="p-2 text-blue-700 bg-white rounded-md active:text-blue-950 ">Next</a>
-                {% endif %}
-                <a href="?page={{allPosts.paginator.num_pages}}" class="p-2 text-blue-700 bg-white rounded-md  active:text-blue-950">Last</a>
-            </div>
         </div>
     </div>
     {% else %}

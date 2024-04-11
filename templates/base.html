@@ -39,7 +39,7 @@
             <div class="">
                 {% if user.is_authenticated %}
                 <a id="Create_postBtn"
-                    class="text-gray-800  font-medium hover:bg-gray-700 hover:text-white hover:border-white border-gray-700 border-[1px] rounded-md p-2"
+                    class="text-gray-800  font-medium hover:bg-gray-800 hover:text-white hover:border-white border-gray-700 border-[1px] rounded-md p-2"
                     href="/create-post/" role="button">Create post</a>
                 {% else %}
                 <a id="signupBtn"
@@ -56,12 +56,11 @@
     </nav>
     <div class="empty-box w-full h-14"></div>
     {% for Message in messages %}
-    <div id="alert" class="p-1 block z-10 fixed  top-14 w-full">
+    <div id="alert" class="p-1 block z-10 fixed  top-14 w-full  ">
         <div
-            class="Dismissable-alert  rounded-md  p-2 {% if Message.tags == 'error' %}bg-red-100 {% elif  Message.tags == 'success' %}bg-green-200 {% endif %}  border   w-full flex justify-between items-center">
-            {% comment %} <strong>{{Message.tags}} : </strong> {% endcomment %}
+            class="Dismissable-alert  rounded-md  p-2 mx-auto w-full lg:w-9/12 {% if Message.tags == 'error' %}bg-red-200 opacity-75 {% elif  Message.tags == 'success' %}bg-blue-300 {% endif %}  border   w-full flex justify-between items-center">
             <p
-                class="{% if Message.tags == 'error' %} text-red-800 {% elif  Message.tags == 'success' %} text-green-700 {% endif %} ">
+                class="{% if Message.tags == 'error' %} text-red-800 {% elif  Message.tags == 'success' %} text-blue-700 {% endif %} ">
                 {{Message}}</p>
             <span class=" text-xl text-black px-2 py-1 rounded-md  hover:bg-gray-50 active:text-white cursor-pointer"
                 id="dismiss_alert">&times;</span>

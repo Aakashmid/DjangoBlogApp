@@ -129,10 +129,10 @@ def Show_post_blogs(request,filterOrder=None,category=None,tagName=None):
         params={'allPosts':allPosts}
     
     # Adding pagination on blogposts page
-    paginator=Paginator(params['allPosts'],3)
-    page_num=request.GET.get('page')
-    posts=paginator.get_page(page_num)
-    params['allPosts']=posts
+    # paginator=Paginator(params['allPosts'],3)
+    # page_num=request.GET.get('page')
+    # posts=paginator.get_page(page_num)
+    # params['allPosts']=posts
     return render(request,'App/blog_posts.html',params)
 
 def Create_post(request):
