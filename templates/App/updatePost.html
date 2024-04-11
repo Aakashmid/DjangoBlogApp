@@ -23,10 +23,6 @@
                 width: '100%',
             });
         }
-
-        // $("#trigger_cat_dropdown").on("click", function () {
-        //     document.getElementById('Categories').classList.toggle('hidden');
-        // });
     });
 
     function toggleDropDown() {
@@ -62,7 +58,7 @@
     <h1 class="text-lg text-center font-semibold">Update post</h1>
     <div class="">
         <div class="form">
-            <form action="/create-post/" class="p-3 flex-col space-y-3 lg:space-y-4 w-full" method="post"
+            <form action="{% url 'App:Update post' post.id %}" class="p-3 flex-col space-y-3 lg:space-y-4 w-full" method="post"
                 enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="title">
@@ -72,18 +68,18 @@
                         id="post_title" placeholder="Enter title of blog here..." value="{{post.title}}" required> 
                 </div>
                 <div class="flex flex-col md:flex-row space-y-4 md:justify-between md:items-center">
-                    <span class="Category-dropDown flex space-x-2">
+                    <span class="Category-dropDown flex space-x-2 relative">
                         <span class="flex items-center space-x-4">
                             <a class=" font-medium text-lg " id="trigger_cat_dropdown" onclick="toggleDropDown()"
                                 role="button">Select
                                 Category <span class="angle-icon mx-1"><i class="fa-solid fa-angle-down fa-sm"></i></span> </a>
-                            <p class="" id="selectedOp"></p>
+                            <p class="" id="selectedOp">{{post.category}}</p>
                         </span>
                         <ul id="Categories"
-                            class="hidden w-fit top-[185px] md:top-[207px] absolute z-10 bg-gray-100 font-normal max-h-52 overflow-y-auto p-2 rounded-md"
+                            class="hidden w-fit  absolute z-10 top-[30px] bg-gray-100 font-normal max-h-52 overflow-y-auto p-2 rounded-md"
                             onclick="selectOption(event)">
                             {% for cat in Categories %}
-                            <li class="cursor-pointer hover:bg-white active:bg-blue-200 px-1 text-lg"
+                            <li class="cursor-pointer text-nowrap hover:bg-white active:bg-blue-200 px-1 text-lg"
                                 data-value="{{cat.name}}">
                                 {{cat.name}}</li>
                             {% endfor %}

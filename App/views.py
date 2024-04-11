@@ -75,8 +75,6 @@ def Login_hand(request):
     else:
          return redirect('/')
 def Logout_hand(request):
-    # user=request.user
-    # print(user)
     user=BlogUser.objects.get(user=request.user)
     user.session_data= serialize_session(request.session)
     user.save()
@@ -445,21 +443,60 @@ def update_post(request,post_id=None):
     if post_id is not None:
         if request.method=="DELETE":
             post=get_object_or_404(Post,id=post_id)
-            print(post)
+            print(f'Post id is {post.id}')
             post.delete()
             if post_id in request.session['LikedPosts'] :
-                request.session['LikedPosts'].remove(post.id) 
+                request.session['LikedPosts'].remove(post_id) 
             if post_id in request.session['SavedPosts'] :
-                request.session['SavedPosts'].remove(post.id) 
+                request.session['SavedPosts'].remove(post_id) 
             print(request.session)
             return JsonResponse({'Message':"Deleted post"})
+        elif request.method=="POST":
+            post=Post.objects.get(id=post_id)
+            title=request.POST.get('post_title')
+            content=request.POST.get('blog_content')
+            cat=request.POST.get('category')
+            Tags=request.POST.get('tags')
+            thumImg=request.FILES.get('thumbnail')
+            if cat!="":
+                category=PostCategory.objects.get(name=cat)
+            else:
+                category=None   
+
+            # Collecting  tags
+            Tagnames=[]
+            for tag in Tags.split():
+                if tag[0]=='#':
+                    Tagnames.append(tag[1:])
+                else:
+                    Tagnames.append(tag[0:])
+            Tags=[]  
+            # Adding tags
+            for tagname in Tagnames:
+                if not Tag.objects.filter(name=tagname).exists():
+                    tag=Tag.objects.create(name=tagname)
+                    Tags.append(tag)
+                else:
+                    tag=Tag.objects.get(name=tagname)
+                    Tags.append(tag)        
+            author=BlogUser.objects.get(user=request.user)
+            author.save()
+            # Create post 
+            # post=Post.objects.create(author=author,title=title,content=content,category=category)
+            post.title=title
+            post.content=content
+            post.category=category
+            post.tags.add(*Tags)
+            post.save()
+            if thumImg is not None:
+                post.thImg=thumImg
+                post.save()
+            messages.success(request,'Updated post successully ')
+            return HttpResponseRedirect(reverse('App:Update post',args=(post_id,)))
         post=Post.objects.get(id=post_id)
         categories=PostCategory.objects.all()
         params={'post':post,'Categories':categories}
         return render(request,'App/updatePost.html',params)
-    if request.method=="POST":
-        pass
-        
 
 # function for serailize session data
 def serialize_session(session):
