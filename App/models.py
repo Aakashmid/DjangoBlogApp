@@ -23,8 +23,6 @@ class BlogUser(models.Model):
     Bio=models.CharField( max_length=5000 ,default="",null=True)
     followers=models.IntegerField(default=0)
     following=models.IntegerField(default=0)
-    # likedPosts=models.JSONField(default=dict)
-    # savedPosts=models.JSONField(default=dict)
     session_data=models.JSONField(default=dict)
     def __str__(self) -> str:
         return self.user.username

@@ -27,7 +27,7 @@
                 <span id="postlike_count{{post.id}}" class="like-count">
                     {{post.like}}
                 </span>
-                <span id="postlike{{post.id}}" onclick="changeLikeStatePost(this)" class="like like-icon">
+                <span  class="like like-icon">
                     <a role="button" class="" onclick="LikePost({{post.id}})" id="LikePostLink{{post.id}}">
                         {% if post.id in request.session.LikedPosts %}
                         <i id="LikePost{{post.id}}" class="fa-solid fa-heart fa-lg " style="color: #f7022b;"></i>
@@ -154,9 +154,9 @@
                                     {% for replyUser,reply in allreply.items %}
                                     <div class="flex flex-col space-y-1">
                                         <span class="flex space-x-2 ">
-                                            <span class="w-8 h-8 rounded-full overflow-hidden">
+                                            <div class="w-8 h-8 rounded-full overflow-hidden">
                                                 <img src="/media/{{replyUser.profileImg}}" alt=".." class="">
-                                            </span>
+                                            </div>
                                             <div class="flex flex-col space-y-1">
                                                 <p class="user font-medium">{{reply.user.first_name}}
                                                     {{reply.user.last_name}}<span class="font-light text-xs">
@@ -218,14 +218,20 @@
                 </a>
                 <div class="footer-part flex items-center justify-between  px-2 py-1">
                     <span class="flex space-x-4 items-center ">
-                        <a role="button" class="" onclick="LikePost({{postr.id}})" id="LikePostLink{{postr.id}}">
-                            {% if postr.id in request.session.LikedPosts %}
-                            <i id="LikePost{{postr.id}}" class="fa-solid fa-thumbs-up text-md lg:text-lg"></i>
-                            {% else %}
-                            <i id="LikePost{{postr.id}}" class="fa-regular fa-thumbs-up text-md lg:text-lg"></i>
-                            {% endif %}
-                        </a>
-                        <a href="" class=""><i class="fa-regular fa-comment fa-md"></i></a>
+                        <span class="like_span">
+                            <span id="postlike_count{{postr.id}}" class="like-count">{{postr.like}}</span>
+                            <a role="button" class="" onclick="LikePost({{postr.id}})" id="LikePostLink{{postr.id}}">
+                                {% if postr.id in request.session.LikedPosts %}
+                                <i id="LikePost{{postr.id}}" class="fa-solid fa-thumbs-up text-md lg:text-lg"></i>
+                                {% else %}
+                                <i id="LikePost{{postr.id}}" class="fa-regular fa-thumbs-up text-md lg:text-lg"></i>
+                                {% endif %}
+                            </a>
+                        </span>
+                        <span class="comment_span">
+                            <span class="comment">{{ postr|get_comments|length }}</span>
+                            <a href="{% url 'App:Blog Post' postr.id %}" class=""><i class="fa-regular fa-comment "></i></a>
+                        </span>
                     </span>
                     <span
                         class="p-2 hidden fixed top-16 left-1/2  transform duration-300 -translate-y-full -translate-x-1/2 w-32 text-center text-white font-semibold rounded shadow-green-100 bg-black"

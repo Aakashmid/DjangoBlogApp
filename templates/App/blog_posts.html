@@ -64,14 +64,20 @@
                 </a>
                 <div class="footer-part flex items-center justify-between px-3 py-1">
                     <span class="flex space-x-4 items-center ">
-                        <a role="button" class="" onclick="LikePost({{post.id}})" id="LikePostLink{{post.id}}">
-                            {% if post.id in request.session.LikedPosts %}
-                            <i id="LikePost{{post.id}}" class="fa-solid fa-thumbs-up text-md lg:text-lg"></i>
-                            {% else %}
-                            <i id="LikePost{{post.id}}" class="fa-regular fa-thumbs-up text-md lg:text-lg"></i>
-                            {% endif %}
-                        </a>
-                        <a href="" class=""><i class="fa-regular fa-comment "></i></a>
+                        <span class="like_span">
+                            <span id="postlike_count{{post.id}}" class="like-count">{{post.like}}</span>
+                            <a role="button" class="" onclick="LikePost({{post.id}})" id="LikePostLink{{post.id}}">
+                                {% if post.id in request.session.LikedPosts %}
+                                <i id="LikePost{{post.id}}" class="fa-solid fa-thumbs-up text-md lg:text-lg"></i>
+                                {% else %}
+                                <i id="LikePost{{post.id}}" class="fa-regular fa-thumbs-up text-md lg:text-lg"></i>
+                                {% endif %}
+                            </a>
+                        </span>
+                        <span class="comment_span">
+                            <span class="comment">{{ post|get_comments|length }}</span>
+                            <a href="{% url 'App:Blog Post' post.id %}" class=""><i class="fa-regular fa-comment "></i></a>
+                        </span>
                     </span>
                     <span
                         class="p-2 hidden fixed top-16 left-1/2  transform duration-300 -translate-y-full -translate-x-1/2 w-32 text-center text-white font-semibold rounded shadow-green-100 bg-black"

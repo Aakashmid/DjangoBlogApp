@@ -131,13 +131,12 @@ Profile
                 </div>
                 {% endfor %}
                 {% else %}
-                <p class="text-center text-lg font-semibold text-wrap">You didn't have any post yet !! </p>
+                <p class="text-center text-md lg:text-lg font-medium lg:font-semibold text-wrap">You didn't have any post yet !! </p>
                 <a href="{% url 'App:Create Post' %}"
-                    class="p-2  float-end m-2  xl:text-lg  text-sm rounded text-white bg-black hover:bg-slate-900 active:bg-slate-900">Create
-                    New Post</a>
+                    class="p-2  float-end m-2  xl:text-lg  text-sm rounded text-white bg-black hover:bg-slate-900 active:bg-slate-900">Create Post</a>
                 {% endif %}
             </div>
-            <div class="border-2 rounded-lg p-4 clear-end lg:text-xl text-lg font-semibold mt-6 hover:bg-gray-300 active:bg-gray-300 cursor-pointer" onclick="showReadingList(this)">Your
+            <div class="border-2 rounded-lg p-4 clear-end lg:text-xl text-lg font-semibold mt-4 hover:bg-gray-300 active:bg-gray-300 cursor-pointer" onclick="showReadingList(this)">Your
                 Reading List >></div>
             <div class=" pt-4 my-2 hidden readingListContainer">
                 {%  if saved_posts|length > 0 %}
@@ -179,14 +178,20 @@ Profile
                     </a>
                     <div class="footer-part flex items-center justify-between pb-1 pt-2 px-2">
                         <span class="flex space-x-4 items-center ">
-                            <a role="button" class="" onclick="LikePost({{post.id}})" id="LikePostLink{{post.id}}">
-                                {% if post.id in request.session.LikedPosts %}
-                                <i id="LikePost{{post.id}}" class="fa-solid fa-thumbs-up text-md lg:text-lg"></i>
-                                {% else %}
-                                <i id="LikePost{{post.id}}" class="fa-regular fa-thumbs-up text-md lg:text-lg"></i>
-                                {% endif %}
-                            </a>
-                            <a href="" class=""><i class="fa-regular fa-comment fa-md"></i></a>
+                            <span class="like_span">
+                                <span id="postlike_count{{post.id}}" class="like-count">{{post.like}}</span>
+                                <a role="button" class="" onclick="LikePost({{post.id}})" id="LikePostLink{{post.id}}">
+                                    {% if post.id in request.session.LikedPosts %}
+                                    <i id="LikePost{{post.id}}" class="fa-solid fa-thumbs-up text-md lg:text-lg"></i>
+                                    {% else %}
+                                    <i id="LikePost{{post.id}}" class="fa-regular fa-thumbs-up text-md lg:text-lg"></i>
+                                    {% endif %}
+                                </a>
+                            </span>
+                            <span class="comment_span">
+                                <span class="comment">{{ post|get_comments|length }}</span>
+                                <a href="{% url 'App:Blog Post' post.id %}" class=""><i class="fa-regular fa-comment "></i></a>
+                            </span>
                         </span>
                         <span
                             class="p-2 hidden fixed top-16 left-1/2  transform duration-300 -translate-y-full -translate-x-1/2 w-32 text-center text-white font-semibold rounded shadow-green-100 bg-black"
@@ -217,7 +222,7 @@ Profile
                 </div>
                 {% endfor %}
                 {% else %}
-                <p class="text-center text-lg font-semibold text-wrap">You didn't have any  post in reading list ,  Save post to add in reading list</p>
+                <p class="text-center text-md lg:text-lg font-medium lg:font-semibold text-wrap">You didn't have any  post in reading list ,  Save post to add in reading list</p>
                 {% endif %}
             </div>
         </div>

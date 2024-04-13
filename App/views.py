@@ -41,6 +41,7 @@ def Create_account(request):
             user.first_name=fname
             user.last_name=lname
             user.save()
+            request.session.set_expiry(2592000)  # user is logged in for 30 days
             bloguser=BlogUser.objects.create(user=user)
             bloguser.save()
             login(request,user=user)
@@ -184,33 +185,10 @@ def Read_post(request,id):
     if request.method=="POST":
         action=request.POST.get('action')
         post=Post.objects.get(pk=id)
-        if action=="PostLikeIncrease":
-            if not PostLike.objects.filter(user=request.user,post=post).exists():
-                post.like+=1
-                post.save()
-                Like=PostLike.objects.create(user=request.user,post=post)
-                Like.save()
-                response=JsonResponse({'likeCount':post.like})
-                return response
-            else:
-                response=JsonResponse({'likeCount':post.like})
-                return response
-                
-        elif action=="PostLikeDecrease":
-            post=Post.objects.get(id=id)
-            if PostLike.objects.filter(user=request.user,post=post).exists():
-                post.like-=1
-                post.save()
-                Like=PostLike.objects.get(user=request.user,post=post)
-                Like.delete()
-                response=JsonResponse({'likeCount':post.like})
-                return response
-            else:
-                response=JsonResponse({'likeCount':post.like})
-                return response   
-            
+        # Liked post login goes here
+
         #If click like button of comment
-        elif action=='CommentlikeIncrease':
+        if action=='CommentlikeIncrease':
             comment_sno=int(request.POST.get('commentNo'))
             comment=Comment.objects.get(sno=comment_sno)
             if not CommentLike.objects.filter(user=request.user,comment=comment).exists():
