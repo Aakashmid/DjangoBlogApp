@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load extraFilter %}
 {% block title %}
 Profile
 {% endblock title %}
@@ -8,38 +9,38 @@ Profile
 {% block body %}
 <div id="profile_page" class="profile-container">
     <div class="upper">
-        <div class="flex flex-col justify-center">
+        <div class="flex flex-col justify-center relative">
             <div class="h-24 flex flex-col justify-center bg-gray-800">
             </div>
-            <div class="p-3">
-                <span onclick="ShowEditForm()" class="z-0 w-auto float-right font-medium rounded-md text-sm  text-white bg-gray-800 p-2 hover:bg-gray-950 active:outline active:outline-1
-                "><i class="fa-solid fa-pen"></i></span>
+            <div class="p-3 ">
                 <span class="flex space-x-5 items-center ">
                     <div class="h-20 rounded-full w-20 outline outline-4 outline-gray-100 overflow-hidden"
-                        onclick="showimage()">
-                        <img src='/media/{{User.profileImg}}' alt="..." class=" ">
-                    </div>
-                    <div
-                        class="hidden image-box overflow-hidden absolute border-[1px] top-1/3 left-1/2 rounded-lg transform  -translate-y-3/4 -translate-x-1/2 w-[250px] lg:w-[300px]  lg:h-[300px] h-[250px]">
-                        <img src="/media/{{User.profileImg}}" alt="..">
-                    </div>
-                    <span class="">
-                        <h1 class="text-2xl font-semibold ">{{user.first_name}} {{user.last_name}}</h1>
-                        <span class="flex space-x-8 mt-2">
-                            <p class="text-[17px]">{{User.followers}} Followers</p>
-                            <p class="text-[17px]">{{User.following}} Following</p>
-                        </span>
-                    </span>
-                </span>
+                    onclick="showimage()">
+                    <img src='/media/{{User.profileImg}}' alt="..." class=" ">
+                </div>
+                <div
+                class="hidden image-box overflow-hidden absolute border-[1px] top-1/3 left-1/2 rounded-lg transform  -translate-y-3/4 -translate-x-1/2 w-[250px] lg:w-[300px]  lg:h-[300px] h-[250px]">
+                <img src="/media/{{User.profileImg}}" alt="..">
             </div>
+            <span class="">
+                <h1 class="text-2xl font-semibold ">{{user.first_name}} {{user.last_name}}</h1>
+                <span class="flex space-x-8 mt-2">
+                    <a href="/" class="text-[17px]   hover:text-blue-900  transition-transform active:scale-105 active:text-blue-900">{{User.followers}} Followers</a>
+                    <a href="/" class="text-[17px]   hover:text-blue-900  transition-transform active:scale-105 active:text-blue-900">{{User.following}} Following</a>
+                </span>
+            </span>
+           <span onclick="ShowEditForm()" class="absolute right-4  w-auto  font-medium rounded-full text-sm  text-white bg-gray-800 hover:bg-slate-900 active:bg-slate-700 px-3 py-2  active:outline active:outline-1
+            "><i class="fa-solid fa-pen"></i></span>
+        </span>
+    </div>
         </div>
     </div>
     <div class="mt-6">
         <span class="w-full">
             <ul class="flex space-x-4 py-2 px-4">
-                <li id="profile_home" class="profile-link cursor-pointer underline underline-offset-[14px]"
+                <li id="profile_home" class="profile-link cursor-pointer underline underline-offset-[14px] hover:text-blue-950"
                     onclick="changeLinkAppearence(this)">Home </li>
-                <li id="profile_about" class="profile-link cursor-pointer underline-offset-[14px]"
+                <li id="profile_about" class="profile-link cursor-pointer underline-offset-[14px] hover:text-blue-950"
                     onclick="changeLinkAppearence(this)">About </li>
             </ul>
         </span>
@@ -115,12 +116,12 @@ Profile
 
                             <!-- options -->
                             <div id="Option_box{{post.id}}"
-                                class="absolute bg-white right-0 p-2 hidden top-5 border-gray-500 border rounded w-36">
-                                <ul class="flex flex-col  items-center  ">
-                                    <li class="py-1 px-2 hover:bg-slate-300 active:bg-slate-300 rounded">
+                                class="absolute bg-white right-0 p-1 hidden top-5 border-gray-500 border rounded ">
+                                <ul class="flex flex-col  items-center  w-fit">
+                                    <li class=" hover:bg-slate-200 active:bg-slate-300 p-1 rounded text-nowrap">
                                         <a href="{% url 'App:Update post' post.id %}" class="">Update post</a>
                                     </li>
-                                    <li class="py-1 px-2 hover:bg-slate-300 active:bg-slate-300 rounded">
+                                    <li class=" hover:bg-slate-200 active:bg-slate-300 p-1 rounded text-nowrap">
                                         <a role="button" onclick="RemovePost({{post.id}})">Remove post</a>
                                     </li>
                                 </ul>
@@ -133,7 +134,7 @@ Profile
                 {% else %}
                 <p class="text-center text-md lg:text-lg font-medium lg:font-semibold text-wrap">You didn't have any post yet !! </p>
                 <a href="{% url 'App:Create Post' %}"
-                    class="p-2  float-end m-2  xl:text-lg  text-sm rounded text-white bg-black hover:bg-slate-900 active:bg-slate-900">Create Post</a>
+                    class="px-3 py-2 float-end m-2  xl:text-lg  text-sm rounded-md text-white bg-black hover:bg-slate-900 active:bg-slate-900">Create Post</a>
                 {% endif %}
             </div>
             <div class="border-2 rounded-lg p-4 clear-end lg:text-xl text-lg font-semibold mt-4 hover:bg-gray-300 active:bg-gray-300 cursor-pointer" onclick="showReadingList(this)">Your
