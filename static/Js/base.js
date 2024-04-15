@@ -146,7 +146,7 @@ Array.from(previews).forEach((element) => {
     element.innerHTML=element.innerText;
 })
 
-
+// this for post card three dots option 
 OptionPopover = (element) => {
     let post_id = element.id.slice(7);
     document.getElementById('Option_box' + post_id).classList.toggle('hidden');

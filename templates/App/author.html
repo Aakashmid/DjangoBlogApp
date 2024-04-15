@@ -56,9 +56,11 @@
                         <div class=" flex justify-between items-center">
                             <div
                                 class="flex flex-col text-wrap   {% if post.thImg != '' %} w-[80%] {% else %}w-auto {% endif %} ">
-                                <h1 id="title{{post.id}}" class="title font-semibold text-xl lg:text-2xl">{{post.title}}</h1>
+                                <h1 id="title{{post.id}}" class="title font-semibold text-xl lg:text-2xl">{{post.title}}
+                                </h1>
                                 <p class="blog-content">
-                                <div class="preview hidden text-lg lg:block">{{post.content|safe|truncatechars_html:150}}</div>
+                                <div class="preview hidden text-lg lg:block">
+                                    {{post.content|safe|truncatechars_html:150}}</div>
                                 </p>
                             </div>
                             {% if post.thImg != '' %}
@@ -82,7 +84,8 @@
                             </span>
                             <span class="comment_span">
                                 <span class="comment">{{ post|get_comments|length }}</span>
-                                <a href="{% url 'App:Blog Post' post.id %}" class=""><i class="fa-regular fa-comment "></i></a>
+                                <a href="{% url 'App:Blog Post' post.id %}" class=""><i
+                                        class="fa-regular fa-comment "></i></a>
                             </span>
                         </span>
                         <span
@@ -93,13 +96,13 @@
                         <span class="flex space-x-6 items-center mx-3">
                             <a role="button" class="bookmark" onclick="SavePost(this)" id="Save_post{{post.id}}"><i
                                     class="fa-regular fa-bookmark fa-lg"></i></a>
-                                    <a role="button" class="three-dots cursor-pointer" id="options{{post.id}}" onclick="OptionPopover(this)"><i
-                                        class="fa-solid fa-ellipsis fa-lg"></i></a>
+                            <a role="button" class="three-dots cursor-pointer" id="options{{post.id}}"
+                                onclick="OptionPopover(this)"><i class="fa-solid fa-ellipsis fa-lg"></i></a>
                             <span id="Option_box{{post.id}}"
                                 class="absolute bg-white  hidden p-2 border-gray-500 border rounded ">
-                                    <li class="" id="follow_op">
-                                        Follow
-                                    </li>
+                                <li class="" id="follow_op">
+                                    Follow
+                                </li>
                                 </ul>
                             </span>
                         </span>
@@ -113,10 +116,18 @@
                 </div>
                 {% endif %}
             </div>
-            <div class="px-4 py-2 about-page hidden text-lg">
-                {% if Author.Bio|length > 0 %}
-                <p class="">{{Author.Bio}}</p>
-                {% endif %}
+            <!-- {% comment %} About section {% endcomment %} -->
+            <div class="about-page hidden p-3">
+                <div class="flex flex-col ">
+                    <div class="min-h-12 pb-4">
+                        <p class="text-lg font-serif">{{Author.Bio}} </p>
+                    </div>
+                    <span class="flex space-x-8 relative bottom-0">
+                        <p class="text-purple-500">{{Author.followers}} Follower</p>
+                        <p class="text-purple-500">{{Author.following}} Following</p>
+                    </span>
+                </div>
+                <hr class="bg-gray-800 w-full mt-3">
             </div>
         </div>
     </div>
@@ -200,40 +211,7 @@
         {% endif %}
     }
 
-    // document.getElementsByClassName('three-dots')[0].addEventListener('click',function(){
-    //     document.getElementsByClassName('Option_box').classList.toggle('hidden');
-    // })
 
-    {% comment %} function SavePost(element) {
-        {% if user.is_authenticated %}
-        let post_id = element.id.slice(9);
-        $.ajax({
-            type: "Post",
-            url: "{% url 'App:Author Profile' user.id %}",
-            data: { 'Post_id': post_id },
-            dataType: "json",
-            headers: {
-                "X-CSRFToken": '{{ csrf_token }}'
-            },
-            //here  data is response return by server 
-            success: function (data) {
-                console.log();
-                if (data.Result == 'Post_saved') {
-                    document.getElementById(element.id).innerHTML = '<i class="fa-solid fa-bookmark fa-lg"></i>';
-                }
-                else if (data.Result == 'Post_unsaved') {
-                    document.getElementById(element.id).innerHTML = '<i class="fa-regular fa-bookmark fa-lg"></i>';
-
-                }
-            },
-            //here error is error return by the url 
-            error: function (error) {
-                console.log("Error:", error);
-            }
-        });
-        {% else %}
-        showLogin();
-        {% endif %}
-    } {% endcomment %}
+    
 </script>
 {% endblock js %}

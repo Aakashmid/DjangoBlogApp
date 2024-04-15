@@ -265,7 +265,7 @@ def post_comment(request):
             messages.success(request," Reply posted successfully ")
         return redirect(f'/post-blogs/{post.id}/')
     
-def profile(request,user_id=None):     
+def profile(request,user_id=None):     # this is for profile  for author profile
     if user_id:
         if request.method=="POST":
             action=request.POST.get('action',None)
@@ -275,13 +275,18 @@ def profile(request,user_id=None):
                     Author=BlogUser.objects.get(user=user_id)
                     Follower=request.user 
                     # AuthFollRel is object storing AuthorFollower object which keeps information of author and follower data
-                    
                     if not AuthorFollower.objects.filter(Author=Author,follower=Follower).exists():
                         Author.followers+=1
                         Author.save()
                         AuthFollRel=AuthorFollower.objects.create(Author=Author,follower=Follower)
                         AuthFollRel.save()
                         response=JsonResponse({'btnText':"Following",'followerCount':Author.followers})
+                        # if 'FollowedAuthor' not  in  request.session :
+                        #     request.session['FollowedAuthor']=[Author]
+                        #     request.session.modified=True
+                        # else:
+                        #     request.session['FollowedAuthor'].append(Author)
+                        #     request.session.modified=True
                         return response
                     else:
                         response=JsonResponse({'btnText':"Following",'followerCount':Author.followers})
