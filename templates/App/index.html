@@ -36,15 +36,12 @@
                 </div>
 
                 <a href="{% url 'App:Blog Post' post.id %}">
-                    <div class=" flex justify-between ">
+                    <div class=" flex justify-between items-center">
                         <div
-                            class="flex flex-col  break-words    {% if post.thImg != '' %} w-[80%] {% else %}w-auto {% endif %} ">
-                            <h1 id="title{{post.id}}" class="title font-semibold text-xl">{{post.title}}</h1>
+                            class="flex flex-col text-wrap   {% if post.thImg != '' %} w-[80%] {% else %}w-auto {% endif %} ">
+                            <h1 id="title{{post.id}}" class="title font-semibold text-xl lg:text-2xl">{{post.title}}</h1>
                             <p class="blog-content">
-                            <div class="preview block lg:hidden"> {% if post.thImg != ''%}
-                                {{post.content|safe|truncatechars_html:45}} {% else %}
-                                {{post.content|safe|truncatechars_html:50}} {% endif %}</div>
-                            <div class="preview hidden lg:block">{{post.content|safe|truncatechars_html:150}}</div>
+                            <div class="preview hidden text-lg lg:block">{{post.content|safe|truncatechars_html:150}}</div>
                             </p>
                         </div>
                         {% if post.thImg != '' %}

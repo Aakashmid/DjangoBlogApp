@@ -71,17 +71,16 @@ Profile
                     </div>
 
                     <a href="{% url 'App:Blog Post' post.id %}">
-                        <div class=" flex justify-between ">
+                        <div class=" flex justify-between items-center">
                             <div
-                                class="flex flex-col  break-words    {% if post.thImg != '' %} w-[80%] {% else %}w-auto {% endif %} ">
-                                <h1 id="title{{post.id}}" class="title font-semibold text-xl">{{post.title}}</h1>
+                                class="flex flex-col text-wrap   {% if post.thImg != '' %} w-[80%] {% else %}w-auto {% endif %} ">
+                                <h1 id="title{{post.id}}" class="title font-semibold text-xl lg:text-2xl">{{post.title}}</h1>
                                 <p class="blog-content">
-                                <div class="preview block lg:hidden">{{post.content|safe|truncatechars_html:50}}</div>
-                                <div class="preview hidden lg:block">{{post.content|safe|truncatechars_html:100}}</div>
+                                <div class="preview hidden text-lg lg:block">{{post.content|safe|truncatechars_html:150}}</div>
                                 </p>
                             </div>
                             {% if post.thImg != '' %}
-                            <div class="w-14 h-14 lg:w-28 lg:h-24 float-end overflow-hidden rounded-md">
+                            <div class="w-14 h-14 lg:w-28 lg:h-24 overflow-hidden rounded-md">
                                 <img src="/media/{{post.thImg}}" alt="">
                             </div>
                             {% endif %}
@@ -161,23 +160,22 @@ Profile
                     </div>
 
                     <a href="{% url 'App:Blog Post' post.id %}">
-                        <div class=" flex justify-between ">
+                        <div class=" flex justify-between items-center">
                             <div
-                                class="flex flex-col  break-words    {% if post.thImg != '' %} w-[80%] {% else %}w-auto {% endif %} ">
-                                <h1 id="title{{post.id}}" class="title font-semibold text-xl">{{post.title}}</h1>
+                                class="flex flex-col text-wrap   {% if post.thImg != '' %} w-[80%] {% else %}w-auto {% endif %} ">
+                                <h1 id="title{{post.id}}" class="title font-semibold text-xl lg:text-2xl">{{post.title}}</h1>
                                 <p class="blog-content">
-                                <div class="preview block lg:hidden">{{post.content|safe|truncatechars_html:50}}</div>
-                                <div class="preview hidden lg:block">{{post.content|safe|truncatechars_html:100}}</div>
+                                <div class="preview hidden text-lg lg:block">{{post.content|safe|truncatechars_html:150}}</div>
                                 </p>
                             </div>
                             {% if post.thImg != '' %}
-                            <div class="w-14 h-14 lg:w-28 lg:h-24 float-end overflow-hidden rounded-md">
+                            <div class="w-14 h-14 lg:w-28 lg:h-24 overflow-hidden rounded-md">
                                 <img src="/media/{{post.thImg}}" alt="">
                             </div>
                             {% endif %}
                         </div>
                     </a>
-                    <div class="footer-part flex items-center justify-between pb-1 pt-2 px-2">
+                    <div class="footer-part flex items-center justify-between pb-1 pt-2 px-1">
                         <span class="flex space-x-4 items-center ">
                             <span class="like_span">
                                 <span id="postlike_count{{post.id}}" class="like-count">{{post.like}}</span>
