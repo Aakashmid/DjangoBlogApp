@@ -5,22 +5,56 @@
     <!-- Followers -->
     <div class="follower-section">
         {% comment %} Followers of Author {% endcomment %}
-        <div class="flex space-x-2">
-            <div class="w-10 h-10 overflow-hidden ">
+        <div class="flex space-x-2 items-center">
+            <div class="w-10 h-10 overflow-hidden rounded-full ">
                 <img src="/media/{{Author.profileImg}}" alt="">
             </div>
+            <span class="">
+                <p class="username  w-fit  text-xl">
+                    {{Author.user.first_name}} {{Author.user.last_name}}
+                </p>
+            </span>
+            <p class="text-3xl font-light px-1">></p>
+            <p class="text-xl font-medium px-1">followers</p>
             <!-- {{Author.user.first_name}} {{Author.user.last_name}} -->
         </div>
+        <p class="follower w-fit text-2xl py-3">Followers count</p>
+        <hr class="bg-gray-600 my-2">
+        <!-- All followers -->
+        <div class="flex flex-col space-y-2 items-start p-2 lg:p-1">
+            <div class="follower-card flex space-x-4 items-start ">
+                <div class="w-12 h-12  overflow-hidden rounded-full ">
+                    <img src="/media/{{Author.profileImg}}" alt="" class="">
+                </div>
+                <div class="w-3/4 flex flex-col items-baseline"><p class="text-lg font-semibold ">{{Author.user.first_name}} {{Author.user.last_name}}</p>
+                    <p class="">{{Author.Bio|truncatechars:50}}  I also doing this job for my </p>
+                </div>
+                <button class="px-3 py-2 bg-slate-800 text-white rounded-3xl text-sm lg:text-lg">
+                    Follow
+                </button>
+            </div>
+            <div class="follower-card flex space-x-4 items-start ">
+                <div class="w-12 h-12  overflow-hidden rounded-full ">
+                    <img src="/media/{{Author.profileImg}}" alt="" class="">
+                </div>
+                <div class="w-3/4 flex flex-col items-baseline"><p class="text-lg font-semibold ">{{Author.user.first_name}} {{Author.user.last_name}}</p>
+                    <p class="">{{Author.Bio}}  I also doing this job for my pracktinc i dont know what to write</p>
+                </div>
+                <button class="px-3 py-2 bg-slate-800 text-white rounded-3xl text-sm lg:text-lg">
+                    Follow
+                </button>
+            </div>
+        </div>
     </div>
-    
+
     {% else %}
     <!-- Following -->
     <div class="">
         Following of Author
     </div>
-    
+
     {% endif %}
-    
+
 </div>
 
 {% endblock body %}

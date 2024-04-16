@@ -18,7 +18,7 @@ class Tag(models.Model):
 
 #  For profile of user 
 class BlogUser(models.Model):
-    user=models.OneToOneField(User, verbose_name="User", on_delete=models.CASCADE)
+    user=models.OneToOneField(User, verbose_name="user", on_delete=models.CASCADE)
     profileImg=models.ImageField("Profile Image", upload_to='App/profileimg/', default='profile.jpg')
     Bio=models.CharField( max_length=5000 ,default="",null=True)
     followers=models.IntegerField(default=0)
