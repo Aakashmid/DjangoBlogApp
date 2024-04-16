@@ -264,8 +264,10 @@ def post_comment(request):
             comment.save()
             messages.success(request," Reply posted successfully ")
         return redirect(f'/post-blogs/{post.id}/')
-    
-def profile(request,user_id=None):     # this is for profile  for author profile
+
+ # this is for profile  for author profile  # we have pass the same name in parameters as we passed in url    
+ # here user_id is bloguser object's id 
+def profile(request,user_id=None,username=None,text=None):    
     if user_id:
         if request.method=="POST":
             action=request.POST.get('action',None)
@@ -335,6 +337,19 @@ def profile(request,user_id=None):     # this is for profile  for author profile
             else:
                 return HttpResponseRedirect(reverse('App:Author profile',args=(user_id)))
 
+        # For followers page
+        elif text is not None:
+            Author=BlogUser.objects.get(pk=user_id)
+            if text=='following':
+                following=True
+                follower=False
+            else:
+                following=False
+                follower=True
+            params={'following':following,'follower':follower,'Author':Author}
+            return render(request,'App/FlersFling.html',params)
+            
+            print('Succssfully')
         # Author.html 
         else:
             # here author id is blogser object pk 

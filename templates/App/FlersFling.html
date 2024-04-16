@@ -1,8 +1,27 @@
 {% extends "base.html" %}
-{% block title %}Followers{% block title%}
-
-
 {% block body %}
+<div class="container p-3">
+    {% if follower %}
+    <!-- Followers -->
+    <div class="follower-section">
+        {% comment %} Followers of Author {% endcomment %}
+        <div class="flex space-x-2">
+            <div class="w-10 h-10 overflow-hidden ">
+                <img src="/media/{{Author.profileImg}}" alt="">
+            </div>
+            <!-- {{Author.user.first_name}} {{Author.user.last_name}} -->
+        </div>
+    </div>
+    
+    {% else %}
+    <!-- Following -->
+    <div class="">
+        Following of Author
+    </div>
+    
+    {% endif %}
+    
+</div>
 
 {% endblock body %}
 

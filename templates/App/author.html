@@ -14,11 +14,12 @@
                 <div class="flex flex-col space-y-1">
                     <span class="Author-name font-semibold text-black text-2xl">{{Author.user.first_name}}
                         {{Author.user.last_name}}</span>
-                    <span class="font-normal">
+                    <a class="font-normal" href="{%  url 'App:Followers Following' 'followers' Author.user.username Author.id %}">
                         <span id="follow_count" class="follower-count">
                             {{Author.followers}}
                         </span>
-                        Followers</span> <!-- Here user is author who's profile is viewing -->
+                        Followers
+                    </a> <!-- Here user is author who's profile is viewing -->
                 </div>
             </div>
             <div class="px-2">
