@@ -1,10 +1,8 @@
 {% extends "base.html" %}
 {% block body %}
 <div class="container p-3">
-    {% if follower %}
     <!-- Followers -->
-    <div class="follower-section">
-        {% comment %} Followers of Author {% endcomment %}
+    <div class="follower-following-section">
         <div class="flex space-x-2 items-center">
             <div class="w-10 h-10 overflow-hidden rounded-full ">
                 <img src="/media/{{Author.profileImg}}" alt="">
@@ -15,46 +13,29 @@
                 </p>
             </span>
             <p class="text-3xl font-light px-1">></p>
-            <p class="text-xl font-medium px-1">followers</p>
-            <!-- {{Author.user.first_name}} {{Author.user.last_name}} -->
+            <p class="text-xl font-medium px-1">{% if follower %}followers{% else %}following{% endif %}</p>
         </div>
-        <p class="follower w-fit text-2xl py-3">Followers count</p>
+        <p class="follower w-fit text-2xl py-3 font-medium">{{AllUsers|length}} {% if follower %}Followers{% else %}Following {% endif%}</p>
         <hr class="bg-gray-600 my-2">
         <!-- All followers -->
-        <div class="flex flex-col space-y-2 items-start p-2 lg:p-1">
-            <div class="follower-card flex space-x-4 items-start ">
-                <div class="w-12 h-12  overflow-hidden rounded-full ">
-                    <img src="/media/{{Author.profileImg}}" alt="" class="">
-                </div>
-                <div class="w-3/4 flex flex-col items-baseline"><p class="text-lg font-semibold ">{{Author.user.first_name}} {{Author.user.last_name}}</p>
-                    <p class="">{{Author.Bio|truncatechars:50}}  I also doing this job for my </p>
-                </div>
+        <div class="flex flex-col space-y-3 items-start p-2 lg:p-1">
+            {% for AuthorF in AllUsers %} <!--Here AuthorF means Author followers or Following-->
+            <div class="follower-card flex space-x-4 items-start w-full ">
+                <!-- <a href="/" class=""> -->
+                    <div class="w-12 h-11 sm:h-12  overflow-hidden rounded-3xl ">
+                        <img src="/media/{{AuthorF.profileImg}}" alt="" class="">
+                    </div>
+                    <div class="w-3/4 flex flex-col items-baseline"><p class="text-lg font-semibold py-1">{{AuthorF.user.first_name}} {{AuthorF.user.last_name}}</p>
+                        <p class="">{{AuthorF.Bio|truncatechars:80}}  </p>
+                    </div>
+                <!-- </a> -->
                 <button class="px-3 py-2 bg-slate-800 text-white rounded-3xl text-sm lg:text-lg">
                     Follow
                 </button>
             </div>
-            <div class="follower-card flex space-x-4 items-start ">
-                <div class="w-12 h-12  overflow-hidden rounded-full ">
-                    <img src="/media/{{Author.profileImg}}" alt="" class="">
-                </div>
-                <div class="w-3/4 flex flex-col items-baseline"><p class="text-lg font-semibold ">{{Author.user.first_name}} {{Author.user.last_name}}</p>
-                    <p class="">{{Author.Bio}}  I also doing this job for my pracktinc i dont know what to write</p>
-                </div>
-                <button class="px-3 py-2 bg-slate-800 text-white rounded-3xl text-sm lg:text-lg">
-                    Follow
-                </button>
-            </div>
+            {% endfor %}
         </div>
     </div>
-
-    {% else %}
-    <!-- Following -->
-    <div class="">
-        Following of Author
-    </div>
-
-    {% endif %}
-
 </div>
 
 {% endblock body %}

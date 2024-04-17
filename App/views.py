@@ -267,7 +267,7 @@ def post_comment(request):
 
  # this is for profile  for author profile  # we have pass the same name in parameters as we passed in url    
  # here user_id is bloguser object's id 
-def profile(request,user_id=None,username=None,text=None):    
+def profile(request,user_id=None,text=None,username=None):    
     if user_id:
         if request.method=="POST":
             action=request.POST.get('action',None)
@@ -343,10 +343,21 @@ def profile(request,user_id=None,username=None,text=None):
             if text=='following':
                 following=True
                 follower=False
+                AuthorFollowerObjs=AuthorFollower.objects.filter(follower=Author.user)  # follower is user object
             else:
+                AuthorFollowerObjs=AuthorFollower.objects.filter(Author=Author)
                 following=False
                 follower=True
-            params={'following':following,'follower':follower,'Author':Author}
+            AllUsers=[]
+            for i in AuthorFollowerObjs:
+                # print(i)
+                # print(i.follower.first_name)
+                if following==True:
+                    AllUsers.append(i.Author)
+                else:
+                    follower=BlogUser.objects.get(user=i.follower)
+                    AllUsers.append(follower)
+            params={'following':following,'follower':follower,'Author':Author,'AllUsers':AllUsers}
             return render(request,'App/FlersFling.html',params)
             
             print('Succssfully')
