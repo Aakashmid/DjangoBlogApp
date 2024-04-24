@@ -14,14 +14,12 @@ from django.contrib import sessions
 import json
 # Create your views here.
 def home(request):    
-    # incomplet , write logic for showing recent posts
+    #  logic for showing recent posts
     allPosts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=5)).order_by('-read_count')[:10]
     postTags=Tag.objects.all()[:8]
     postCats=PostCategory.objects.all()[:10]
-    if not allPosts.exists():
-        allPosts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=20)) 
-  
-            
+    # if not allPosts.exists():
+    #     allPosts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=20))           
     parms={"allPosts":allPosts,'postTags':postTags,'Categories':postCats,}
     return render(request,'App/index.html',parms)
 
@@ -231,7 +229,10 @@ def Read_post(request,id):
     if post:
         comments=Comment.objects.filter(Q(parent=None) & Q(post=post))
         replies=Comment.objects.filter(post=post).exclude(parent=None)
-        related_posts=Post.objects.filter(category=post.category)[:4]
+        related_posts=Post.objects.filter(category=post.category)
+        # print(related_posts)
+        # for p in related_posts :
+        #     print(post.id,p.id)
         # Author=BlogUser.objects.get(user=post.author)
         CommentsDict={}
         replyDict={}
@@ -396,7 +397,8 @@ def profile(request,user_id=None,text=None,username=None):
         else:
             request.session['LikedPosts']=[int(post_id)]
             request.session.modified=True
-            return JsonResponse({'Success':"Successfull"})
+            post.like+=1
+            return JsonResponse({'Success':"Successfull ","like_count":post.like})
 
     else:
         bloguser=BlogUser.objects.get(user=request.user)

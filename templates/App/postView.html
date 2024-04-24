@@ -202,15 +202,15 @@
                 <a href="{% url 'App:Blog Post' postr.id %}" id="card_link" class="">
                     <div class="px-1 flex justify-between items-center">
                         <div
-                            class="flex flex-col text-wrap   {% if post.thImg != '' %} w-[80%] {% else %}w-auto {% endif %} ">
-                            <h1 id="title{{post.id}}" class="title font-semibold text-xl lg:text-2xl">{{post.title}}</h1>
+                            class="flex flex-col text-wrap   {% if postr.thImg != '' %} w-[80%] {% else %}w-auto {% endif %} ">
+                            <h1 id="title{{postr.id}}" class="title font-semibold text-xl lg:text-2xl">{{postr.title}}</h1>
                             <p class="blog-content">
-                            <div class="preview hidden text-lg lg:block">{{post.content|safe|truncatechars_html:150}}</div>
+                            <div class="preview hidden text-lg lg:block">{{postr.content|safe|truncatechars_html:150}}</div>
                             </p>
                         </div>
-                        {% if post.thImg != '' %}
+                        {% if postr.thImg != '' %}
                         <div class="w-14 h-14 lg:w-28 lg:h-24 overflow-hidden rounded-md">
-                            <img src="/media/{{post.thImg}}" alt="">
+                            <img src="/media/{{postr.thImg}}" alt="">
                         </div>
                         {% endif %}
                     </div>
