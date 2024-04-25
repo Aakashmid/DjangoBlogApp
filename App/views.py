@@ -12,6 +12,7 @@ from datetime import datetime, timedelta
 from django.core.paginator import Paginator
 from django.contrib import sessions
 import json
+from django.http import QueryDict
 # Create your views here.
 def home(request):    
     #  logic for showing recent posts
@@ -230,9 +231,6 @@ def Read_post(request,id):
         comments=Comment.objects.filter(Q(parent=None) & Q(post=post))
         replies=Comment.objects.filter(post=post).exclude(parent=None)
         related_posts=Post.objects.filter(category=post.category)
-        # print(related_posts)
-        # for p in related_posts :
-        #     print(post.id,p.id)
         # Author=BlogUser.objects.get(user=post.author)
         CommentsDict={}
         replyDict={}
@@ -271,54 +269,8 @@ def post_comment(request):
 def profile(request,user_id=None,text=None,username=None):    
     if user_id:
         if request.method=="POST":
-            action=request.POST.get('action',None)
             post_id=request.POST.get('Post_id',None)  # for saving post in reading list
-            if action is not None:
-                if action=='IncreaseFollower':
-                    Author=BlogUser.objects.get(user=user_id)
-                    Follower=request.user 
-                    # AuthFollRel is object storing AuthorFollower object which keeps information of author and follower data
-                    if not AuthorFollower.objects.filter(Author=Author,follower=Follower).exists():
-                        Author.followers+=1
-                        Author.save()
-                        AuthFollRel=AuthorFollower.objects.create(Author=Author,follower=Follower)
-                        AuthFollRel.save()
-                        response=JsonResponse({'btnText':"Following",'followerCount':Author.followers})
-                        # if 'FollowedAuthor' not  in  request.session :
-                        #     request.session['FollowedAuthor']=[Author]
-                        #     request.session.modified=True
-                        # else:
-                        #     request.session['FollowedAuthor'].append(Author)
-                        #     request.session.modified=True
-                        return response
-                    else:
-                        response=JsonResponse({'btnText':"Following",'followerCount':Author.followers})
-                        return response   
-                elif action=="DecreaseFollower":
-                    Author=BlogUser.objects.get(user=user_id)
-                    Follower=request.user
-                    if AuthorFollower.objects.filter(Author=Author,follower=Follower).exists():
-                        Author.followers-=1
-                        Author.save()
-                        AuthFollRel=AuthorFollower.objects.get(Author=Author,follower=Follower)
-                        AuthFollRel.delete()
-                        response=JsonResponse({'btnText':"Follow",'followerCount':Author.followers})
-                        return response
-                    else:
-                        response=JsonResponse({'btnText':"Follow",'followerCount':Author.followers})
-                        return response
-
-                else:
-                    Author=BlogUser.objects.get(user=user_id)
-                    # if not request.user.is_anonymous
-                    Follower=request.user
-                    if AuthorFollower.objects.filter(Author=Author,follower=Follower).exists():
-                        response=JsonResponse({'btnText':"Following"})
-                        return response
-                    else:
-                        response=JsonResponse({'btnText':"Follow"})
-                        return response
-            elif post_id is not None:
+            if post_id is not None:
                 # post_id=int(post_id)
                 if 'SavedPosts' in request.session:
                     if int(post_id) not in request.session['SavedPosts']:
@@ -400,6 +352,37 @@ def profile(request,user_id=None,text=None,username=None):
             post.like+=1
             return JsonResponse({'Success':"Successfull ","like_count":post.like})
 
+    elif request.method=="PATCH": 
+        data=json.loads(request.body)
+        # print(data['author_userid'])
+        # print(data)
+        if 'FollowedAuthor' not in request.session : 
+            request.session['FollowedAuthor']=[]
+        author_userid=data['author_userid']
+        Author=BlogUser.objects.get(user=author_userid)
+        follower=BlogUser.objects.get(user=request.user)  # follower user bloguser object
+        if AuthorFollower.objects.filter(Author=Author,follower=request.user).exists():
+            print(True)
+            AuthorFollower.objects.get(Author=Author,follower=request.user).delete()
+            Author.followers-=1
+            follower.following-=1
+            Author.save()
+            follower.save()
+            if int(author_userid) in request.session['FollowedAuthor']:
+                request.session['FollowedAuthor'].remove(int(author_userid))
+                request.session.modified=True
+            params={'btnText':'Follow','follower_count':Author.followers}
+        else:
+            AuthorFollower.objects.create(Author=Author,follower=request.user)
+            Author.followers+=1
+            follower.following+=1
+            Author.save()
+            follower.save()
+            request.session['FollowedAuthor'].append(int(author_userid))
+            request.session.modified=True
+            params={'btnText':'Following','follower_count':Author.followers}
+        print(request.session['FollowedAuthor'])
+        return JsonResponse(params)
     else:
         bloguser=BlogUser.objects.get(user=request.user)
         SavedPosts=[]

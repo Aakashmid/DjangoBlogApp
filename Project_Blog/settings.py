@@ -148,3 +148,6 @@ STATICFILES_FINDERS=('compressor.finders.CompressorFinder',)
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_AGE = 3600
+
+
+### Settings configuration for production

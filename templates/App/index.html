@@ -87,7 +87,11 @@
                             class="absolute bg-white right-0 top-6 hidden p-1 border-gray-500 border rounded ">
                             <ul class="flex flex-col items-start w-fit">
                                 <li class="p-1 hover:bg-gray-200" id="follow_op{{post.id}}">
-                                    <a href="" class="">Follow</a>
+                                    {% if post.author.user_id in request.session.FollowedAuthor %}
+                                    <a  onclick="ChangeFollowers(this)" id="follow{{post.author.user_id}}" class="cursor-pointer">Following</a>
+                                    {% else %}
+                                    <a onclick="ChangeFollowers(this)" id="follow{{post.author.user_id}}" class="cursor-pointer">Follow</a>
+                                    {% endif %}
                                 </li>
                             </ul>
                         </span>

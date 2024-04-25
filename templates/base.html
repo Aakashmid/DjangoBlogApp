@@ -367,20 +367,41 @@
             showLogin();
             {% endif %}
         }
+        
 
-        function ChangeFollowers(followBtn) {
-            {% if user.is_authenticated %}
-
-            if (followBtn.innerText == "Follow") {
-                SenAjaxchangeFollower(followBtn, "IncreaseFollower");
+    //change follower
+    function SenAjaxchangeFollower(element) {
+        let author_userid=element.id.slice(6);
+        console.log(author_userid);
+        followCount = document.getElementById('follow_count');
+        $.ajax({
+            type: "Patch",
+            url: "{% url 'App:User Profile' %}",
+            data: JSON.stringify({ "author_userid": author_userid }),
+            dataType: "json",
+            headers: {
+                "X-CSRFToken": '{{ csrf_token }}'
+            },
+            //here  data is response return by server 
+            success: function (data) {
+                element.innerText = data.btnText;
+                if (document.getElementById('follower_count')) {
+                    document.getElementById('follower_count').innerText=data.follower_count;
+                }
+            },
+            //here error is error return by the url 
+            error: function (error) {
+                console.log("Error:", error);
             }
-            else if (followBtn.innerText == "Following") {
-                SenAjaxchangeFollower(followBtn, "DecreaseFollower");
-            }
-            {% else %}
-            showLogin();
-            {% endif %}
-        }
+        });
+    }
+    function ChangeFollowers(followBtn) {
+        {% if user.is_authenticated %}
+        SenAjaxchangeFollower(followBtn);
+        {% else %}
+        showLogin();
+        {% endif %}
+    }
     </script>
 </body>
 

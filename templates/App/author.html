@@ -15,7 +15,7 @@
                     <span class="Author-name font-semibold text-black text-2xl">{{Author.user.first_name}}
                         {{Author.user.last_name}}</span>
                     <a class="font-normal" href="{%  url 'App:Followers Following' 'followers' Author.user.username Author.id %}">
-                        <span id="follow_count" class="follower-count">
+                        <span id="follower_count" class="follower-count">
                             {{Author.followers}}
                         </span>
                         Followers
@@ -26,10 +26,10 @@
                 {% if request.user == Author.user %}
                 {% else %}
                 {% if userFollower %}
-                <button onclick="ChangeFollowers(this)"
+                <button onclick="ChangeFollowers(this)" id="follow{{Author.user_id}}"
                     class=" follow-btn text-black w-2/3 outline outline-2 outline-blue-950 rounded-3xl p-2">Following</button>
                 {% else %}
-                <button onclick="ChangeFollowers(this)"
+                <button onclick="ChangeFollowers(this)" id="follow{{Author.user_id}}"
                     class=" follow-btn text-white w-2/3 bg-blue-950 rounded-3xl p-2">Follow</button>
                 {% endif %}
                 {% endif %}
@@ -166,51 +166,6 @@
         }
     }
 
-    function SenAjaxchangeFollower(element, action) {
-        followCount = document.getElementById('follow_count');
-        $.ajax({
-            type: "Post",
-            url: "{% url 'App:Author Profile' Author.user_id %}",
-            data: { 'action': action },
-            dataType: "json",
-            headers: {
-                "X-CSRFToken": '{{ csrf_token }}'
-            },
-            //here  data is response return by server 
-            success: function (data) {
-                element.innerText = data.btnText;
-                if (data.followerCount != undefined) {
-                    followCount.innerText = data.followerCount;
-                }
-                if (element.innerText == "Following") {
-                    element.classList.remove('text-white', 'bg-blue-950');
-                    element.classList.add('text-black', 'outline', 'outline-2', 'outline-blue-950');
-                }
-                else if (element.innerText == 'Follow') {
-                    element.classList.remove('outline');
-                    element.classList.add('text-white', 'bg-blue-950');
-                }
-
-            },
-            //here error is error return by the url 
-            error: function (error) {
-                console.log("Error:", error);
-            }
-        });
-    }
-    function ChangeFollowers(followBtn) {
-        {% if user.is_authenticated %}
-
-        if (followBtn.innerText == "Follow") {
-            SenAjaxchangeFollower(followBtn, "IncreaseFollower");
-        }
-        else if (followBtn.innerText == "Following") {
-            SenAjaxchangeFollower(followBtn, "DecreaseFollower");
-        }
-        {% else %}
-        showLogin();
-        {% endif %}
-    }
 
 
     
