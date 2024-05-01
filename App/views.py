@@ -16,13 +16,15 @@ from django.http import QueryDict
 # Create your views here.
 def home(request):    
     #  logic for showing recent posts
-    allPosts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=5)).order_by('-read_count')[:10]
-    postTags=Tag.objects.all()[:8]
-    postCats=PostCategory.objects.all()[:10]
+    recent_posts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=3)).order_by('-read_count')[:10]
+    allposts=Post.objects.all()   # for showing all post , change it for showing some post and on patch request load more posts
+    # postTags=Tag.objects.all()[:8]
+    # postCats=PostCategory.objects.all()[:10]
     # if not allPosts.exists():
     #     allPosts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=20))           
-    parms={"allPosts":allPosts,'postTags':postTags,'Categories':postCats,}
-    return render(request,'App/index.html',parms)
+    # params={"allPosts":allPosts,'postTags':postTags,'Categories':postCats,}
+    params={'recent_posts':recent_posts,'allPosts':allposts}
+    return render(request,'App/index.html',params)
 
 
 def Create_account(request):
@@ -83,7 +85,7 @@ def Logout_hand(request):
     messages.success(request,"Successsfully logout !!")
     return redirect('/')
     
-def Show_post_blogs(request,filterOrder=None,category=None,tagName=None):
+def SearchResult(request,filterOrder=None,category=None,tagName=None):
     # Handling search query 
     if request.method=="POST":
         if request.POST['SearchQuery']:

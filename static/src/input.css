@@ -19,4 +19,8 @@
         padding: revert;
         list-style: revert;
     }
+
+    .no-scrollbar::-webkit-scrollbar{
+        display: none;
+    }
 }
