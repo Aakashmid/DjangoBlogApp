@@ -5,6 +5,7 @@ from .import views
 app_name='App'
 urlpatterns = [
     path('',views.home,name="Home"),
+    path('<str:fname>/',views.home,name="filter posts"),
     path('sign-up/',views.Create_account,name="Create user"),
     path('login-user/',views.Login_hand,name="Login user"),
     path('logout-user/',views.Logout_hand,name="Logout user"),
