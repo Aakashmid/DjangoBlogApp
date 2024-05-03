@@ -97,11 +97,6 @@
                                     class="fa-regular fa-comment "></i></a>
                         </span>
                     </span>
-                    <span
-                        class="p-2 hidden fixed top-16 left-1/2  transform duration-300 -translate-y-full -translate-x-1/2 w-32 text-center text-white font-semibold rounded shadow-green-100 bg-black"
-                        id="SavePost_popover">
-                        Post saved
-                    </span>
                     <span class="flex space-x-6 items-center mx-3 relative">
                         <a role="button" class="bookmark" onclick="SavePost(this)" id="Save_post{{post.id}}">
                             {% if post.id in request.session.SavedPosts %}
@@ -117,10 +112,10 @@
                             <ul class="flex flex-col items-start w-fit">
                                 <li class="p-1 hover:bg-gray-200" id="follow_op{{post.id}}">
                                     {% if post.author.user_id in request.session.FollowedAuthor %}
-                                    <a onclick="ChangeFollowers(this)" id="follow{{post.author.user_id}}"
+                                    <a onclick="ChangeFollowers(this)" id="follow{{post.autho_id}}"
                                         class="cursor-pointer">Following</a>
                                     {% else %}
-                                    <a onclick="ChangeFollowers(this)" id="follow{{post.author.user_id}}"
+                                    <a onclick="ChangeFollowers(this)" id="follow{{post.author_id}}"
                                         class="cursor-pointer">Follow</a>
                                     {% endif %}
                                 </li>
@@ -165,35 +160,29 @@
                             <div class="author-profile-image w-8 rounded-full h-8 overflow-hidden">
                                 <img src="/media/{{post.author.profileImg}}" class="" alt="">
                             </div>
-                            <span class="flex flex-col  font-sans ">
-                                <p class="font-normal">
+                            <span class="flex space-x-2 items-center  font-sans ">
+                                <p class="font-medium">
                                     {{post.author.user.first_name}} {{post.author.user.last_name}}
                                 </p>
-                                <p class="text-xs font-light">Posted on {{post.publish_time}}</p>
+                                <p class="text-xs font-light">.  Posted on {{post.publish_time}}</p>
                             </span>
                         </div>
                     </a>
                 </div>
 
-
                 <a href="{% url 'App:Blog Post' post.id %}">
-                    <div class=" flex justify-between items-center">
+                    <div class=" flex justify-between items-start space-x-2 py-2">
                         <div
-                            class="flex flex-col text-wrap   {% if post.thImg != '' %} w-[80%] {% else %}w-auto {% endif %} ">
-                            <h1 id="title{{post.id}}" class="title font-semibold text-xl lg:text-2xl">{{post.title}}
+                            class="flex flex-col text-wrap {% if post.thImg != '' %} flex-grow {% else %} {% endif %}">
+                            <h1 id="title{{post.id}}" class="title font-bold text-lg lg:text-xl">{{post.title}}
                             </h1>
-                            {% if post.title|length < 50 %}
-                            <p class="blog-content">
-                                <div class="preview  text-lg lg:hidden">{{post.content|safe|truncatechars_html:60}}</div>
-                            </p>
-                             {% endif %}
                             <p class="blog-content">
                             <div class="preview hidden text-lg lg:block">{{post.content|safe|truncatechars_html:150}}
                             </div>
                             </p>
                         </div>
                         {% if post.thImg != '' %}
-                        <div class="w-14 h-14 lg:w-28 lg:h-24 overflow-hidden rounded-md">
+                        <div class="w-14 h-14 lg:w-28 lg:h-24  overflow-hidden rounded-md flex-shrink-0 ">
                             <img src="/media/{{post.thImg}}" alt="">
                         </div>
                         {% endif %}
@@ -217,11 +206,6 @@
                                     class="fa-regular fa-comment "></i></a>
                         </span>
                     </span>
-                    <span
-                        class="p-2 hidden fixed top-16 left-1/2  transform duration-300 -translate-y-full -translate-x-1/2 w-32 text-center text-white font-semibold rounded shadow-green-100 bg-black"
-                        id="SavePost_popover">
-                        Post saved
-                    </span>
                     <span class="flex space-x-6 items-center mx-3 relative">
                         <a role="button" class="bookmark" onclick="SavePost(this)" id="Save_post{{post.id}}">
                             {% if post.id in request.session.SavedPosts %}
@@ -236,11 +220,11 @@
                             class="absolute bg-white right-0 top-6 hidden p-1 border-gray-500 border rounded ">
                             <ul class="flex flex-col items-start w-fit">
                                 <li class="p-1 hover:bg-gray-200" id="follow_op{{post.id}}">
-                                    {% if post.author.user_id in request.session.FollowedAuthor %}
-                                    <a onclick="ChangeFollowers(this)" id="follow{{post.author.user_id}}"
+                                    {% if post.author_id in request.session.FollowedAuthor %}
+                                    <a onclick="ChangeFollowers(this)" id="follow{{post.author_id}}"
                                         class="cursor-pointer">Following</a>
                                     {% else %}
-                                    <a onclick="ChangeFollowers(this)" id="follow{{post.author.user_id}}"
+                                    <a onclick="ChangeFollowers(this)" id="follow{{post.author_id}}"
                                         class="cursor-pointer">Follow</a>
                                     {% endif %}
                                 </li>

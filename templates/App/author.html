@@ -26,10 +26,10 @@
                 {% if request.user == Author.user %}
                 {% else %}
                 {% if userFollower %}
-                <button onclick="ChangeFollowers(this)" id="follow{{Author.user_id}}"
-                    class=" follow-btn text-black w-2/3 outline outline-2 outline-blue-950 rounded-3xl p-2">Following</button>
+                <button onclick="ChangeFollowers(this)" id="follow{{Author.id}}"
+                    class=" follow-btn text-black w-2/3 outline outline-2 bg-white outline-blue-950 rounded-3xl p-2">Following</button>
                 {% else %}
-                <button onclick="ChangeFollowers(this)" id="follow{{Author.user_id}}"
+                <button onclick="ChangeFollowers(this)" id="follow{{Author.id}}"
                     class=" follow-btn text-white w-2/3 bg-blue-950 rounded-3xl p-2">Follow</button>
                 {% endif %}
                 {% endif %}

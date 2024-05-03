@@ -360,13 +360,14 @@ def profile(request,user_id=None,text=None,username=None):
             return JsonResponse({'Success':"Successfull ","like_count":post.like})
 
     elif request.method=="PATCH": 
-        data=json.loads(request.body)
+        data=json.loads(request.body)  # get author_userid of author 
         # print(data['author_userid'])
         # print(data)
         if 'FollowedAuthor' not in request.session : 
             request.session['FollowedAuthor']=[]
-        author_userid=data['author_userid']
-        Author=BlogUser.objects.get(user=author_userid)
+        author_id=data['author_id']
+        print(author_id)
+        Author=BlogUser.objects.get(pk=author_id)
         follower=BlogUser.objects.get(user=request.user)  # follower user bloguser object
         if AuthorFollower.objects.filter(Author=Author,follower=request.user).exists():
             print(True)
@@ -375,8 +376,8 @@ def profile(request,user_id=None,text=None,username=None):
             follower.following-=1
             Author.save()
             follower.save()
-            if int(author_userid) in request.session['FollowedAuthor']:
-                request.session['FollowedAuthor'].remove(int(author_userid))
+            if int(author_id) in request.session['FollowedAuthor']:
+                request.session['FollowedAuthor'].remove(int(author_id))
                 request.session.modified=True
             params={'btnText':'Follow','follower_count':Author.followers}
         else:
@@ -385,7 +386,7 @@ def profile(request,user_id=None,text=None,username=None):
             follower.following+=1
             Author.save()
             follower.save()
-            request.session['FollowedAuthor'].append(int(author_userid))
+            request.session['FollowedAuthor'].append(int(author_id))
             request.session.modified=True
             params={'btnText':'Following','follower_count':Author.followers}
         print(request.session['FollowedAuthor'])

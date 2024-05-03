@@ -35,7 +35,7 @@ class PostAdmin(admin.ModelAdmin):
 
 @admin.register(BlogUser,site=blog_site)
 class UserAdmin(admin.ModelAdmin):
-    list_display=['Username','Full_Name','followers','following','bio']
+    list_display=['id','Username','Full_Name','followers','following','bio']
     list_filter=('followers',)
     def Username(self,obj): #obj is Bloguser object
         return obj.user.username

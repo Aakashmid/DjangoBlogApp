@@ -83,8 +83,14 @@
             <button type="submit"
                 class="hover:bg-blue-900 hover:text-white shadow-sm bg-white text-black rounded text-sm p-[7px] border-[1px] border-gray-500">Search</button>
         </form>
-
     </div>
+
+    <!-- popover saved post -->
+    <span
+        class="p-2  fixed top-5 px-4 left-1/2  transform duration-700 text-lg -translate-y-full -translate-x-1/2 w-fit text-center text-white font-semibold rounded  bg-black ease-in-out"
+        id="popover">
+        Post saved
+    </span>
 
     <!-- navigation bar  -->
     <div id="navigation_bar"
@@ -137,23 +143,12 @@
                 <div class="p-1 hover:bg-blue-100   text-lg font-normal rounded-sm flex items-center"><span
                         class="text-gray-700 mr-4"><i class="fa-solid fa-house fa-sm"></i></span> Home</div>
             </a>
-            <a href="/post-blogs" class="">
+            {% if user.is_authenticated %}
+            <a href="{% url 'App:User Profile' %}" class="">
                 <div class="p-1 hover:bg-blue-100 text-lg font-normal  rounded-sm flex items-center"><span
-                        class="text-gray-700 mr-4"><i class="fa-solid fa-book"></i></span> All Posts</div>
+                        class="text-gray-700 mr-4"><i class="fa-solid fa-book"></i></span> Library </div>
             </a>
-
-            <div id="cat_link" class="p-1 hover:bg-blue-100 text-lg font-normal  rounded-sm" onclick="showhidecat()">
-                <span class="text-gray-700 mr-3"><i class="fa-solid fa-folder fa-sm"></i></span>
-                Post Category
-            </div>
-            <div id="categories" class=" absolute top-[433px] mx-auto w-fit bg-gray-300 rounded text-black p-2 hidden">
-                <ul class="h-44 overflow-y-scroll px-6 " onmouseleave="hidecatDiv()">
-                    {% for cat in ForAllCategories %}
-                    <li class="p-1 active:bg-gray-200"><a href="{% url 'App:Blogs By Category' cat.name %}"
-                            class="text-[17px]  active:text-black active:font-semibold">{{cat.name}}</a></li>
-                    {% endfor %}
-                </ul>
-            </div>
+            {% endif %}
             <a href="#" class="">
                 <div class="p-1 hover:bg-blue-100  text-lg font-normal rounded-sm flex items-center"><span
                         class="text-gray-700 mr-4"><i class="fa-solid fa-circle-info"></i></span>About</div>
@@ -248,10 +243,12 @@
                         <div class="p-1 hover:bg-blue-100   text-lg font-normal rounded-sm flex items-center"><span
                                 class="text-gray-700 mr-4"><i class="fa-solid fa-house fa-sm"></i></span> Home</div>
                     </a>
+                    {% if user.is_authenticated %}
                     <a href="/post-blogs" class="">
                         <div class="p-1 hover:bg-blue-100 text-lg font-normal  rounded-sm flex items-center"><span
-                                class="text-gray-700 mr-4"><i class="fa-solid fa-book"></i></span> All Posts</div>
+                                class="text-gray-700 mr-4"><i class="fa-solid fa-book"></i></span> Library </div>
                     </a>
+                    {% endif %}
                     <a href="#" class="">
                         <div class="p-1 hover:bg-blue-100  text-lg font-normal rounded-sm flex items-center"><span
                                 class="text-gray-700 mr-4"><i class="fa-solid fa-circle-info"></i></span>About</div>
@@ -313,23 +310,20 @@
             {% endif %}
         }
         function showSavePostModel(text) {
-            let box_post = document.getElementById('SavePost_popover');
+            let box_post = document.getElementById('popover');
             if (text === 'Saved') {
-                box_post.innerText = 'Post Saved';
+                box_post.innerText = 'Saved a new post';
             }
             else {
-                box_post.innerText = 'Post unsaved';
+                box_post.innerText = 'Unsaved post ';
             }
 
             // Toggle classes after a delay
             setTimeout(() => {
-                box_post.classList.toggle('-translate-y-full');
-                box_post.classList.toggle('hidden');
+                box_post.classList.toggle('translate-y-full');
             }, 1000);
-
             // Immediate toggle
-            box_post.classList.toggle('hidden');
-            box_post.classList.toggle('-translate-y-full');
+            box_post.classList.toggle('translate-y-full');
         }
 
         LikePost = (post_id) => {
@@ -367,41 +361,51 @@
             showLogin();
             {% endif %}
         }
-        
 
-    //change follower
-    function SenAjaxchangeFollower(element) {
-        let author_userid=element.id.slice(6);
-        console.log(author_userid);
-        followCount = document.getElementById('follow_count');
-        $.ajax({
-            type: "Patch",
-            url: "{% url 'App:User Profile' %}",
-            data: JSON.stringify({ "author_userid": author_userid }),
-            dataType: "json",
-            headers: {
-                "X-CSRFToken": '{{ csrf_token }}'
-            },
-            //here  data is response return by server 
-            success: function (data) {
-                element.innerText = data.btnText;
-                if (document.getElementById('follower_count')) {
-                    document.getElementById('follower_count').innerText=data.follower_count;
+
+        //change follower
+        function SenAjaxchangeFollower(element) {
+            let author_id = element.id.slice(6);
+            console.log(author_id);
+            followCount = document.getElementById('follow_count');
+            $.ajax({
+                type: "Patch",
+                url: "{% url 'App:User Profile' %}",
+                data: JSON.stringify({ "author_id": author_id }),
+                dataType: "json",
+                headers: {
+                    "X-CSRFToken": '{{ csrf_token }}'
+                },
+                //here  data is response return by server 
+                success: function (data) {
+                    element.innerText = data.btnText;
+                    if (document.getElementById('follower_count')) {
+                        document.getElementById('follower_count').innerText = data.follower_count;
+                        element.classList.toggle('text-white');
+                    }
+                    if(element.classList.contains('bg-white')){
+                        element.classList.remove('bg-white');
+                        element.classList.add('bg-blue-950');
+                        element.classList.toggle('text-black');
+                    }
+                    else if(element.classList.contains('bg-blue-950')){
+                        element.classList.remove('bg-blue-950');
+                        element.classList.add('bg-white');
+                    }
+                },
+                //here error is error return by the url 
+                error: function (error) {
+                    console.log("Error:", error);
                 }
-            },
-            //here error is error return by the url 
-            error: function (error) {
-                console.log("Error:", error);
-            }
-        });
-    }
-    function ChangeFollowers(followBtn) {
-        {% if user.is_authenticated %}
-        SenAjaxchangeFollower(followBtn);
-        {% else %}
-        showLogin();
-        {% endif %}
-    }
+            });
+        }
+        function ChangeFollowers(followBtn) {
+            {% if user.is_authenticated %}
+            SenAjaxchangeFollower(followBtn);
+            {% else %}
+            showLogin();
+            {% endif %}
+        }
     </script>
 </body>
 
