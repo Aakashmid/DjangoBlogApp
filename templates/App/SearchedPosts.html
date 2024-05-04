@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+{% load static %}
+{% load extraFilter %}
+{% block js%}
+<script>
+
+
+</script>
+{% endblock js %}
+
+{% block body %}
+<div class="container pt-2 lg:w-full">
+    {% if readingList %}
+    <div class="p-2 ">
+        <div class="py-4">
+            <p class="font-semibold text-2xl">Your Reading list</p>
+        </div>
+        {% if readingListPosts|length > 0 %}
+        <div class="flex flex-col space-y-2">
+            {% for post in readingListPosts %}
+            <div class="card  flex flex-col  space-y-1  border-gray-800 rounded-md shadow-xl py-3 bg-gray-50">
+                <div class="upper-part flex-col space-y-1 px-2 ">
+                    <a href="{% url 'App:Author Profile' post.author_id %}" class="author-name">
+                        <div class="flex items-center space-x-2">
+                            <div class="author-profile-image w-8 rounded-full h-8 overflow-hidden">
+                                <img src="/media/{{post.author.profileImg}}" class="" alt="">
+                            </div>
+                            <span class="flex flex-col  font-sans ">
+                                <p class="font-normal">
+                                    {{post.author.user.first_name}} {{post.author.user.last_name}}
+                                </p>
+                                <p class="text-xs font-light">Posted on {{post.publish_time}}</p>
+                            </span>
+                        </div>
+                    </a>
+                    <div class="">
+                    </div>
+                </div>
+                {% comment %} Card main body {% endcomment %}
+                <a href="{% url 'App:Blog Post' post.id %}" id="card_link" class="">
+                    <div class="px-2 flex justify-between items-center">
+                        <div
+                            class="flex flex-col text-wrap   {% if post.thImg != '' %} w-[80%] {% else %}w-auto {% endif %} ">
+                            <h1 id="title{{post.id}}" class="title font-semibold text-xl lg:text-2xl">{{post.title}}
+                            </h1>
+                            <p class="blog-content">
+                            <div class="preview hidden text-lg lg:block">{{post.content|safe|truncatechars_html:150}}
+                            </div>
+                            </p>
+                        </div>
+                        {% if post.thImg != '' %}
+                        <div class="w-14 h-14 lg:w-28 lg:h-24 overflow-hidden rounded-md">
+                            <img src="/media/{{post.thImg}}" alt="">
+                        </div>
+                        {% endif %}
+                    </div>
+                </a>
+                <div class="footer-part flex items-center justify-between px-3 py-1">
+                    <span class="flex space-x-4 items-center ">
+                        <span class="like_span">
+                            <span id="postlike_count{{post.id}}" class="like-count">{{post.like}}</span>
+                            <a role="button" class="" onclick="LikePost({{post.id}})" id="LikePostLink{{post.id}}">
+                                {% if post.id in request.session.LikedPosts %}
+                                <i id="LikePost{{post.id}}" class="fa-solid fa-thumbs-up text-md lg:text-lg"></i>
+                                {% else %}
+                                <i id="LikePost{{post.id}}" class="fa-regular fa-thumbs-up text-md lg:text-lg"></i>
+                                {% endif %}
+                            </a>
+                        </span>
+                        <span class="comment_span">
+                            <span class="comment">{{ post|get_comments|length }}</span>
+                            <a href="{% url 'App:Blog Post' post.id %}" class=""><i class="fa-regular fa-comment "></i></a>
+                        </span>
+                    </span>
+                    <span
+                        class="p-2 hidden fixed top-16 left-1/2  transform duration-300 -translate-y-full -translate-x-1/2 w-32 text-center text-white font-semibold rounded shadow-green-100 bg-black"
+                        id="SavePost_popover">
+                        Post saved
+                    </span>
+                    <span class="flex space-x-6 items-center mx-3">
+                        <a role="button" class="bookmark" onclick="SavePost(this)" id="Save_post{{post.id}}">
+                            {% if post.id in request.session.SavedPosts %}
+                            <i id="saveIcon{{post.id}}" class="fa-solid fa-bookmark text-md lg:text-lg"></i>
+                            {% else %}
+                            <i id="saveIcon{{post.id}}" class="fa-regular fa-bookmark text-md lg:text-lg"></i>
+                            {% endif %}
+                        </a>
+                        <a role="button" class="three-dots cursor-pointer" id="options{{post.id}}"
+                            onclick="OptionPopover(this)"><i class="fa-solid fa-ellipsis fa-lg"></i></a>
+                        <span id="Option_box{{post.id}}"
+                            class="absolute bg-white  hidden p-2 border-gray-500 border rounded ">
+                            <ul class="flex flex-col">
+                                <li class="" id="follow_op">
+                                    Follow
+                                </li>
+                            </ul>
+                        </span>
+                    </span>
+    
+    
+                </div>
+            </div>
+            <hr class="my-1 bg-gray-800">
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="">
+            <p class="font-normal  text-center text-lg">You didn't save any post yet !!</p>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% if allPosts  %}
+{% if allPosts|length > 0 %}
+<div class="category  flex overflow-x-auto w-full">
+    {% comment %} change it trend posts to all {% endcomment %}
+    <a href="/post-blogs/trend" id="trend"
+        class="p-2 text-lg font-semibold hover:text-blue-600 hover:underline">Trending</a>
+    <a href="/post-blogs/new" id="new" class="p-2 text-lg font-semibold hover:text-blue-600 hover:underline">Newest</a>
+    <a href="/post-blogs/old" id="old" class="p-2 text-lg font-semibold hover:text-blue-600 hover:underline">Oldest</a>
+    <a href="/post-blogs/mostreaded" id="mostreaded"
+        class="p-2 text-lg font-semibold hover:text-blue-600 hover:underline">Most Readed </a>
+</div>
+<div class="blogs mt-4 clear-left w-full">
+    <div id="testid" class="p-2 flex flex-col space-y-2">
+        {% for post in allPosts %}
+        <div class="card  flex flex-col  space-y-1  border-gray-800 rounded-md shadow-xl py-3 bg-gray-50">
+            <div class="upper-part flex-col space-y-1 px-2 ">
+                <a href="{% url 'App:Author Profile' post.author_id %}" class="author-name">
+                    <div class="flex items-center space-x-2">
+                        <div class="author-profile-image w-8 rounded-full h-8 overflow-hidden">
+                            <img src="/media/{{post.author.profileImg}}" class="" alt="">
+                        </div>
+                        <span class="flex flex-col  font-sans ">
+                            <p class="font-normal">
+                                {{post.author.user.first_name}} {{post.author.user.last_name}}
+                            </p>
+                            <p class="text-xs font-light">Posted on {{post.publish_time}}</p>
+                        </span>
+                    </div>
+                </a>
+                <div class="">
+                </div>
+            </div>
+            {% comment %} Card main body {% endcomment %}
+            <a href="{% url 'App:Blog Post' post.id %}" id="card_link" class="">
+                <div class="px-2 flex justify-between items-center">
+                    <div
+                        class="flex flex-col text-wrap   {% if post.thImg != '' %} w-[80%] {% else %}w-auto {% endif %} ">
+                        <h1 id="title{{post.id}}" class="title font-semibold text-xl lg:text-2xl">{{post.title}}
+                        </h1>
+                        <p class="blog-content">
+                        <div class="preview hidden text-lg lg:block">{{post.content|safe|truncatechars_html:150}}
+                        </div>
+                        </p>
+                    </div>
+                    {% if post.thImg != '' %}
+                    <div class="w-14 h-14 lg:w-28 lg:h-24 overflow-hidden rounded-md">
+                        <img src="/media/{{post.thImg}}" alt="">
+                    </div>
+                    {% endif %}
+                </div>
+            </a>
+            <div class="footer-part flex items-center justify-between px-3 py-1">
+                <span class="flex space-x-4 items-center ">
+                    <span class="like_span">
+                        <span id="postlike_count{{post.id}}" class="like-count">{{post.like}}</span>
+                        <a role="button" class="" onclick="LikePost({{post.id}})" id="LikePostLink{{post.id}}">
+                            {% if post.id in request.session.LikedPosts %}
+                            <i id="LikePost{{post.id}}" class="fa-solid fa-thumbs-up text-md lg:text-lg"></i>
+                            {% else %}
+                            <i id="LikePost{{post.id}}" class="fa-regular fa-thumbs-up text-md lg:text-lg"></i>
+                            {% endif %}
+                        </a>
+                    </span>
+                    <span class="comment_span">
+                        <span class="comment">{{ post|get_comments|length }}</span>
+                        <a href="{% url 'App:Blog Post' post.id %}" class=""><i class="fa-regular fa-comment "></i></a>
+                    </span>
+                </span>
+                <span
+                    class="p-2 hidden fixed top-16 left-1/2  transform duration-300 -translate-y-full -translate-x-1/2 w-32 text-center text-white font-semibold rounded shadow-green-100 bg-black"
+                    id="SavePost_popover">
+                    Post saved
+                </span>
+                <span class="flex space-x-6 items-center mx-3">
+                    <a role="button" class="bookmark" onclick="SavePost(this)" id="Save_post{{post.id}}">
+                        {% if post.id in request.session.SavedPosts %}
+                        <i id="saveIcon{{post.id}}" class="fa-solid fa-bookmark text-md lg:text-lg"></i>
+                        {% else %}
+                        <i id="saveIcon{{post.id}}" class="fa-regular fa-bookmark text-md lg:text-lg"></i>
+                        {% endif %}
+                    </a>
+                    <a role="button" class="three-dots cursor-pointer" id="options{{post.id}}"
+                        onclick="OptionPopover(this)"><i class="fa-solid fa-ellipsis fa-lg"></i></a>
+                    <span id="Option_box{{post.id}}"
+                        class="absolute bg-white  hidden p-2 border-gray-500 border rounded ">
+                        <ul class="flex flex-col">
+                            <li class="" id="follow_op">
+                                Follow
+                            </li>
+                        </ul>
+                    </span>
+                </span>
+
+
+            </div>
+        </div>
+        <hr class="my-1 bg-gray-800">
+        {% endfor %}
+    </div>
+</div>
+{% else %}
+<div class="p-4 mt-3">
+    <p class="font-semibold text-xl">No search result found according to your query !!!</p>
+</div>
+{% endif %}
+{% endif %}
+
+
+</div>
+{% endblock body %}
