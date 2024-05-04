@@ -317,17 +317,18 @@ def profile(request,user_id=None,text=None,username=None):
                 follower=True
             AllUsers=[]
             for i in AuthorFollowerObjs:
-                # print(i)
-                # print(i.follower.first_name)
+             
                 if following==True:
-                    AllUsers.append(i.Author)
+                    if i.Author != Author:
+                        AllUsers.append(i.Author)
                 else:
                     follower=BlogUser.objects.get(user=i.follower)
-                    AllUsers.append(follower)
+                    if follower != Author:
+                        AllUsers.append(follower)
             params={'following':following,'follower':follower,'Author':Author,'AllUsers':AllUsers}
             return render(request,'App/followersFollowings.html',params)
-            
-            print('Succssfully')
+
+
         # Author.html 
         else:
             # here author id is blogser object pk 
@@ -366,10 +367,9 @@ def profile(request,user_id=None,text=None,username=None):
             post.like+=1
             return JsonResponse({'Success':"Successfull ","like_count":post.like})
 
+    # for follow a author or unfollow 
     elif request.method=="PATCH": 
-        data=json.loads(request.body)  # get author_userid of author 
-        # print(data['author_userid'])
-        # print(data)
+        data=json.loads(request.body)  # get author_userid of author   
         if 'FollowedAuthor' not in request.session : 
             request.session['FollowedAuthor']=[]
         author_id=data['author_id']

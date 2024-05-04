@@ -20,18 +20,25 @@
         <!-- All followers -->
         <div class="flex flex-col space-y-3 items-start p-2 lg:p-1">
             {% for AuthorF in AllUsers %} <!--Here AuthorF means  followers or Followings of author-->
-            <div class="follower-card flex space-x-4 items-start w-full ">
-                <a href="/" class="flex-shrink-0 ">
-                    <div class="w-12 h-11 sm:h-12  overflow-hidden rounded-3xl ">
+            <div class="follower-card flex space-x-4 items-start w-full justify-between">
+                <a href="{% url 'App:Author Profile' AuthorF.id %}" class="flex space-x-2">
+                    <div class="w-10 h-10   overflow-hidden rounded-3xl ">
                         <img src="/media/{{AuthorF.profileImg}}" alt="" class="">
                     </div>
-                    <div class="w-3/4 flex flex-col items-baseline"><p class="text-lg font-semibold py-1 ">{{AuthorF.user.first_name}} {{AuthorF.user.last_name}}</p>
+                    <div class="w-3/4 flex flex-col items-baseline">
+                        <p class="text-lg font-semibold py-1 ">{{AuthorF.user.first_name}} {{AuthorF.user.last_name}}</p>
                         <p class="">{{AuthorF.Bio|truncatechars:80}}  </p>
                     </div>
                 </a>
-                <button onclick="ChangeFollowers(this)"  id='follow{{AuthorF.id}}' class="px-3 py-2 bg-slate-800 text-white rounded-3xl text-sm lg:text-lg flex-grow-0">
+                {% if AuthorF.id in request.session.FollowedAuthor %}
+                <button onclick="ChangeFollowers(this)"  id='follow{{AuthorF.id}}' class="px-3 py-2 bg-slate-800 text-white rounded-3xl text-sm lg:text-lg ">
+                    Following
+                </button>
+                {% else %}
+                <button onclick="ChangeFollowers(this)"  id='follow{{AuthorF.id}}' class="px-3 py-2 bg-slate-800 text-white rounded-3xl text-sm lg:text-lg ">
                     Follow
                 </button>
+                {% endif %}
             </div>
             {% endfor %}
         </div>

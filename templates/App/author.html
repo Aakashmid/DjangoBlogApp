@@ -14,12 +14,10 @@
                 <div class="flex flex-col space-y-1">
                     <span class="Author-name font-semibold text-black text-2xl">{{Author.user.first_name}}
                         {{Author.user.last_name}}</span>
-                    <a class="font-normal" href="{%  url 'App:Followers Following' 'followers' Author.user.username Author.id %}">
-                        <span id="follower_count" class="follower-count">
-                            {{Author.followers}}
-                        </span>
-                        Followers
-                    </a> <!-- Here user is author who's profile is viewing -->
+                        <span class="flex space-x-8 mt-2">
+                            <a href="{% url 'App:Followers Following'  'followers' Author.user.username Author.id %}" class="text-[17px]   hover:text-blue-900  transition-transform active:scale-105 active:text-blue-900"><span id="follower_count">{{Author.followers}}</span> Followers</a>
+                            <a href="{%  url 'App:Followers Following' 'following' Author.user.username Author.id %}" class="text-[17px]   hover:text-blue-900  transition-transform active:scale-105 active:text-blue-900">{{Author.following}} Following</a>
+                        </span><!-- Here user is author who's profile is viewing -->
                 </div>
             </div>
             <div class="px-2">
@@ -27,10 +25,10 @@
                 {% else %}
                 {% if userFollower %}
                 <button onclick="ChangeFollowers(this)" id="follow{{Author.id}}"
-                    class=" follow-btn text-black w-2/3 outline outline-2 bg-white outline-blue-950 rounded-3xl p-2">Following</button>
+                    class=" follow-btn text-black w-2/3  bg-white border-[2px] border-blue-950  rounded-3xl p-2">Following</button>
                 {% else %}
                 <button onclick="ChangeFollowers(this)" id="follow{{Author.id}}"
-                    class=" follow-btn text-white w-2/3 bg-blue-950 rounded-3xl p-2">Follow</button>
+                    class=" follow-btn text-white w-2/3 border-[2px] border-blue-950 bg-blue-950 rounded-3xl p-2">Follow</button>
                 {% endif %}
                 {% endif %}
             </div>

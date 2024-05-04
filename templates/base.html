@@ -381,16 +381,16 @@
                     element.innerText = data.btnText;
                     if (document.getElementById('follower_count')) {
                         document.getElementById('follower_count').innerText = data.follower_count;
-                        element.classList.toggle('text-white');
                     }
                     if(element.classList.contains('bg-white')){
                         element.classList.remove('bg-white');
                         element.classList.add('bg-blue-950');
-                        element.classList.toggle('text-black');
+                        element.classList.toggle('text-white');
                     }
                     else if(element.classList.contains('bg-blue-950')){
                         element.classList.remove('bg-blue-950');
                         element.classList.add('bg-white');
+                        element.classList.toggle('text-white');
                     }
                 },
                 //here error is error return by the url 
