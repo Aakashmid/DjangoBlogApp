@@ -132,15 +132,22 @@ def SearchResult(request,filterOrder=None,category=None,tagName=None):
             allPosts=Post.objects.all().order_by('-read_count')[:20]
         params={'allPosts':allPosts}
     else:
-        allPosts=Post.objects.all()
-        params={'allPosts':allPosts}
-    
+        SavedPosts=[]
+        postIds=request.session['SavedPosts'] if 'SavedPosts' in request.session else []
+        if len(postIds)>0:
+            for id in postIds:
+                try:
+                    SavedPosts.append(Post.objects.get(id=id))
+                except Exception as e:
+                    request.session['SavedPosts'].remove(id)
+                    request.session.modified=True
+        params={'readingList':True, 'readingListPosts':SavedPosts}
     # Adding pagination on blogposts page
     # paginator=Paginator(params['allPosts'],3)
     # page_num=request.GET.get('page')
     # posts=paginator.get_page(page_num)
     # params['allPosts']=posts
-    return render(request,'App/blog_posts.html',params)
+    return render(request,'App/SearchedPosts.html',params)
 
 def Create_post(request):
     if request.method=="POST":
@@ -318,7 +325,7 @@ def profile(request,user_id=None,text=None,username=None):
                     follower=BlogUser.objects.get(user=i.follower)
                     AllUsers.append(follower)
             params={'following':following,'follower':follower,'Author':Author,'AllUsers':AllUsers}
-            return render(request,'App/FlersFling.html',params)
+            return render(request,'App/followersFollowings.html',params)
             
             print('Succssfully')
         # Author.html 
