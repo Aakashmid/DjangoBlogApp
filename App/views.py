@@ -19,16 +19,18 @@ def home(request,fname=None):
     recent_posts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=3)).order_by('-read_count')[:10]
     allposts=Post.objects.all()   # for showing all post , change it for showing some post and on patch request load more posts
     postTags=Tag.objects.all()[:8]
+    filtere=[]
+    All={'name':'For You'}
+    folowing={'name':'Following'}
     # postCats=PostCategory.objects.all()[:10]
     # if not allPosts.exists():
     #     allPosts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=20))           
     # params={"allPosts":allPosts,'postTags':postTags,'Categories':postCats,}
 
     params={'recent_posts':recent_posts,'allPosts':allposts,'filters':postTags}
-
-    # if fname is not None:
-    #     # filter=Tag.objects.get(name=fname)
-    #     # params={'recent_posts':recent_posts,'allPosts':allposts,'filters':postTags,'activeFilter':filter}
+    if fname is not None:
+        filter=Tag.objects.get(name=fname)
+        params={'recent_posts':recent_posts,'allPosts':allposts,'filters':postTags,'activeFilter':filter}
     return render(request,'App/index.html',params)
 
 

@@ -674,14 +674,6 @@ video {
   top: 80px;
 }
 
-.left-0 {
-  left: 0px;
-}
-
-.top-10 {
-  top: 2.5rem;
-}
-
 .z-0 {
   z-index: 0;
 }
@@ -704,10 +696,6 @@ video {
 
 .float-right {
   float: right;
-}
-
-.float-left {
-  float: left;
 }
 
 .clear-end {
@@ -777,14 +765,6 @@ video {
   margin-left: 0.75rem;
 }
 
-.ml-4 {
-  margin-left: 1rem;
-}
-
-.mr-2 {
-  margin-right: 0.5rem;
-}
-
 .mr-4 {
   margin-right: 1rem;
 }
@@ -837,10 +817,6 @@ video {
   height: 2.5rem;
 }
 
-.h-11 {
-  height: 2.75rem;
-}
-
 .h-14 {
   height: 3.5rem;
 }
@@ -885,10 +861,6 @@ video {
   height: 100%;
 }
 
-.h-12 {
-  height: 3rem;
-}
-
 .max-h-52 {
   max-height: 13rem;
 }
@@ -907,10 +879,6 @@ video {
 
 .w-11\/12 {
   width: 91.666667%;
-}
-
-.w-12 {
-  width: 3rem;
 }
 
 .w-14 {
@@ -1004,10 +972,6 @@ video {
 
 .flex-grow {
   flex-grow: 1;
-}
-
-.flex-grow-0 {
-  flex-grow: 0;
 }
 
 .-translate-x-1\/2 {
@@ -1218,10 +1182,6 @@ video {
   border-radius: 0.125rem;
 }
 
-.rounded-xl {
-  border-radius: 0.75rem;
-}
-
 .border {
   border-width: 1px;
 }
@@ -1247,6 +1207,11 @@ video {
   border-color: rgb(0 0 0 / var(--tw-border-opacity));
 }
 
+.border-blue-950 {
+  --tw-border-opacity: 1;
+  border-color: rgb(23 37 84 / var(--tw-border-opacity));
+}
+
 .border-gray-500 {
   --tw-border-opacity: 1;
   border-color: rgb(107 114 128 / var(--tw-border-opacity));
@@ -1270,11 +1235,6 @@ video {
 .border-gray-900 {
   --tw-border-opacity: 1;
   border-color: rgb(17 24 39 / var(--tw-border-opacity));
-}
-
-.border-blue-950 {
-  --tw-border-opacity: 1;
-  border-color: rgb(23 37 84 / var(--tw-border-opacity));
 }
 
 .bg-black {
@@ -1661,10 +1621,6 @@ video {
   outline-offset: 2px;
 }
 
-.outline-blue-950 {
-  outline-color: #172554;
-}
-
 .outline-gray-100 {
   outline-color: #f3f4f6;
 }
@@ -1928,10 +1884,6 @@ video {
 }
 
 @media (min-width: 640px) {
-  .sm\:h-12 {
-    height: 3rem;
-  }
-
   .sm\:w-3\/4 {
     width: 75%;
   }
@@ -1966,11 +1918,6 @@ video {
 @media (min-width: 1024px) {
   .lg\:fixed {
     position: fixed;
-  }
-
-  .lg\:my-2 {
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
   }
 
   .lg\:ml-\[18\%\] {
