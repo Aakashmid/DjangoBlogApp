@@ -17,20 +17,19 @@
     {% endif %}
 
     <!-- Search post option by filters -->
-    <div class="filters-Box mt-6 bg-white  p-2 overflow-x-scroll no-scrollbar ">
-        <div class="Filter-links">
-            <ul class="flex  space-x-1 ">
-                {% for filter in filters %}
-                {% if activeFilter and activeFilter.name == filter.name %}
-                <li class="filter-op px-3 py-1  border bg-gray-200 rounded-md "><a
-                        href="{% url 'App:filter posts' filter.name %}" class="text-lg">{{activeFilter.name}}</a></li>
-                {% else %}
-                <li class="filter-op px-3 py-1 bg-white border active:bg-gray-200 hover:font-medium rounded-md "><a
-                        href="{% url 'App:filter posts' filter.name %}" class="text-lg">{{filter.name}}</a></li>
-                {% endif %}
-                {% endfor %}
-            </ul>
-        </div>
+    <div class="filters-Box mt-6 bg-white  p-2 overflow-x-scroll no-scrollbar " id="filtersContainer">
+        <ul class="flex  space-x-1 ">
+            {% for filter in filters %}
+            {% if activeFilter and activeFilter.name == filter.name %}
+            <li class="filter-op px-3 py-1  border bg-gray-200 rounded-md "><a
+                    href="{% url 'App:filter posts' filter.name %}" id="{{activeFilter.name}}"
+                    class="text-lg">{{activeFilter.name}}</a></li>
+            {% else %}
+            <li class="filter-op px-3 py-1 bg-white border active:bg-gray-200 hover:font-medium rounded-md "><a
+                    href="{% url 'App:filter posts' filter.name %}" class="text-lg">{{filter.name}}</a></li>
+            {% endif %}
+            {% endfor %}
+        </ul>
     </div>
 
     <!-- showing all posts  -->
@@ -128,5 +127,21 @@
         console.log('Success');
         element.classList.add('bg-gray-200');
     }
+
+    window.onload = function () {
+        // Check if there's an active filter and scroll to it within the filters container
+        var activeFilterName = "{{ activeFilter.name }}";
+        if (activeFilterName) {
+            var filtersContainer = document.getElementById('filtersContainer');
+            var activeFilterElement = document.getElementById(activeFilterName);
+            if (filtersContainer && activeFilterElement) {
+                // Calculate the position of the active filter within the filters container
+                var activeFilterPosition = activeFilterElement.offsetLeft - filtersContainer.offsetLeft -100;
+                // Scroll the filters container to the active filter
+                filtersContainer.scrollLeft = activeFilterPosition;
+            }
+        }
+    };
+
 </script>
 {% endblock js %}
