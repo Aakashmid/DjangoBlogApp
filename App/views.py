@@ -16,21 +16,43 @@ from django.http import QueryDict
 # Create your views here.
 def home(request,fname=None):    
     #  logic for showing recent posts
-    recent_posts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=3)).order_by('-read_count')[:10]
-    allposts=Post.objects.all()   # for showing all post , change it for showing some post and on patch request load more posts
-    postTags=Tag.objects.all()[:8]
-    filtere=[]
-    All={'name':'For You'}
-    folowing={'name':'Following'}
-    # postCats=PostCategory.objects.all()[:10]
-    # if not allPosts.exists():
-    #     allPosts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=20))           
-    # params={"allPosts":allPosts,'postTags':postTags,'Categories':postCats,}
+    # recent_posts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=3)).order_by('-read_count')[:10]
 
-    params={'recent_posts':recent_posts,'allPosts':allposts,'filters':postTags}
+    filters=[{'name':'All'},{'name':'Following'}]
+    postTags=Tag.objects.all()
+    for tag in postTags:
+        if len(tag.name) >0:
+            filters.append({'name':str(tag.name)})
+
+    allposts=Post.objects.all()
+    params={'allPosts':allposts,'filters':filters,'activeFilter':{'name':'All'}}
+    # params={'recent_posts':recent_posts,'allPosts':allposts,'filters':postTags}
+
+    # for filtering posts
     if fname is not None:
-        filter=Tag.objects.get(name=fname)
-        params={'recent_posts':recent_posts,'allPosts':allposts,'filters':postTags,'activeFilter':filter}
+        if fname!='Following' and fname!='All':
+            filteredPosts=[]
+            try :
+                activefilter=Tag.objects.get(name=fname)
+                filteredPosts=Post.objects.filter(tags=activefilter)
+            except Exception as e:
+                pass
+            params={'allPosts':filteredPosts,'filters':filters,'activeFilter':activefilter}
+        else:
+            if fname =='All':
+                activefilter={'name':'All'} 
+                params={'allPosts':allposts,'filters':filters,'activeFilter':activefilter }
+            elif fname== 'Following':
+                if not request.user.is_anonymous:
+                    followedAuthorPosts=[]
+                    for post in allposts:
+                        if post.author in request.session['FollowedAuthor']:
+                            followedAuthorPosts.append(post) 
+                else:
+                    # handle when user in not logged in 
+                    return render(request,'signup.html')
+                activefilter={'name':'Following'} 
+                params={'allPosts':followedAuthorPosts,'filters':filters,'activeFilter':activefilter }
     return render(request,'App/index.html',params)
 
 

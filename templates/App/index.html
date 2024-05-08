@@ -17,15 +17,15 @@
     {% endif %}
 
     <!-- Search post option by filters -->
-    <div class="filters-Box mt-6 bg-white  p-2 overflow-x-scroll no-scrollbar " id="filtersContainer">
-        <ul class="flex  space-x-1 ">
+    <div class="filters-Box mt-4 bg-white  px-4" >
+        <ul class="flex  space-x-1 p-2 overflow-x-scroll no-scrollbar " id="filtersContainer">
             {% for filter in filters %}
             {% if activeFilter and activeFilter.name == filter.name %}
-            <li class="filter-op px-3 py-1  border bg-gray-200 rounded-md "><a
+            <li class="filter-op px-3 py-1  border bg-gray-200 rounded-md text-nowrap"><a
                     href="{% url 'App:filter posts' filter.name %}" id="{{activeFilter.name}}"
                     class="text-lg">{{activeFilter.name}}</a></li>
             {% else %}
-            <li class="filter-op px-3 py-1 bg-white border active:bg-gray-200 hover:font-medium rounded-md "><a
+            <li class="filter-op px-3 py-1 bg-white border active:bg-gray-200 hover:font-medium rounded-md text-nowrap "><a
                     href="{% url 'App:filter posts' filter.name %}" class="text-lg">{{filter.name}}</a></li>
             {% endif %}
             {% endfor %}
@@ -34,6 +34,8 @@
 
     <!-- showing all posts  -->
     <div class="mt-8 flex flex-col lg:space-y-4 space-y-2 lg:px-4 px-2">
+        {% if activeFilter and allPosts|length == 0%}
+        {% else %}
         {% for post in allPosts %}
         <div class="card border-gray-600 border-[1px] rounded-md shadow-md px-3 pt-2">
             <div class="upper-part flex-col   ">
@@ -97,7 +99,7 @@
                     <a role="button" class="three-dots cursor-pointer" id="options{{post.id}}"
                         onclick="OptionPopover(this)"><i class="fa-solid fa-ellipsis fa-lg"></i></a>
                     <span id="Option_box{{post.id}}"
-                        class="absolute bg-white right-0 top-6 hidden p-1 border-gray-500 border rounded ">
+                        class="absolute z bg-white right-0 top-6 hidden p-1 border-gray-500 border rounded ">
                         <ul class="flex flex-col items-start w-fit">
                             <li class="p-1 hover:bg-gray-200" id="follow_op{{post.id}}">
                                 {% if post.author_id in request.session.FollowedAuthor %}
@@ -115,7 +117,7 @@
             </div>
         </div>
         {% endfor %}
-
+        {% endif %}
     </div>
     <div class="h-14 w-full"></div>
 </div>
@@ -136,7 +138,7 @@
             var activeFilterElement = document.getElementById(activeFilterName);
             if (filtersContainer && activeFilterElement) {
                 // Calculate the position of the active filter within the filters container
-                var activeFilterPosition = activeFilterElement.offsetLeft - filtersContainer.offsetLeft -100;
+                var activeFilterPosition = activeFilterElement.offsetLeft - filtersContainer.offsetLeft - 100;
                 // Scroll the filters container to the active filter
                 filtersContainer.scrollLeft = activeFilterPosition;
             }
