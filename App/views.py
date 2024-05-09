@@ -14,23 +14,20 @@ from django.contrib import sessions
 import json
 from django.http import QueryDict
 # Create your views here.
-def home(request,fname=None):    
-    #  logic for showing recent posts
-    # recent_posts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=3)).order_by('-read_count')[:10]
-
-    filters=[{'name':'All'},{'name':'Following'}]
+def home(request,fname=None):    #fname is filter name
+    filters=[{'name':'All'},{'name':'Latest'},{'name':'Following'}] if 'FollowedAuthor' in request.session and len(request.session['FollowedAuthor']) > 0 else [{'name':'All'},{'name':'Latest'}]
     postTags=Tag.objects.all()
     for tag in postTags:
-        if len(tag.name) >0:
+        # getting those tag whose post exists
+        if len(tag.name) >0 and Post.objects.filter(tags=tag).exists():
             filters.append({'name':str(tag.name)})
-
+            
     allposts=Post.objects.all()
     params={'allPosts':allposts,'filters':filters,'activeFilter':{'name':'All'}}
-    # params={'recent_posts':recent_posts,'allPosts':allposts,'filters':postTags}
 
     # for filtering posts
     if fname is not None:
-        if fname!='Following' and fname!='All':
+        if fname!='Following' and fname!='All' and fname!='Latest':
             filteredPosts=[]
             try :
                 activefilter=Tag.objects.get(name=fname)
@@ -39,20 +36,24 @@ def home(request,fname=None):
                 pass
             params={'allPosts':filteredPosts,'filters':filters,'activeFilter':activefilter}
         else:
-            if fname =='All':
-                activefilter={'name':'All'} 
-                params={'allPosts':allposts,'filters':filters,'activeFilter':activefilter }
-            elif fname== 'Following':
+            if fname== 'Following':
                 if not request.user.is_anonymous:
                     followedAuthorPosts=[]
                     for post in allposts:
-                        if post.author in request.session['FollowedAuthor']:
+                        # print(request.session['FollowedAuthor'])
+                        if 'FollowedAuthor' in request.session and post.author.pk in request.session['FollowedAuthor']:
                             followedAuthorPosts.append(post) 
                 else:
                     # handle when user in not logged in 
                     return render(request,'signup.html')
                 activefilter={'name':'Following'} 
                 params={'allPosts':followedAuthorPosts,'filters':filters,'activeFilter':activefilter }
+            #  logic for showing latest posts
+            elif fname=='Latest':
+                activefilter={'name':'Latest'} 
+                latest_posts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=3))
+                # latest_posts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=3)).order_by('-read_count')
+                params={'allPosts':latest_posts,'filters':filters,'activeFilter':activefilter }
     return render(request,'App/index.html',params)
 
 
