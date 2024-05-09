@@ -57,7 +57,7 @@
             <a href="{% url 'App:Blog Post' post.id %}">
                 <div class=" flex justify-between items-start space-x-2 py-2">
                     <div class="flex flex-col text-wrap {% if post.thImg != '' %} flex-grow {% else %} {% endif %}">
-                        <h1 id="title{{post.id}}" class="title font-bold text-lg lg:text-xl">{{post.title}}
+                        <h1 id="title{{post.id}}" class="title font-semibold text-lg lg:text-xl">{{post.title}}
                         </h1>
                         <p class="blog-content">
                         <div class="preview hidden text-lg lg:block">{{post.content|safe|truncatechars_html:150}}
@@ -100,8 +100,13 @@
                         onclick="OptionPopover(this)"><i class="fa-solid fa-ellipsis fa-lg"></i></a>
                     <span id="Option_box{{post.id}}"
                         class="absolute z bg-white right-0 top-6 hidden p-1 border-gray-500 border rounded ">
-                        <ul class="flex flex-col items-start w-fit">
-                            <li class="p-1 hover:bg-gray-200" id="follow_op{{post.id}}">
+                        <ul class="flex flex-col items-start w-fit space-y-1">
+                            {% if post.author == User%}
+                            <li class=" hover:bg-slate-200 active:bg-slate-300 px-1 rounded text-nowrap">
+                                <a href="{% url 'App:Update post' post.id %}" class="">Update post</a>
+                            </li>
+                            {% else %}
+                            <li class="px-1 hover:bg-gray-200" id="follow_op{{post.id}}">
                                 {% if post.author_id in request.session.FollowedAuthor %}
                                 <a onclick="ChangeFollowers(this)" id="follow{{post.author_id}}"
                                     class="cursor-pointer">Following</a>
@@ -110,6 +115,7 @@
                                     class="cursor-pointer">Follow</a>
                                 {% endif %}
                             </li>
+                            {% endif %}
                         </ul>
                     </span>
                 </span>

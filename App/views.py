@@ -115,7 +115,7 @@ def Logout_hand(request):
     messages.success(request,"Successsfully logout !!")
     return redirect('/')
     
-def SearchResult(request,filterOrder=None,category=None,tagName=None):
+def SearchResult(request,filterOrder=None,category=None,tagName=None,readinglist=None):
     # Handling search query 
     if request.method=="POST":
         if request.POST['SearchQuery']:

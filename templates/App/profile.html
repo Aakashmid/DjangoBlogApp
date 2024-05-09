@@ -136,95 +136,11 @@ Profile
                     class="px-3 py-2 float-end m-2  xl:text-lg  text-sm rounded-md text-white bg-black hover:bg-slate-900 active:bg-slate-900">Create Post</a>
                 {% endif %}
             </div>
-            <div class="border-2 rounded-lg p-4 clear-end lg:text-xl text-lg font-semibold mt-4 hover:bg-gray-300 active:bg-gray-300 cursor-pointer" onclick="showReadingList(this)">Your
-                Reading List >></div>
-            <div class=" pt-4 my-2 hidden readingListContainer">
-                {%  if saved_posts|length > 0 %}
-                {% for post in saved_posts %}
-                <div id="SavedPost{{post.id}}"
-                    class="card border-gray-600 border-[1px] rounded-md shadow-md p-2 mt-2 min-h-[120px] xl:min-h-[130px]">
-                    <div class="upper-part flex-col ">
-                        <a href="{% url 'App:Author Profile' post.author_id %}" class="author-name">
-                            <div class="flex items-center space-x-2">
-                                <div class="author-profile-image w-8 rounded-full h-8 overflow-hidden">
-                                    <img src="/media/{{post.author.profileImg}}" class="" alt="">
-                                </div>
-                                <span class="flex flex-col  font-sans ">
-                                    <p class="font-normal">
-                                        {{post.author.user.first_name}} {{post.author.user.last_name}}
-                                    </p>
-                                    <p class="text-xs font-light">{{post.publish_time}}</p>
-                                </span>
-                            </div>
-                        </a>
-                    </div>
-
-                    <a href="{% url 'App:Blog Post' post.id %}">
-                        <div class=" flex justify-between items-center">
-                            <div
-                                class="flex flex-col text-wrap   {% if post.thImg != '' %} w-[80%] {% else %}w-auto {% endif %} ">
-                                <h1 id="title{{post.id}}" class="title font-semibold text-xl lg:text-2xl">{{post.title}}</h1>
-                                <p class="blog-content">
-                                <div class="preview hidden text-lg lg:block">{{post.content|safe|truncatechars_html:150}}</div>
-                                </p>
-                            </div>
-                            {% if post.thImg != '' %}
-                            <div class="w-14 h-14 lg:w-28 lg:h-24 overflow-hidden rounded-md">
-                                <img src="/media/{{post.thImg}}" alt="">
-                            </div>
-                            {% endif %}
-                        </div>
-                    </a>
-                    <div class="footer-part flex items-center justify-between pb-1 pt-2 px-1">
-                        <span class="flex space-x-4 items-center ">
-                            <span class="like_span">
-                                <span id="postlike_count{{post.id}}" class="like-count">{{post.like}}</span>
-                                <a role="button" class="" onclick="LikePost({{post.id}})" id="LikePostLink{{post.id}}">
-                                    {% if post.id in request.session.LikedPosts %}
-                                    <i id="LikePost{{post.id}}" class="fa-solid fa-thumbs-up text-md lg:text-lg"></i>
-                                    {% else %}
-                                    <i id="LikePost{{post.id}}" class="fa-regular fa-thumbs-up text-md lg:text-lg"></i>
-                                    {% endif %}
-                                </a>
-                            </span>
-                            <span class="comment_span">
-                                <span class="comment">{{ post|get_comments|length }}</span>
-                                <a href="{% url 'App:Blog Post' post.id %}" class=""><i class="fa-regular fa-comment "></i></a>
-                            </span>
-                        </span>
-                        <span
-                            class="p-2 hidden fixed top-16 left-1/2  transform duration-300 -translate-y-full -translate-x-1/2 w-32 text-center text-white font-semibold rounded shadow-green-100 bg-black"
-                            id="SavePost_popover">
-                            Post saved
-                        </span>
-                        <span class="flex space-x-6 items-center mx-3">
-                            <a role="button" class="bookmark" onclick="SavePost(this)" id="Save_post{{post.id}}">
-                                {% if post.id in request.session.SavedPosts %}
-                                <i id="saveIcon{{post.id}}" class="fa-solid fa-bookmark  text-md lg:text-lg"></i>
-                                {% else %}
-                                <i id="saveIcon{{post.id}}" class="fa-regular fa-bookmark  text-md lg:text-lg"></i>
-                                {% endif %}
-                            </a>
-                            <a role="button" class="three-dots cursor-pointer" id="options{{post.id}}"
-                                onclick="OptionPopover(this)"><i class="fa-solid fa-ellipsis fa-lg"></i></a>
-                            <span id="Option_box{{post.id}}"
-                                class="absolute bg-white  hidden p-2 border-gray-500 border rounded ">
-                                <ul class="flex flex-col">
-                                    <li class="" id="follow_op">
-                                        Follow
-                                    </li>
-                                </ul>
-                            </span>
-                        </span>
-
-                    </div>
+            <a href="{% url 'App:Blogs' %}" class="">
+                <div class="border-2 rounded-lg p-4 clear-end lg:text-xl text-lg font-semibold mt-4 hover:bg-gray-300 active:bg-gray-300 cursor-pointer">Your
+                    Reading List >></div>
                 </div>
-                {% endfor %}
-                {% else %}
-                <p class="text-center text-md lg:text-lg font-medium lg:font-semibold text-wrap">You didn't have any  post in reading list ,  Save post to add in reading list</p>
-                {% endif %}
-            </div>
-        </div>
+            </a>
 
         <!-- About Section -->
         <div class="about-page hidden p-3">
@@ -363,14 +279,6 @@ Profile
     span_close.onclick = function () {
         document.getElementsByClassName('image-box')[0].classList.remove('block');
         document.getElementsByClassName('image-box')[0].classList.add('hidden');
-    }
-
-
-    showReadingList = () => {
-        document.getElementsByClassName('readingListContainer')[0].classList.toggle('hidden');
-    }
-    showUsersPosts = () => {
-        document.getElementsByClassName('Users-Posts-Container')[0].classList.toggle('hidden');
     }
 
     // Delete post
