@@ -75,9 +75,8 @@
     </div>
     {% endfor %}
     <div id="searchBar" class="searchBar lg:w-[60%] lg:ml-[18%] shadow-indigo-100 my-2 hidden  ">
-        <form action="/post-blogs/" method="post" class="space-x-2 flex px-1">
-            {% csrf_token %}
-            <input type="text" name="SearchQuery" id="SearchQuery"
+        <form action="{% url 'App:Search Posts' %}" method="get" class="space-x-2 flex px-1">
+            <input type="text" name="q" id="q"
                 class="w-full p-[7px]  bg-gray-50  focus:outline-[2px] shadow-md  focus:outline-blue-200 focus:outline border-[1px] border-gray-500 rounded outline-offset-1"
                 placeholder="Search..." required>
             <button type="submit"
@@ -168,7 +167,7 @@
             <div class="mt-4 clear-right">
                 <p class="text-lg font-semibold text-center">Login here</p>
             </div>
-            <form action="/login-user/" class="w-full p-4 space-y-2" method="post">
+            <form action="{% url 'App:login_user'%}" class="w-full p-4 space-y-2" method="post">
                 {% csrf_token %}
                 <div class="flex-col flex space-y-1">
                     <label for="username" class="text-[17px] ">Username</label>

@@ -14,7 +14,7 @@ from django.contrib import sessions
 import json
 from django.http import QueryDict
 # Create your views here.
-def home(request,fname=None):    #fname is filter name
+def home(request):    #fname is filter name
     filters=[{'name':'All'},{'name':'Latest'},{'name':'Following'}] if 'FollowedAuthor' in request.session and len(request.session['FollowedAuthor']) > 0 else [{'name':'All'},{'name':'Latest'}]
     postTags=Tag.objects.all()
     for tag in postTags:
@@ -26,34 +26,35 @@ def home(request,fname=None):    #fname is filter name
     params={'allPosts':allposts,'filters':filters,'activeFilter':{'name':'All'}}
 
     # for filtering posts
-    if fname is not None:
-        if fname!='Following' and fname!='All' and fname!='Latest':
-            filteredPosts=[]
+    filter=request.GET.get('filter','')
+    if filter:
+        filteredPosts=[]
+        if filter!='Following' and filter!='All' and filter!='Latest':
             try :
-                activefilter=Tag.objects.get(name=fname)
+                activefilter=Tag.objects.get(name=filter)
                 filteredPosts=Post.objects.filter(tags=activefilter)
+                params={'allPosts':filteredPosts,'filters':filters,'activeFilter':activefilter}
             except Exception as e:
                 pass
-            params={'allPosts':filteredPosts,'filters':filters,'activeFilter':activefilter}
+        elif filter=='Following':
+            if not request.user.is_anonymous:
+                followedAuthorPosts=[]
+                for post in allposts:
+                    # print(request.session['FollowedAuthor'])
+                    if 'FollowedAuthor' in request.session and post.author.pk in request.session['FollowedAuthor']:
+                        followedAuthorPosts.append(post) 
+            else:
+                # handle when user in not logged in 
+                return render(request,'signup.html')
+            activefilter={'name':'Following'} 
+            params={'allPosts':followedAuthorPosts,'filters':filters,'activeFilter':activefilter }
+        elif filter=='Latest':
+            activefilter={'name':'Latest'} 
+            latest_posts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=3))
+            # latest_posts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=3)).order_by('-read_count')
+            params={'allPosts':latest_posts,'filters':filters,'activeFilter':activefilter }
         else:
-            if fname== 'Following':
-                if not request.user.is_anonymous:
-                    followedAuthorPosts=[]
-                    for post in allposts:
-                        # print(request.session['FollowedAuthor'])
-                        if 'FollowedAuthor' in request.session and post.author.pk in request.session['FollowedAuthor']:
-                            followedAuthorPosts.append(post) 
-                else:
-                    # handle when user in not logged in 
-                    return render(request,'signup.html')
-                activefilter={'name':'Following'} 
-                params={'allPosts':followedAuthorPosts,'filters':filters,'activeFilter':activefilter }
-            #  logic for showing latest posts
-            elif fname=='Latest':
-                activefilter={'name':'Latest'} 
-                latest_posts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=3))
-                # latest_posts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=3)).order_by('-read_count')
-                params={'allPosts':latest_posts,'filters':filters,'activeFilter':activefilter }
+            params={'allPosts':allposts,'filters':filters,'activeFilter':{'name':'All'} }
     return render(request,'App/index.html',params)
 
 
@@ -117,18 +118,19 @@ def Logout_hand(request):
     
 def SearchResult(request,filterOrder=None,category=None,tagName=None,readinglist=None):
     # Handling search query 
-    if request.method=="POST":
-        if request.POST['SearchQuery']:
-            search=request.POST.get('SearchQuery')
+    if request.method=="GET":
+        if request.GET['q']:
+            query=request.GET.get('q')
             allPosts=Post.objects.all()
             Posts=[]
             for post in allPosts:
-                if search.lower() in  post.title.lower() or search.lower() in post.content.lower() :
+                if query.lower() in  post.title.lower() :
                     Posts.append(post)
                 if post.category is not None:
-                    if post.category.name.lower()==search.lower():
+                    if post.category.name.lower()==query.lower():
                         Posts.append(post)
             params={"allPosts":Posts,'Search':"Search_result_page"}
+
 
     elif category is not  None:
         cat=PostCategory.objects.get(name=category)
@@ -144,6 +146,8 @@ def SearchResult(request,filterOrder=None,category=None,tagName=None,readinglist
                     Posts.append(post)
                     break
         params={'allPosts':Posts}
+    
+    # FOR FILTERING POST SERRCHRESULT PAGE
     elif filterOrder : 
         ids=['trend','new','old','mostreaded']
         if filterOrder==ids[0]:
@@ -156,6 +160,8 @@ def SearchResult(request,filterOrder=None,category=None,tagName=None,readinglist
         elif filterOrder==ids[3]:
             allPosts=Post.objects.all().order_by('-read_count')[:20]
         params={'allPosts':allPosts}
+   
+    # FOR SHOWING READING LIST 
     else:
         SavedPosts=[]
         postIds=request.session['SavedPosts'] if 'SavedPosts' in request.session else []

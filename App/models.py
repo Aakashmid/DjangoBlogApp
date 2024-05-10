@@ -28,7 +28,7 @@ class BlogUser(models.Model):
         return self.user.username
 
 class Post(models.Model):
-    title=models.CharField( max_length=500)
+    title=models.CharField( max_length=200)
     content=models.TextField()
     publish_time=models.DateField(default=datetime.today)
     read_count=models.IntegerField(default=0)
@@ -37,8 +37,11 @@ class Post(models.Model):
     category=models.ForeignKey(PostCategory, verbose_name="Post_Categories", on_delete=models.SET_NULL,null=True,blank=True)
     tags=models.ManyToManyField(Tag, verbose_name="Post_Tags",blank=True)
     thImg=models.ImageField("Post Thumbnail", upload_to='App/thumbnail/', default='',blank=True ,null=True)
+    # slug=models.SlugField(default="", editable=False,null=False ,max_length=200)
     def __str__(self) -> str:
         return self.title
+    # def save(self):
+
     class Meta:
         verbose_name_plural="Blog posts"
 
