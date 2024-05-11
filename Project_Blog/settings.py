@@ -155,4 +155,4 @@ if not DEBUG:  # checking whether debug is false or true
         conn_max_age=600
     )
     }
-    ALLOWED_HOSTS=os.environ.get('ALLOWED_HOSTS')
+    ALLOWED_HOSTS.append(os.environ.get('ALLOWED_HOSTS'))
