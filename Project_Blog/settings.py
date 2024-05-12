@@ -17,7 +17,7 @@ SECRET_KEY = 'django-insecure-8kbo$_-*8irf^50#5kdmn4=lm)o*w*7=a7*$git!+9ie-u$qyf
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG=False if os.environ.get('DEBUG') else True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definitions
@@ -151,8 +151,8 @@ if not DEBUG:  # checking whether debug is false or true
     DATABASES = {
     'default': dj_database_url.config(
         # Replace this value with your local database's connection string.
-        default=os.environ.get('INTERNAL_DBURL'),
+        default=dj_database_url.parse(os.environ.get('INTERNAL_DBURL')),
         conn_max_age=600
     )
     }
-    ALLOWED_HOSTS.append(os.environ.get('ALLOWED_HOSTS'))
+    ALLOWED_HOSTS+=os.environ.get('ALLOWED_HOSTS').split(',')
