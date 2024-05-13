@@ -12,4 +12,4 @@ python manage.py collectstatic --no-input
 python manage.py migrate
 
 # Create superuser
-python manage.py createsuperuser --noinput --username admin --email admin@example.com --password keepgrowing
+python manage.py createsuperuser --noinput --username smart --password keepgrowing
