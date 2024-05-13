@@ -148,10 +148,11 @@ SESSION_COOKIE_AGE = 3600
 if not DEBUG:  # checking whether debug is false or true
     SECRET_KEY=os.environ.get('SECRET_KEY')
     # Replace the SQLite DATABASES configuration with PostgreSQL:
+    DB_URL=os.environ.get('INTERNAL_DBURL')
     DATABASES = {
     'default': dj_database_url.config(
         # Replace this value with your local database's connection string.
-        default=dj_database_url.parse(os.environ.get('INTERNAL_DBURL')),
+        default=dj_database_url.parse(DB_URL),
         conn_max_age=600
     )
     }
