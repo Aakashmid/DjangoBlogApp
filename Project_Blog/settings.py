@@ -150,10 +150,6 @@ if not DEBUG:  # checking whether debug is false or true
     # Replace the SQLite DATABASES configuration with PostgreSQL:
     DB_URL=os.environ.get('DATABASE_URL')
     DATABASES = {
-    'default': dj_database_url.config(
-        # Replace this value with your local database's connection string.
-        default=dj_database_url.parse(DB_URL),
-        conn_max_age=600
-    )
+    'default': dj_database_url.parse(DB_URL)
     }
     ALLOWED_HOSTS+=os.environ.get('ALLOWED_HOSTS').split(',')
