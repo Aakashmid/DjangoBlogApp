@@ -23,7 +23,7 @@ class BlogUser(models.Model):
     Bio=models.CharField( max_length=5000 ,default="",null=True)
     followers=models.IntegerField(default=0)
     following=models.IntegerField(default=0)
-    test=models.CharField( max_length=50,default='')
+    # test=models.CharField( max_length=50,dea)
     session_data=models.JSONField(default=dict)
     def __str__(self) -> str:
         return self.user.username
