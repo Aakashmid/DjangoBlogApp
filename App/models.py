@@ -20,11 +20,11 @@ class Tag(models.Model):
 class BlogUser(models.Model):
     user=models.OneToOneField(User, verbose_name="user", on_delete=models.CASCADE)
     profileImg=models.ImageField("Profile Image", upload_to='App/profileimg/', default='profile.jpg')
-    Bio=models.CharField( max_length=5000 ,default="",null=True)
+    Bio=models.CharField( max_length=5000 ,default="",null=True,blank=True)
     followers=models.IntegerField(default=0)
     following=models.IntegerField(default=0)
-    test=models.CharField( max_length=50,default='')
-    session_data=models.JSONField(default=dict)
+    # test=models.CharField( max_length=50,dea)
+    session_data=models.JSONField(default=dict,blank=True)
     def __str__(self) -> str:
         return self.user.username
 
