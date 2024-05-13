@@ -146,7 +146,6 @@ SESSION_COOKIE_AGE = 3600
 ### Settings configuration for production
 
 if not DEBUG:  # checking whether debug is false or true
-    DEBUG=True
     SECRET_KEY=os.environ.get('SECRET_KEY')
     # Replace the SQLite DATABASES configuration with PostgreSQL:
     DB_URL=os.environ.get('DATABASE_URL')
