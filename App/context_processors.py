@@ -4,7 +4,10 @@ from .models import BlogUser,PostCategory
 
 def BlogUser_context(request):
     if request.user.is_authenticated:
-        user = BlogUser.objects.get(user=request.user)
+        try :
+            user = BlogUser.objects.get(user=request.user)
+        except Exception as e:
+            user=None
     else:
         user=None
     return {'User': user}
