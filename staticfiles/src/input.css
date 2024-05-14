@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base{
+    .no-tailwind-base,.no-tailwind-base *,.no-tailwind-base > *{
+        font-size: revert;
+        font-weight: revert;
+        margin: revert;
+        display: revert;
+        height: revert;
+        vertical-align: revert;
+        max-width: revert;
+        border-style: revert;
+        border-width: revert;
+        border-color: revert;
+        outline: revert;
+        
+        padding: revert;
+        list-style: revert;
+    }
+
+    .no-scrollbar::-webkit-scrollbar{
+        display: none;
+    }
+}

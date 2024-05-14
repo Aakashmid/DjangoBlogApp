@@ -31,7 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'App',  #updated part
-    'compressor',
+    # 'compressor',
     'django_summernote',
 ]
 
@@ -124,17 +124,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 #### Added manually   ####
-# STATICFILES_DIRS=[
-#     BASE_DIR /'static'
-# ]
-STATIC_ROOT=BASE_DIR /'static'
+STATICFILES_DIRS=[
+    BASE_DIR /'static'
+]
 
 MEDIA_ROOT=os.path.join(BASE_DIR,'media')
 MEDIA_URL="/media/"
 X_FRAME_OPTIONS='SAMEORIGIN'
 
 
-COMPRESS_ROOT=BASE_DIR /'static'
+# COMPRESS_ROOT=BASE_DIR /'static'
 # COMPRESS_ENABLED=True
 # STATICFILES_FINDERS=('compressor.finders.CompressorFinder',)
 
@@ -144,6 +143,7 @@ SESSION_COOKIE_AGE = 3600
 ### Settings configuration for production
 
 if not DEBUG:  # checking whether debug is false or true
+    STATIC_ROOT=BASE_DIR /'staticfiles'
     SECRET_KEY=os.environ.get('SECRET_KEY')
     # Replace the SQLite DATABASES configuration with PostgreSQL:
     DB_URL=os.environ.get('DATABASE_URL')
