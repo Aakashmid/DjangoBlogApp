@@ -124,6 +124,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 #### Added manually   ####
+STATICFILES_DIRS=[
+    BASE_DIR /'static'
+]
 STATIC_ROOT=BASE_DIR /'static'
 
 MEDIA_ROOT=os.path.join(BASE_DIR,'media')
@@ -132,7 +135,7 @@ X_FRAME_OPTIONS='SAMEORIGIN'
 
 
 COMPRESS_ROOT=BASE_DIR /'static'
-COMPRESS_ENABLED=True
+# COMPRESS_ENABLED=True
 STATICFILES_FINDERS=('compressor.finders.CompressorFinder',)
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
@@ -148,4 +151,3 @@ if not DEBUG:  # checking whether debug is false or true
     'default': dj_database_url.parse(DB_URL)
     }
     ALLOWED_HOSTS+=os.environ.get('ALLOWED_HOSTS').split(',')
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
