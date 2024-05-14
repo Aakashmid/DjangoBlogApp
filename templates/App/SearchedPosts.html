@@ -111,8 +111,8 @@
     </div>
     {% endif %}
 </div>
-{% if allPosts  %}
-{% if allPosts|length > 0 %}
+
+{% if allPosts and allPosts|length > 0 %}
 <div class="category  flex overflow-x-auto w-full">
     {% comment %} change it trend posts to all {% endcomment %}
     <a href="/post-blogs/trend" id="trend"
@@ -219,7 +219,7 @@
     <p class="font-semibold text-xl">No search result found according to your query !!!</p>
 </div>
 {% endif %}
-{% endif %}
+
 
 
 </div>
