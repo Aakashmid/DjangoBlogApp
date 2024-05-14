@@ -148,3 +148,4 @@ if not DEBUG:  # checking whether debug is false or true
     'default': dj_database_url.parse(DB_URL)
     }
     ALLOWED_HOSTS+=os.environ.get('ALLOWED_HOSTS').split(',')
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
