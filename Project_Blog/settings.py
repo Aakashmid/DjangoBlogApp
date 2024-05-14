@@ -124,9 +124,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 #### Added manually   ####
-STATICFILES_DIRS=[
-    BASE_DIR /'static'
-]
+# STATICFILES_DIRS=[
+#     BASE_DIR /'static'
+# ]
 STATIC_ROOT=BASE_DIR /'static'
 
 MEDIA_ROOT=os.path.join(BASE_DIR,'media')
@@ -136,7 +136,7 @@ X_FRAME_OPTIONS='SAMEORIGIN'
 
 COMPRESS_ROOT=BASE_DIR /'static'
 # COMPRESS_ENABLED=True
-STATICFILES_FINDERS=('compressor.finders.CompressorFinder',)
+# STATICFILES_FINDERS=('compressor.finders.CompressorFinder',)
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_AGE = 3600
