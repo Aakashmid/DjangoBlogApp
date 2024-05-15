@@ -116,21 +116,19 @@ def Logout_hand(request):
     messages.success(request,"Successsfully logout !!")
     return redirect('/')
     
-def SearchResult(request,filterOrder=None,category=None,tagName=None,readinglist=None):
+def SearchResult(request,filterOrder=None,category=None,tagName=None,username=None): # username is username of whose reading list is view
     # Handling search query 
-    if request.method=="GET":
-        if request.GET['q']:
-            query=request.GET.get('q')
-            allPosts=Post.objects.all()
-            Posts=[]
-            for post in allPosts:
-                if query.lower() in  post.title.lower() :
+    if request.method=="GET" and 'q' in  request.GET:
+        query=request.GET.get('q')
+        allPosts=Post.objects.all()
+        Posts=[]
+        for post in allPosts:
+            if query.lower() in  post.title.lower() :
+                Posts.append(post)
+            if post.category is not None:
+                if post.category.name.lower()==query.lower():
                     Posts.append(post)
-                if post.category is not None:
-                    if post.category.name.lower()==query.lower():
-                        Posts.append(post)
-            params={"allPosts":Posts,'Search':"Search_result_page"}
-
+        params={"allPosts":Posts,'Search':"Search_result_page"}
 
     elif category is not  None:
         cat=PostCategory.objects.get(name=category)
