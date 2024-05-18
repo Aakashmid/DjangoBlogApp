@@ -116,7 +116,7 @@ def Logout_hand(request):
     messages.success(request,"Successsfully logout !!")
     return redirect('/')
     
-def SearchResult(request,filterOrder=None,category=None,tagName=None,username=None): # username is username of whose reading list is view
+def SearchResult(request,filterOrder=None,category=None,tagName=None):
     # Handling search query 
     if request.method=="GET" and 'q' in  request.GET:
         query=request.GET.get('q')
@@ -130,6 +130,7 @@ def SearchResult(request,filterOrder=None,category=None,tagName=None,username=No
                     Posts.append(post)
         params={"allPosts":Posts,'Search':"Search_result_page"}
 
+# --------------------------- handle later
     elif category is not  None:
         cat=PostCategory.objects.get(name=category)
         Posts=Post.objects.filter(category=cat)
@@ -144,7 +145,7 @@ def SearchResult(request,filterOrder=None,category=None,tagName=None,username=No
                     Posts.append(post)
                     break
         params={'allPosts':Posts}
-    
+
     # FOR FILTERING POST SERRCHRESULT PAGE
     elif filterOrder : 
         ids=['trend','new','old','mostreaded']
@@ -159,6 +160,7 @@ def SearchResult(request,filterOrder=None,category=None,tagName=None,username=No
             allPosts=Post.objects.all().order_by('-read_count')[:20]
         params={'allPosts':allPosts}
    
+#----------------------------- 
     # FOR SHOWING READING LIST 
     else:
         SavedPosts=[]
@@ -171,11 +173,6 @@ def SearchResult(request,filterOrder=None,category=None,tagName=None,username=No
                     request.session['SavedPosts'].remove(id)
                     request.session.modified=True
         params={'readingList':True, 'readingListPosts':SavedPosts}
-    # Adding pagination on blogposts page
-    # paginator=Paginator(params['allPosts'],3)
-    # page_num=request.GET.get('page')
-    # posts=paginator.get_page(page_num)
-    # params['allPosts']=posts
     return render(request,'App/SearchedPosts.html',params)
 
 def Create_post(request):
@@ -309,60 +306,30 @@ def post_comment(request):
 
  # this is for profile  for author profile  # we have pass the same name in parameters as we passed in url    
  # here user_id is bloguser object's id 
-def profile(request,user_id=None,text=None,username=None):    
-    if user_id:
-        if request.method=="POST":
-            post_id=request.POST.get('Post_id',None)  # for saving post in reading list
-            if post_id is not None:
-                # post_id=int(post_id)
-                if 'SavedPosts' in request.session:
-                    if int(post_id) not in request.session['SavedPosts']:
-                        request.session['SavedPosts'].append(int(post_id))
-                        response=JsonResponse({'Result':'Post_saved'})
+def profile(request,user_id=None,text=None,username=None):
+    if username is not None:
+        # for current user profile
+        if not request.user.is_anonymous and  username==request.user.username:
+            bloguser=BlogUser.objects.get(user=request.user)
+            SavedPosts=[]
+            postIds=request.session['SavedPosts'] if 'SavedPosts' in request.session else []
+            if len(postIds)>0:
+                for id in postIds:
+                    try:
+                        SavedPosts.append(Post.objects.get(id=id))
+                    except Exception as e:
+                        request.session['SavedPosts'].remove(id)
                         request.session.modified=True
-                        return response
-                    else:
-                        request.session['SavedPosts'].remove(int(post_id))
-                        request.session.modified=True
-                        response=JsonResponse({'Result':'Post_unsaved'})
-                        return response
-                else:
-                    request.session['SavedPosts']=[int(post_id)]
-                    request.session.modified=True
-                    return JsonResponse({'Result':'Post_saved'})
-            else:
-                return HttpResponseRedirect(reverse('App:Author profile',args=(user_id)))
-
-        # For followers page
-        elif text is not None:
-            Author=BlogUser.objects.get(pk=user_id)
-            if text=='following':
-                following=True
-                follower=False
-                AuthorFollowerObjs=AuthorFollower.objects.filter(follower=Author.user)  # follower is user object
-            else:
-                AuthorFollowerObjs=AuthorFollower.objects.filter(Author=Author)
-                following=False
-                follower=True
-            AllUsers=[]
-            for i in AuthorFollowerObjs:
-             
-                if following==True:
-                    if i.Author != Author:
-                        AllUsers.append(i.Author)
-                else:
-                    follower=BlogUser.objects.get(user=i.follower)
-                    if follower != Author:
-                        AllUsers.append(follower)
-            params={'following':following,'follower':follower,'Author':Author,'AllUsers':AllUsers}
-            return render(request,'App/followersFollowings.html',params)
-
-
-        # Author.html 
-        else:
-            # here author id is blogser object pk 
-            bloguser=BlogUser.objects.get(pk=user_id)
-            allPosts=Post.objects.filter(author=user_id)
+            CurrentUser=BlogUser.objects.get(user=request.user)
+            UsersPosts=Post.objects.filter(author=CurrentUser) if Post.objects.filter(author=CurrentUser).exists() else []
+            context={"User":bloguser,'saved_posts':SavedPosts,'UsersPosts':UsersPosts}
+            return render(request,'App/profile.html',context=context)
+        
+        # for author profile
+        elif User.objects.filter(username=username).exists():
+            user=User.objects.get(username=username)
+            bloguser=BlogUser.objects.get(user=user)
+            allPosts=Post.objects.filter(author=bloguser)
             if not request.user.is_anonymous:
                 if AuthorFollower.objects.filter(follower=request.user,Author=bloguser).exists():
                     userFollower=True
@@ -373,6 +340,59 @@ def profile(request,user_id=None,text=None,username=None):
             # here Author is author of post
             return render(request,'App/author.html',{"Author":bloguser,'Posts':allPosts,'userFollower':userFollower})
             # return render(request,'App/author.html',{'Posts':allPosts})
+        else :
+            return redirect('/')
+
+
+
+# ---------have to modify ---------
+    # # if user_id is not None:
+    # if request.method=="POST":
+    #     post_id=request.POST.get('Post_id',None)  # for saving post in reading list
+    #     if post_id is not None:
+    #         # post_id=int(post_id)
+    #         if 'SavedPosts' in request.session:
+    #             if int(post_id) not in request.session['SavedPosts']:
+    #                 request.session['SavedPosts'].append(int(post_id))
+    #                 response=JsonResponse({'Result':'Post_saved'})
+    #                 request.session.modified=True
+    #                 return response
+    #             else:
+    #                 request.session['SavedPosts'].remove(int(post_id))
+    #                 request.session.modified=True
+    #                 response=JsonResponse({'Result':'Post_unsaved'})
+    #                 return response
+    #         else:
+    #             request.session['SavedPosts']=[int(post_id)]
+    #             request.session.modified=True
+    #             return JsonResponse({'Result':'Post_saved'})
+    #     else:
+    #         return HttpResponseRedirect(reverse('App:Author profile',args=(user_id,)))
+
+    # For showing followers following  page
+    elif text is not None:
+        Author=BlogUser.objects.get(pk=user_id)
+        if text=='following':
+            following=True
+            follower=False
+            AuthorFollowerObjs=AuthorFollower.objects.filter(follower=Author.user)  # follower is user object
+        else:
+            AuthorFollowerObjs=AuthorFollower.objects.filter(Author=Author)
+            following=False
+            follower=True
+        AllUsers=[]
+        for i in AuthorFollowerObjs:
+            
+            if following==True:
+                if i.Author != Author:
+                    AllUsers.append(i.Author)
+            else:
+                follower=BlogUser.objects.get(user=i.follower)
+                if follower != Author:
+                    AllUsers.append(follower)
+        params={'following':following,'follower':follower,'Author':Author,'AllUsers':AllUsers}
+        return render(request,'App/followersFollowings.html',params)
+
     elif request.method=="POST":
         post_id=request.POST.get('post_id')
         post=Post.objects.get(id=post_id)
@@ -427,21 +447,8 @@ def profile(request,user_id=None,text=None,username=None):
             params={'btnText':'Following','follower_count':Author.followers}
         print(request.session['FollowedAuthor'])
         return JsonResponse(params)
-    else:
-        bloguser=BlogUser.objects.get(user=request.user)
-        SavedPosts=[]
-        postIds=request.session['SavedPosts'] if 'SavedPosts' in request.session else []
-        if len(postIds)>0:
-            for id in postIds:
-                try:
-                    SavedPosts.append(Post.objects.get(id=id))
-                except Exception as e:
-                    request.session['SavedPosts'].remove(id)
-                    request.session.modified=True
-        User=BlogUser.objects.get(user=request.user)
-        UsersPosts=Post.objects.filter(author=User) if Post.objects.filter(author=User).exists() else []
-        context={"User":bloguser,'saved_posts':SavedPosts,'UsersPosts':UsersPosts}
-        return render(request,'App/profile.html',context=context)
+    
+
     
 def Change_profile(request):
     if request.method=="POST":
@@ -475,10 +482,11 @@ def Change_profile(request):
             bloguser.Bio=bio
             bloguser.save()
             messages.success(request,"Changed profile successfully !!")
-            return HttpResponseRedirect(reverse('App:User Profile'))
+            return HttpResponseRedirect(reverse('App:User Profile',args=(request.user.username,)))
 
 def update_post(request,post_id=None):
     if post_id is not None:
+        # for delete post
         if request.method=="DELETE":
             post=get_object_or_404(Post,id=post_id)
             print(f'Post id is {post.id}')
@@ -489,6 +497,8 @@ def update_post(request,post_id=None):
                 request.session['SavedPosts'].remove(post_id) 
             print(request.session)
             return JsonResponse({'Message':"Deleted post"})
+        
+        # for update post
         elif request.method=="POST":
             post=Post.objects.get(id=post_id)
             title=request.POST.get('post_title')
@@ -496,7 +506,7 @@ def update_post(request,post_id=None):
             cat=request.POST.get('category')
             Tags=request.POST.get('tags')
             thumImg=request.FILES.get('thumbnail')
-            if cat!="":
+            if cat !="":
                 category=PostCategory.objects.get(name=cat)
             else:
                 category=None   
@@ -542,3 +552,31 @@ def serialize_session(session):
     for key, value in session.items():
         serialized_data[key] = value
     return json.dumps(serialized_data)
+
+# for saving post (adding in reading list of user)
+def SavePost(request):
+    print("post")
+    if request.method=="POST":
+        post_id=request.POST.get('Post_id') 
+        if post_id :
+            post_id=int(post_id)
+            if 'SavedPosts' in request.session:
+                if post_id not in request.session['SavedPosts']:
+                    request.session['SavedPosts'].append(post_id)
+                    response=JsonResponse({'Result':'Post_saved'})
+                    request.session.modified=True
+                    return response
+                else:
+                    request.session['SavedPosts'].remove(post_id)
+                    request.session.modified=True
+                    response=JsonResponse({'Result':'Post_unsaved'})
+                    return response
+            else:
+                request.session['SavedPosts']=[post_id]
+                request.session.modified=True
+                return JsonResponse({'Result':'Post_saved'})
+        else:
+            # return HttpResponseRedirect(reverse('App:Author profile',args=(,)))
+            return HttpResponse('testingdslf')
+    else:
+        return HttpResponse('testingdslf')

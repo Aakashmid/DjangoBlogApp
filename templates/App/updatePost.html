@@ -21,8 +21,16 @@
             $('#blog_content').summernote({
                 height: 240,
                 width: '100%',
+                {% comment %} callbacks: {
+                    onInit: function(contents, context) {
+                        contents.find('img').each(function() {
+                            $(this).attr('style', 'max-width: 100%; height: auto; object-fit: contain; object-position: center;');
+                        });
+                    }
+                } {% endcomment %}
             });
         }
+
     });
 
     function toggleDropDown() {
@@ -84,14 +92,14 @@
                                 {{cat.name}}</li>
                             {% endfor %}
                         </ul>
-                        <input name="category" type="hidden" id="selectedOption" value="{{post.category}}">
+                        <input name="category" type="hidden" id="selectedOption" {% if post.category is None %} value=""{%else%} value="{{post.category}}"{%endif%}>
                     </span>
                     <!-- Tag selector -->
                     <span class="flex space-x-3 items-center">
                         <p class="text-lg font-medium">Tags </p>
                         <input type="text" name="tags" id="tags"
                             class=" w-full lg:w-96 border-[1px] rounded border-gray-600 p-1 outline-gray-300  outline-offset-2 outline-1"
-                            placeholder="#tag_name #tag2_name #tag3_name....." value="">
+                            placeholder="#tag_name #tag2_name #tag3_name....." value="{{post.tag}}">
                     </span>
                 </div>
                 <div class="">
@@ -106,7 +114,8 @@
                 </div>
                 <div class="post-button">
                     <button type="submit"
-                        class="submit-post-button p-2 rounded bg-gray-700 hover:bg-gray-800 active:outline active:outline-gray-800 active:outline-2 text-white">Update Post</button>
+                        class="submit-post-button p-2 rounded bg-gray-900 hover:bg-gray-800 active:outline active:outline-gray-800 active:outline-2 text-white">Update Post</button>
+                    
                 </div>
             </form>
         </div>

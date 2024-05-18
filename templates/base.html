@@ -105,7 +105,7 @@
                 <div class="w-20 h-20 outline outline-white rounded-full overflow-hidden">
                     <img src="/media/{{User.profileImg}}" class="" alt="">
                 </div>
-                <a href="/profile" class="flex flex-col items-center">
+                <a href="{%url 'App:User Profile' user.username %}" class="flex flex-col items-center">
                     <!-- <p class="font-semibold text-lg">{{user.first_name}} {{user.last_name}}</p> -->
                     <p class="font-semibold text-lg">{{user.first_name}} {{user.last_name}} </p>
                     <p class="text-sm font-light">View profile</p>
@@ -141,7 +141,7 @@
                         class="text-gray-700 mr-4"><i class="fa-solid fa-house fa-sm"></i></span> Home</div>
             </a>
             {% if user.is_authenticated %}
-            <a href="{% url 'App:Reading_list' user.username %}" class="">
+            <a href="{% url 'App:Reading_list'  %}" class="">
                 <div class="p-1 hover:bg-blue-100 text-lg font-normal  rounded-sm flex items-center"><span
                         class="text-gray-700 mr-4"><i class="fa-solid fa-book"></i></span> Library </div>
             </a>
@@ -206,7 +206,7 @@
                         <div class="w-16 h-16 outline outline-white rounded-full overflow-hidden">
                             <img src="/media/{{User.profileImg}}" class="" alt="">
                         </div>
-                        <a href="/profile" class="">
+                        <a href="{%url 'App:User Profile' user.username %}" class="">
                             <!-- <p class="font-semibold text-lg">{{user.first_name}} {{user.last_name}}</p> -->
                             <p class="font-semibold text-lg">{{user.first_name}} {{user.last_name}} </p>
                             <p class="text-sm">View profile</p>
@@ -241,7 +241,7 @@
                                 class="text-gray-700 mr-4"><i class="fa-solid fa-house fa-sm"></i></span> Home</div>
                     </a>
                     {% if user.is_authenticated %}
-                    <a href="{% url 'App:Reading_list' user.username %}" class="">
+                    <a href="{% url 'App:Reading_list'  %}" class="">
                         <div class="p-1 hover:bg-blue-100 text-lg font-normal  rounded-sm flex items-center"><span
                                 class="text-gray-700 mr-4"><i class="fa-solid fa-book"></i></span> Library </div>
                     </a>
@@ -263,12 +263,14 @@
     {% endblock js %}
     <script src="{% static 'Js/base.js' %}"></script>
     <script>
+
+        // for saving post in request.session
         function SavePost(element) {
             {% if user.is_authenticated %}
             let post_id = element.id.slice(9);
             $.ajax({
                 type: "Post",
-                url: "{% url 'App:Author Profile' user.id %}",
+                url: "{% url 'App:Save Post' %}",
                 data: { 'Post_id': post_id },
                 dataType: "json",
                 headers: {
@@ -306,7 +308,9 @@
             showLogin();
             {% endif %}
         }
-        function showSavePostModel(text) {
+
+
+        function showSavePostModel(text) {  //popover
             let box_post = document.getElementById('popover');
             if (text === 'Saved') {
                 box_post.innerText = 'Saved a new post';
@@ -323,11 +327,12 @@
             box_post.classList.toggle('translate-y-full');
         }
 
+        
         LikePost = (post_id) => {
             {% if user.is_authenticated %}
             $.ajax({
                 type: "Post",
-                url: "{% url 'App:User Profile' %}",
+                url: "{% url 'App:User Profile' user.username %}",
                 data: { 'post_id': post_id },
                 headers: {
                     "X-CSRFToken": '{{ csrf_token }}'
@@ -367,7 +372,7 @@
             followCount = document.getElementById('follow_count');
             $.ajax({
                 type: "Patch",
-                url: "{% url 'App:User Profile' %}",
+                url: "{% url 'App:User Profile' user.username %}",
                 data: JSON.stringify({ "author_id": author_id }),
                 dataType: "json",
                 headers: {

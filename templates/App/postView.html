@@ -4,11 +4,11 @@
 {% load extraFilter %}
 {% block body %}
 
-<div class="container pt-2">
+<div class="container pt-2 ">
     <div class="main-body p-2 flex-col space-y-3 max-w-full">
         <h1 class="font-bold text-2xl">{{post.title}}</h1>
         <div class="post-header flex space-x-2 items-center">
-            <span class="w-14 h-14 rounded-full overflow-hidden ">
+            <span class="w-14 h-14 rounded-full overflow-hidden  ">
                 <img src="/media/{{post.author.profileImg}}" alt="..." class=" ">
             </span>
             <div class="flex flex-col space-y-1">
@@ -17,7 +17,7 @@
                         class="text-blue-500 font-medium "> {{post.author.user.first_name}}
                         {{post.author.user.last_name}}</a>
                 </p>
-                <p class="time text-xs  font-light">
+                <p class="time text-xs  font-light ">
                     Posted on {{post.publish_time}}
                 </p>
             </div>
@@ -60,7 +60,8 @@
         </p>
 
         <hr class="mt-2 mb-3 bg-gray-600   w-auto ">
-        <div class="no-tailwind-base">
+
+        <div class="no-tailwind-base  w-full ">
             {{post.content|safe}}
         </div>
     </div>
@@ -181,6 +182,8 @@
         </div>
     </div>
     <hr class="mt-2 mb-3 bg-gray-600   w-auto mx-2">
+
+    {%if Related_posts%}
     <div class="related-post-container p-2">
         <h3 class="font-semibod text-xl p-2">Related posts :</h3>
         <div class="posts pt-4">
@@ -278,6 +281,7 @@
             {% endfor %}
         </div>
     </div>
+    {% endif %}
 
 
 </div>
