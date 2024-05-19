@@ -13,7 +13,7 @@
     {% if readingList %}
     <div class="">
         <div class="py-4">
-            <p class="font-semibold text-2xl">Your Reading list</p>
+            <p class="font-semibold text-2xl">Your Reading list({{readingListPosts|length}})</p>
         </div>
         {% if readingListPosts|length > 0 %}
         <div class="flex flex-col space-y-2">

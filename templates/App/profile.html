@@ -15,30 +15,35 @@ Profile
             <div class="p-3 ">
                 <span class="flex space-x-5 items-center ">
                     <div class="h-20 rounded-full w-20 outline outline-4 outline-gray-100 overflow-hidden"
-                    onclick="showimage()">
-                    <img src='/media/{{User.profileImg}}' alt="..." class=" ">
-                </div>
-                <div
-                class="hidden image-box overflow-hidden absolute border-[1px] top-1/3 left-1/2 rounded-lg transform  -translate-y-3/4 -translate-x-1/2 w-[250px] lg:w-[300px]  lg:h-[300px] h-[250px]">
-                <img src="/media/{{User.profileImg}}" alt="..">
-            </div>
-            <span class="">
-                <h1 class="text-2xl font-semibold ">{{user.first_name}} {{user.last_name}}</h1>
-                <span class="flex space-x-8 mt-2">
-                    <a href="{% url 'App:Followers Following'  'followers' user.username User.id %}" class="text-[17px]   hover:text-blue-900  transition-transform active:scale-105 active:text-blue-900">{{User.followers}} Followers</a>
-                    <a href="{%  url 'App:Followers Following' 'following' user.username User.id %}" class="text-[17px]   hover:text-blue-900  transition-transform active:scale-105 active:text-blue-900">{{User.following}} Following</a>
-                </span>
-            </span>
-           <span onclick="ShowEditForm()" class="absolute right-4  w-auto  font-medium rounded-full text-sm  text-white bg-gray-800 hover:bg-slate-900 active:bg-slate-700 px-3 py-2  active:outline active:outline-1
+                        onclick="showimage()">
+                        <img src='/media/{{User.profileImg}}' alt="..." class=" ">
+                    </div>
+                    <div
+                        class="hidden image-box overflow-hidden absolute border-[1px] top-1/3 left-1/2 rounded-lg transform  -translate-y-3/4 -translate-x-1/2 w-[250px] lg:w-[300px]  lg:h-[300px] h-[250px]">
+                        <img src="/media/{{User.profileImg}}" alt="..">
+                    </div>
+                    <span class="">
+                        <h1 class="text-2xl font-semibold ">{{user.first_name}} {{user.last_name}}</h1>
+                        <span class="flex space-x-8 mt-2">
+                            <a href="{% url 'App:Followers Following'  user.username 'followers'  %}"
+                                class="text-[17px]   hover:text-blue-900  transition-transform active:scale-105 active:text-blue-900">{{User.followers}}
+                                Followers</a>
+                            <a href="{%  url 'App:Followers Following' user.username 'following'  %}"
+                                class="text-[17px]   hover:text-blue-900  transition-transform active:scale-105 active:text-blue-900">{{User.following}}
+                                Following</a>
+                        </span>
+                    </span>
+                    <span onclick="ShowEditForm()" class="absolute right-4  w-auto  font-medium rounded-full text-sm  text-white bg-gray-800 hover:bg-slate-900 active:bg-slate-700 px-3 py-2  active:outline active:outline-1
             "><i class="fa-solid fa-pen"></i></span>
-        </span>
-    </div>
+                </span>
+            </div>
         </div>
     </div>
     <div class="mt-6">
         <span class="w-full">
             <ul class="flex space-x-4 py-2 px-4">
-                <li id="profile_home" class="profile-link cursor-pointer underline underline-offset-[14px] hover:text-blue-950"
+                <li id="profile_home"
+                    class="profile-link cursor-pointer underline underline-offset-[14px] hover:text-blue-950"
                     onclick="changeLinkAppearence(this)">Home </li>
                 <li id="profile_about" class="profile-link cursor-pointer underline-offset-[14px] hover:text-blue-950"
                     onclick="changeLinkAppearence(this)">About </li>
@@ -47,15 +52,16 @@ Profile
         <hr class="mx-3 bg-gray-900 ">
         <!-- Home section -->
         <div class="Home-page py-3 px-2">
-            <div class="border-2 rounded-lg p-4 lg:text-xl text-lg font-semibold my-2 hover:bg-gray-300 active:bg-gray-300 cursor-pointer" onclick="showUsersPosts(this)">
+            <div class="border-2 rounded-lg p-4 lg:text-xl text-lg font-semibold my-2 hover:bg-gray-300 active:bg-gray-300 cursor-pointer"
+                onclick="showUsersPosts(this)">
                 Your Posts >></div>
-                <div class="Users-Posts-Container hidden">
+            <div class="Users-Posts-Container hidden">
                 {% if UsersPosts|length > 0 %}
                 {% for post in UsersPosts %}
                 <div id="MyPost{{post.id}}"
                     class="card border-gray-600 border-[1px] rounded-md shadow-md p-2 mt-2 min-h-[120px] xl:min-h-[130px]">
                     <div class="upper-part flex-col ">
-                        <a href="{% url 'App:Author Profile' post.author_id %}" class="author-name">
+                        <a href="{% url 'App:Profile' post.author_id %}" class="author-name">
                             <div class="flex items-center space-x-2">
                                 <div class="author-profile-image w-8 rounded-full h-8 overflow-hidden">
                                     <img src="/media/{{post.author.profileImg}}" class="" alt="">
@@ -74,9 +80,11 @@ Profile
                         <div class=" flex justify-between items-center">
                             <div
                                 class="flex flex-col text-wrap   {% if post.thImg != '' %} w-[80%] {% else %}w-auto {% endif %} ">
-                                <h1 id="title{{post.id}}" class="title font-semibold text-xl lg:text-2xl">{{post.title}}</h1>
+                                <h1 id="title{{post.id}}" class="title font-semibold text-xl lg:text-2xl">{{post.title}}
+                                </h1>
                                 <p class="blog-content">
-                                <div class="preview hidden text-lg lg:block">{{post.content|safe|truncatechars_html:150}}</div>
+                                <div class="preview hidden text-lg lg:block">
+                                    {{post.content|safe|truncatechars_html:150}}</div>
                                 </p>
                             </div>
                             {% if post.thImg != '' %}
@@ -131,16 +139,20 @@ Profile
                 </div>
                 {% endfor %}
                 {% else %}
-                <p class="text-center text-md lg:text-lg font-medium lg:font-semibold text-wrap">You didn't have any post yet !! </p>
+                <p class="text-center text-md lg:text-lg font-medium lg:font-semibold text-wrap">You didn't have any
+                    post yet !! </p>
                 <a href="{% url 'App:Create Post' %}"
-                    class="px-3 py-2 float-end m-2  xl:text-lg  text-sm rounded-md text-white bg-black hover:bg-slate-900 active:bg-slate-900">Create Post</a>
+                    class="px-3 py-2 float-end m-2  xl:text-lg  text-sm rounded-md text-white bg-black hover:bg-slate-900 active:bg-slate-900">Create
+                    Post</a>
                 {% endif %}
             </div>
             <a href="{% url 'App:Reading_list'  %}" class="">
-                <div class="border-2 rounded-lg p-4 clear-end lg:text-xl text-lg font-semibold mt-4 hover:bg-gray-300 active:bg-gray-300 cursor-pointer">Your
+                <div
+                    class="border-2 rounded-lg p-4 clear-end lg:text-xl text-lg font-semibold mt-4 hover:bg-gray-300 active:bg-gray-300 cursor-pointer">
+                    Your
                     Reading List >></div>
-                </div>
-            </a>
+        </div>
+        </a>
 
         <!-- About Section -->
         <div class="about-page hidden p-3">
@@ -285,7 +297,7 @@ Profile
     RemovePost = (post_id) => {
         {% if user.is_authenticated %}
         let ans = confirm("You want to delete this post permanently ");
-        if (ans){
+        if (ans) {
 
             $.ajax({
                 type: "Delete",

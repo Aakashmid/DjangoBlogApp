@@ -30,6 +30,7 @@
                         <p class="">{{AuthorF.Bio|truncatechars:80}}  </p>
                     </div>
                 </a>
+                {% if AuthorF.id != User.id %}
                 {% if AuthorF.id in request.session.FollowedAuthor %}
                 <button onclick="ChangeFollowers(this)"  id='follow{{AuthorF.id}}' class="px-3 py-2 bg-slate-800 text-white rounded-3xl text-sm lg:text-lg ">
                     Following
@@ -38,6 +39,7 @@
                 <button onclick="ChangeFollowers(this)"  id='follow{{AuthorF.id}}' class="px-3 py-2 bg-slate-800 text-white rounded-3xl text-sm lg:text-lg ">
                     Follow
                 </button>
+                {% endif %}
                 {% endif %}
             </div>
             {% endfor %}

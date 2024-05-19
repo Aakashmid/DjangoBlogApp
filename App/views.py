@@ -215,9 +215,10 @@ def Create_post(request):
             post.save()
         messages.success(request,"Blog is posted successfuly !!")
         return redirect('/')
-    categories=PostCategory.objects.all()
-    params={'Categories':categories}
-    return render(request,'App/createPost.html',params)
+    else :
+        categories=PostCategory.objects.all()
+        params={'Categories':categories}
+        return render(request,'App/createPost.html',params)
 
 def Read_post(request,id):
     post=Post.objects.get(id=id)
@@ -306,72 +307,14 @@ def post_comment(request):
 
  # this is for profile  for author profile  # we have pass the same name in parameters as we passed in url    
  # here user_id is bloguser object's id 
-def profile(request,user_id=None,text=None,username=None):
-    if username is not None:
-        # for current user profile
-        if not request.user.is_anonymous and  username==request.user.username:
-            bloguser=BlogUser.objects.get(user=request.user)
-            SavedPosts=[]
-            postIds=request.session['SavedPosts'] if 'SavedPosts' in request.session else []
-            if len(postIds)>0:
-                for id in postIds:
-                    try:
-                        SavedPosts.append(Post.objects.get(id=id))
-                    except Exception as e:
-                        request.session['SavedPosts'].remove(id)
-                        request.session.modified=True
-            CurrentUser=BlogUser.objects.get(user=request.user)
-            UsersPosts=Post.objects.filter(author=CurrentUser) if Post.objects.filter(author=CurrentUser).exists() else []
-            context={"User":bloguser,'saved_posts':SavedPosts,'UsersPosts':UsersPosts}
-            return render(request,'App/profile.html',context=context)
-        
-        # for author profile
-        elif User.objects.filter(username=username).exists():
-            user=User.objects.get(username=username)
-            bloguser=BlogUser.objects.get(user=user)
-            allPosts=Post.objects.filter(author=bloguser)
-            if not request.user.is_anonymous:
-                if AuthorFollower.objects.filter(follower=request.user,Author=bloguser).exists():
-                    userFollower=True
-                else:
-                    userFollower=False
-            else:
-                userFollower=False
-            # here Author is author of post
-            return render(request,'App/author.html',{"Author":bloguser,'Posts':allPosts,'userFollower':userFollower})
-            # return render(request,'App/author.html',{'Posts':allPosts})
-        else :
-            return redirect('/')
+def profile(request,text=None,username=None):
+    # whole view function has to update 
 
-
-
-# ---------have to modify ---------
-    # # if user_id is not None:
-    # if request.method=="POST":
-    #     post_id=request.POST.get('Post_id',None)  # for saving post in reading list
-    #     if post_id is not None:
-    #         # post_id=int(post_id)
-    #         if 'SavedPosts' in request.session:
-    #             if int(post_id) not in request.session['SavedPosts']:
-    #                 request.session['SavedPosts'].append(int(post_id))
-    #                 response=JsonResponse({'Result':'Post_saved'})
-    #                 request.session.modified=True
-    #                 return response
-    #             else:
-    #                 request.session['SavedPosts'].remove(int(post_id))
-    #                 request.session.modified=True
-    #                 response=JsonResponse({'Result':'Post_unsaved'})
-    #                 return response
-    #         else:
-    #             request.session['SavedPosts']=[int(post_id)]
-    #             request.session.modified=True
-    #             return JsonResponse({'Result':'Post_saved'})
-    #     else:
-    #         return HttpResponseRedirect(reverse('App:Author profile',args=(user_id,)))
 
     # For showing followers following  page
-    elif text is not None:
-        Author=BlogUser.objects.get(pk=user_id)
+    if username !=None and text !=None:
+        user=User.objects.get(username=username)
+        Author=BlogUser.objects.get(user=user)
         if text=='following':
             following=True
             follower=False
@@ -392,9 +335,12 @@ def profile(request,user_id=None,text=None,username=None):
                     AllUsers.append(follower)
         params={'following':following,'follower':follower,'Author':Author,'AllUsers':AllUsers}
         return render(request,'App/followersFollowings.html',params)
-
+    
+    # for liked post by users
     elif request.method=="POST":
+        print("Post id is none")
         post_id=request.POST.get('post_id')
+        print(f"Post id is {post_id}")
         post=Post.objects.get(id=post_id)
         if "LikedPosts" in request.session:
             if int(post_id) not in request.session['LikedPosts']:
@@ -448,6 +394,46 @@ def profile(request,user_id=None,text=None,username=None):
         print(request.session['FollowedAuthor'])
         return JsonResponse(params)
     
+    # for show profile page of user 
+    elif username is not None:
+        # for showing current user profile
+        if not request.user.is_anonymous and  username==request.user.username:
+            bloguser=BlogUser.objects.get(user=request.user)
+            SavedPosts=[]
+            postIds=request.session['SavedPosts'] if 'SavedPosts' in request.session else []
+            if len(postIds)>0:
+                for id in postIds:
+                    try:
+                        SavedPosts.append(Post.objects.get(id=id))
+                    except Exception as e:
+                        request.session['SavedPosts'].remove(id)
+                        request.session.modified=True
+            CurrentUser=BlogUser.objects.get(user=request.user)
+            UsersPosts=Post.objects.filter(author=CurrentUser) if Post.objects.filter(author=CurrentUser).exists() else []
+            context={"User":bloguser,'saved_posts':SavedPosts,'UsersPosts':UsersPosts}
+            return render(request,'App/profile.html',context=context)
+        
+        # for showing  author profile
+        elif User.objects.filter(username=username).exists():
+            user=User.objects.get(username=username)
+            bloguser=BlogUser.objects.get(user=user)
+            allPosts=Post.objects.filter(author=bloguser)
+            if not request.user.is_anonymous:
+                if AuthorFollower.objects.filter(follower=request.user,Author=bloguser).exists():
+                    userFollower=True
+                else:
+                    userFollower=False
+            else:
+                userFollower=False
+            # here Author is author of post
+            return render(request,'App/author.html',{"Author":bloguser,'Posts':allPosts,'userFollower':userFollower})
+            # return render(request,'App/author.html',{'Posts':allPosts})
+
+        else:
+            return redirect('/')
+    else:
+        return redirect('/')
+
 
     
 def Change_profile(request):
@@ -579,4 +565,4 @@ def SavePost(request):
             # return HttpResponseRedirect(reverse('App:Author profile',args=(,)))
             return HttpResponse('testingdslf')
     else:
-        return HttpResponse('testingdslf')
+        return redirect('/')

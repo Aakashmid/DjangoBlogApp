@@ -61,7 +61,7 @@
 <div class="container">
     <div class="">
         <div class="form">
-            <form action="/create-post/" class="p-3 flex-col space-y-3 lg:space-y-4 w-full" method="post"
+            <form action="{% url "App:Create Post"%}" class="p-3 flex-col space-y-3 lg:space-y-4 w-full" method="post"
                 enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="title">

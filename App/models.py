@@ -3,6 +3,7 @@ from django.shortcuts import render,redirect
 from django.contrib.auth.models import AbstractUser,User
 from datetime import datetime
 from django.utils import timezone
+from django.utils.text import slugify
 
 # Create your models here.
 
@@ -16,7 +17,7 @@ class Tag(models.Model):
         return self.name
 
 
-#  For profile of user 
+#  For profile of user (CustomUser)
 class BlogUser(models.Model):
     user=models.OneToOneField(User, verbose_name="user", on_delete=models.CASCADE)
     profileImg=models.ImageField("Profile Image", upload_to='App/profileimg/', default='profile.jpg')
@@ -38,7 +39,19 @@ class Post(models.Model):
     category=models.ForeignKey(PostCategory, verbose_name="Post_Categories", on_delete=models.SET_NULL,null=True,blank=True)
     tags=models.ManyToManyField(Tag, verbose_name="Post_Tags",blank=True)
     thImg=models.ImageField("Post Thumbnail", upload_to='App/thumbnail/', default='',blank=True ,null=True)
-    # slug=models.SlugField(default="", editable=False,null=False ,max_length=200)
+    # slug = models.SlugField(unique=True, max_length=200, blank=True)
+
+    # def save(self, *args, **kwargs):
+    #         if not self.slug:
+    #             self.slug = slugify(self.title)
+    #             original_slug = self.slug
+    #             queryset = Post.objects.all()
+    #             next_num = 1
+    #             while queryset.filter(slug=self.slug).exists():
+    #                 self.slug = f"{original_slug}-{next_num}"
+    #                 next_num += 1
+    #         super().save(*args, **kwargs)  # This is necessary to actually save the instance
+
     def __str__(self) -> str:
         return self.title
     # def save(self):

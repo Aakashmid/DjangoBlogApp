@@ -39,7 +39,7 @@
         {% for post in allPosts %}
         <div class="card border-gray-600 border-[1px] rounded-md shadow-md px-3 pt-2">
             <div class="upper-part flex-col   ">
-                <a href="{% url 'App:Author Profile' post.author_id %}" class="author-name ">
+                <a href="{% url 'App:Profile' post.author.user.username %}" class="author-name ">
                     <div class="flex items-center space-x-2">
                         <div class="author-profile-image w-8 rounded-full h-8 overflow-hidden">
                             <img src="/media/{{post.author.profileImg}}" class="" alt="">

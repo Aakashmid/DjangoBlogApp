@@ -15,10 +15,10 @@
                     <span class="Author-name font-semibold text-black text-2xl">{{Author.user.first_name}}
                         {{Author.user.last_name}}</span>
                     <span class="flex space-x-8 mt-2">
-                        <a href="{% url 'App:Followers Following'  'followers' Author.user.username Author.id %}"
+                        <a href="{% url 'App:Followers Following'   Author.user.username 'followers' %}"
                             class="text-[17px]   hover:text-blue-900  transition-transform active:scale-105 active:text-blue-900"><span
                                 id="follower_count">{{Author.followers}}</span> Followers</a>
-                        <a href="{%  url 'App:Followers Following' 'following' Author.user.username Author.id %}"
+                        <a href="{%  url 'App:Followers Following'  Author.user.username 'following' %}"
                             class="text-[17px]   hover:text-blue-900  transition-transform active:scale-105 active:text-blue-900">{{Author.following}}
                             Following</a>
                     </span><!-- Here user is author who's profile is viewing -->

@@ -42,7 +42,7 @@
                     {% if user.is_authenticated %}
                     <a id="Create_postBtn"
                         class="text-gray-800  font-medium hover:bg-gray-800 hover:text-white hover:border-white border-gray-700 border-[1px] rounded-md p-2"
-                        href="/create-post/" role="button">Create post</a>
+                        href="{% url "App:Create Post" %}" role="button">Create post</a>
                     {% else %}
                     <a id="signupBtn"
                         class="text-gray-800 font-medium hover:bg-gray-800 hover:text-white active:disabled: border-gray-700 border-[1px] rounded-md p-2"
@@ -72,6 +72,7 @@
         </div>
     </div>
     {% endfor %}
+    
     <div id="searchBar" class="searchBar lg:w-[60%] lg:ml-[18%] shadow-indigo-100 my-2 hidden  ">
         <form action="{% url 'App:Search Posts' %}" method="get" class="space-x-2 flex px-1">
             <input type="text" name="q" id="q"
@@ -105,7 +106,7 @@
                 <div class="w-20 h-20 outline outline-white rounded-full overflow-hidden">
                     <img src="/media/{{User.profileImg}}" class="" alt="">
                 </div>
-                <a href="{%url 'App:User Profile' user.username %}" class="flex flex-col items-center">
+                <a href="{%url 'App:Profile' user.username %}" class="flex flex-col items-center">
                     <!-- <p class="font-semibold text-lg">{{user.first_name}} {{user.last_name}}</p> -->
                     <p class="font-semibold text-lg">{{user.first_name}} {{user.last_name}} </p>
                     <p class="text-sm font-light">View profile</p>
@@ -119,7 +120,7 @@
         </div>
         <div class="flex flex-col space-y-2 px-6">
             {% if user.is_authenticated %}
-            <a href="/create-post/"
+            <a href="{% url 'App:Create Post' %}"
                 class="px-2 p-1 text-center hover:bg-gray-800 hover:text-white border-[1px] border-gray-900 rounded-md">Write
                 blog</a>
             <a href="/logout-user"
@@ -206,7 +207,7 @@
                         <div class="w-16 h-16 outline outline-white rounded-full overflow-hidden">
                             <img src="/media/{{User.profileImg}}" class="" alt="">
                         </div>
-                        <a href="{%url 'App:User Profile' user.username %}" class="">
+                        <a href="{%url 'App:Profile' user.username %}" class="">
                             <!-- <p class="font-semibold text-lg">{{user.first_name}} {{user.last_name}}</p> -->
                             <p class="font-semibold text-lg">{{user.first_name}} {{user.last_name}} </p>
                             <p class="text-sm">View profile</p>
@@ -327,15 +328,15 @@
             box_post.classList.toggle('translate-y-full');
         }
 
-        
+        // for like a post
         LikePost = (post_id) => {
             {% if user.is_authenticated %}
             $.ajax({
                 type: "Post",
-                url: "{% url 'App:User Profile' user.username %}",
+                url: "{% url 'App:Profile' user.username %}",
                 data: { 'post_id': post_id },
                 headers: {
-                    "X-CSRFToken": '{{ csrf_token }}'
+                    "X-CSRFToken": '{{ csrf_token }}' 
                 },
                 //here  data is response return by server 
                 success: function (data) {
@@ -366,13 +367,13 @@
 
 
         //change follower
-        function SenAjaxchangeFollower(element) {
+        function SenAjaxchangeFollower(element) { 
             let author_id = element.id.slice(6);
             console.log(author_id);
             followCount = document.getElementById('follow_count');
             $.ajax({
                 type: "Patch",
-                url: "{% url 'App:User Profile' user.username %}",
+                url: "{% url 'App:Follow Author' %}",
                 data: JSON.stringify({ "author_id": author_id }),
                 dataType: "json",
                 headers: {
@@ -401,6 +402,7 @@
                 }
             });
         }
+        
         function ChangeFollowers(followBtn) {
             {% if user.is_authenticated %}
             SenAjaxchangeFollower(followBtn);
