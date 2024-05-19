@@ -39,18 +39,18 @@ class Post(models.Model):
     category=models.ForeignKey(PostCategory, verbose_name="Post_Categories", on_delete=models.SET_NULL,null=True,blank=True)
     tags=models.ManyToManyField(Tag, verbose_name="Post_Tags",blank=True)
     thImg=models.ImageField("Post Thumbnail", upload_to='App/thumbnail/', default='',blank=True ,null=True)
-    # slug = models.SlugField(unique=True, max_length=200, blank=True)
+    slug = models.SlugField(unique=True, max_length=200, blank=True)
 
-    # def save(self, *args, **kwargs):
-    #         if not self.slug:
-    #             self.slug = slugify(self.title)
-    #             original_slug = self.slug
-    #             queryset = Post.objects.all()
-    #             next_num = 1
-    #             while queryset.filter(slug=self.slug).exists():
-    #                 self.slug = f"{original_slug}-{next_num}"
-    #                 next_num += 1
-    #         super().save(*args, **kwargs)  # This is necessary to actually save the instance
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+            original_slug = self.slug
+            queryset = Post.objects.all()
+            next_num = 1
+            while queryset.filter(slug=self.slug).exists():
+                self.slug = f"{original_slug}-{next_num}"
+                next_num += 1
+        super().save(*args, **kwargs)  # This is necessary to actually save the instance
 
     def __str__(self) -> str:
         return self.title

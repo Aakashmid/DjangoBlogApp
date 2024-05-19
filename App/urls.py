@@ -19,13 +19,17 @@ urlpatterns = [
     # Search and filter
     path('search/', views.SearchResult, name="Search Posts"),
     path('readinglist/', views.SearchResult, name="Reading_list"),
-    path('post-blogs/<str:filterOrder>/', views.SearchResult, name="Blogs filter"),
+
+    #-------------have to modify----------------
+    # path('post-blogs/<str:filterOrder>/', views.SearchResult, name="Blogs filter"),
     path('search/category/<str:category>/', views.SearchResult, name="Blogs By Category"),
     path('search/tag/<str:tagName>/', views.SearchResult, name="Blogs by tag"),
-    
+    # ----------------------------
+
     # Post-related
     path('new-post/', views.Create_post, name="Create Post"),
-    path('post-blogs/<int:id>/', views.Read_post, name="Blog Post"),
+    path('<str:author_username>/<str:slug>/', views.detail_post, name="Detail Post"),
+    # path('<str:author_username>/<str:slug>/', views.detail_post, name="Blog Post"),
     path('post-comment/', views.post_comment, name="Post Comment"),
     path('savepost/', views.SavePost, name='Save Post'),
     path('edit-post/post-id-<int:post_id>/', views.update_post, name="Update post"),

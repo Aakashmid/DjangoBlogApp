@@ -13,7 +13,7 @@
             </span>
             <div class="flex flex-col space-y-1">
                 <p class=" ">
-                    <span class="font-normal">By </span><a href="{% url 'App:Author Profile' post.author_id %}"
+                    <span class="font-normal">By </span><a href="{% url 'App:Profile' post.author_id %}"
                         class="text-blue-500 font-medium "> {{post.author.user.first_name}}
                         {{post.author.user.last_name}}</a>
                 </p>
@@ -191,7 +191,7 @@
             {% if postr.id != post.id %}
             <div
                 class="card flex  flex-col space-y-1 mt-2 outline outline-gray-400 rounded-lg py-2 px-3 outline-1 xl:w-9/12 xl:mx-auto">
-                <a href="{% url 'App:Author Profile' postr.author_id %}" class="author-name ">
+                <a href="{% url 'App:Profile' postr.author_id %}" class="author-name ">
                     <div class="flex items-center space-x-2">
                         <div class="author-profile-image w-8 rounded-full h-8 overflow-hidden">
                             <img src="/media/{{postr.author.profileImg}}" class="" alt="">
@@ -204,7 +204,7 @@
                         </span>
                     </div>
                 </a>
-                <a href="{% url 'App:Blog Post' postr.id %}" id="card_link" class="">
+                <a href="{% url 'App:Detail Post' postr.author.user.username postr.slug %}" id="card_link" class="">
                        <div class=" flex justify-between items-start space-x-2 py-2">
                     <div class="flex flex-col text-wrap {% if postr.thImg != '' %} flex-grow {% else %} {% endif %}">
                         <h1 id="title{{postr.id}}" class="title font-semibold text-lg lg:text-xl">{{postr.title}}
@@ -235,7 +235,7 @@
                         </span>
                         <span class="comment_span">
                             <span class="comment">{{ postr|get_comments|length }}</span>
-                            <a href="{% url 'App:Blog Post' postr.id %}" class=""><i class="fa-regular fa-comment "></i></a>
+                            <a href="{% url 'App:Detail Post' postr.author.user.username postr.slug %}" class=""><i class="fa-regular fa-comment "></i></a>
                         </span>
                     </span>
                     <span

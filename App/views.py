@@ -220,8 +220,7 @@ def Create_post(request):
         params={'Categories':categories}
         return render(request,'App/createPost.html',params)
 
-def Read_post(request,id):
-    post=Post.objects.get(id=id)
+def detail_post(request,slug=None,author_username=None):
     if request.method=="POST":
         action=request.POST.get('action')
         post=Post.objects.get(pk=id)
@@ -267,8 +266,9 @@ def Read_post(request,id):
         response = JsonResponse({'message': 'read count is alerdyincreased '})
         return response
 
-###  Fitler comments and replies of a post 
-    if post:
+    ###  Fitler comments and replies of a post 
+    if Post.objects.filter(slug=slug).exists():
+        post=Post.objects.get(slug=slug)
         comments=Comment.objects.filter(Q(parent=None) & Q(post=post))
         replies=Comment.objects.filter(post=post).exclude(parent=None)
         related_posts=Post.objects.filter(category=post.category)
