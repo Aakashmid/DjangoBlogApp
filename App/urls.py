@@ -9,8 +9,6 @@ app_name = 'App'
 urlpatterns = [
     # Home page
     path('', views.home, name="Home"),
-    path('', views.home, name="filter_posts"),
-    
     # Authentication
     path('sign-up/', views.Create_account, name="Create user"),
     path('login-user/', views.Login_hand, name="login_user"),
@@ -28,7 +26,7 @@ urlpatterns = [
 
     # Post-related
     path('new-post/', views.Create_post, name="Create Post"),
-    path('<str:author_username>/<str:slug>/', views.detail_post, name="Detail Post"),
+    path('<str:author_username>/post-<str:slug>/', views.detail_post, name="Detail Post"),
     # path('<str:author_username>/<str:slug>/', views.detail_post, name="Blog Post"),
     path('post-comment/', views.post_comment, name="Post Comment"),
     path('savepost/', views.SavePost, name='Save Post'),

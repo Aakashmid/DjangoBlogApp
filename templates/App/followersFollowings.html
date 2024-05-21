@@ -21,7 +21,7 @@
         <div class="flex flex-col space-y-3 items-start p-2 lg:p-1">
             {% for AuthorF in AllUsers %} <!--Here AuthorF means  followers or Followings of author-->
             <div class="follower-card flex space-x-4 items-start w-full justify-between">
-                <a href="{% url 'App:Author Profile' AuthorF.id %}" class="flex space-x-2">
+                <a href="{% url 'App:Profile' AuthorF.user.username %}" class="flex space-x-2">
                     <div class="w-10 h-10   overflow-hidden rounded-3xl ">
                         <img src="/media/{{AuthorF.profileImg}}" alt="" class="">
                     </div>

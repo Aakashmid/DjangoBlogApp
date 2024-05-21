@@ -22,11 +22,11 @@
             {% for filter in filters %}
             {% if activeFilter and activeFilter.name == filter.name %}
             <li class="filter-op px-3 py-1  border bg-gray-200 rounded-md text-nowrap" ><a
-                    href="{% url 'App:filter_posts' %} {% if activeFilter.name == 'All' %}{% else %}?filter={{activeFilter.name}}{%endif %}" id="{{activeFilter.name}}"
+                    href="{% url 'App:Home' %} {% if activeFilter.name == 'All' %}{% else %}?filter={{activeFilter.name}}{%endif %}" id="{{activeFilter.name}}"
                     class="text-lg">{{activeFilter.name}}</a></li>
             {% else %}
             <li class="filter-op px-3 py-1 bg-white border active:bg-gray-200 hover:font-medium rounded-md text-nowrap " ><a
-                    href="{% url 'App:filter_posts' %}{% if filter.name == 'All' %}{% else %}?filter={{filter.name}}{%endif %}"  id="{{filter.name}}"  class="text-lg">{{filter.name}}</a></li>
+                    href="{% url 'App:Home' %}{% if filter.name == 'All' %}{% else %}?filter={{filter.name}}{%endif %}"  id="{{filter.name}}"  class="text-lg">{{filter.name}}</a></li>
             {% endif %}
             {% endfor %}
         </ul>

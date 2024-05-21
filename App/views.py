@@ -285,7 +285,7 @@ def detail_post(request,slug=None,author_username=None):
             CommentsDict[comment]=BlogUser.objects.get(user=comment.user)
         return render(request,'App/postView.html',{"post":post,"CommentsDict":CommentsDict,'replies':replyDict,'Related_posts':related_posts})  #User is logged in user or current user
     else:
-        return redirect('/post-blogs/')
+        return redirect('/')
 
 def post_comment(request):
     if request.method=="GET":
@@ -312,7 +312,7 @@ def profile(request,text=None,username=None):
 
 
     # For showing followers following  page
-    if username !=None and text !=None:
+    if username is not None and  text is not None:
         user=User.objects.get(username=username)
         Author=BlogUser.objects.get(user=user)
         if text=='following':

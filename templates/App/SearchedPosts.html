@@ -20,7 +20,7 @@
             {% for post in readingListPosts %}
             <div class="card  flex flex-col  space-y-1  border-gray-800 rounded-md shadow-xl px-3 py-2 bg-gray-50">
                 <div class="upper-part flex-col   ">
-                    <a href="{% url 'App:Author Profile' post.author_id %}" class="author-name ">
+                    <a href="{% url 'App:Profile' post.author.user.username %}" class="author-name ">
                         <div class="flex items-center space-x-2">
                             <div class="author-profile-image w-8 rounded-full h-8 overflow-hidden">
                                 <img src="/media/{{post.author.profileImg}}" class="" alt="">
@@ -35,7 +35,7 @@
                     </a>
                 </div>
 
-                <a href="{% url 'App:Blog Post' post.id %}">
+                <a href="{% url 'App:Detail Post' post.author.user.username  post.slug %}">
                     <div class=" flex justify-between items-start space-x-2 py-2">
                         <div class="flex flex-col text-wrap {% if post.thImg != '' %} flex-grow {% else %} {% endif %}">
                             <h1 id="title{{post.id}}" class="title font-semibold text-lg lg:text-xl">{{post.title}}
@@ -66,7 +66,7 @@
                         </span>
                         <span class="comment_span">
                             <span class="comment">{{ post|get_comments|length }}</span>
-                            <a href="{% url 'App:Blog Post' post.id %}" class=""><i
+                            <a href="{% url 'App:Detail Post' post.author.user.username  post.slug %}" class=""><i
                                     class="fa-regular fa-comment "></i></a>
                         </span>
                     </span>
@@ -133,7 +133,7 @@
             {% for post in allPosts %}
             <div class="card  flex flex-col  space-y-1  border-gray-800 rounded-md shadow-xl px-3 py-2 bg-gray-50">
                 <div class="upper-part flex-col   ">
-                    <a href="{% url 'App:Author Profile' post.author_id %}" class="author-name ">
+                    <a href="{% url 'App:Profile' post.author.user.username %}" class="author-name ">
                         <div class="flex items-center space-x-2">
                             <div class="author-profile-image w-8 rounded-full h-8 overflow-hidden">
                                 <img src="/media/{{post.author.profileImg}}" class="" alt="">
@@ -148,7 +148,7 @@
                     </a>
                 </div>
 
-                <a href="{% url 'App:Blog Post' post.id %}">
+                <a href="{% url 'App:Detail Post' post.author.user.username  post.slug %}">
                     <div class=" flex justify-between items-start space-x-2 py-2">
                         <div class="flex flex-col text-wrap {% if post.thImg != '' %} flex-grow {% else %} {% endif %}">
                             <h1 id="title{{post.id}}" class="title font-semibold text-lg lg:text-xl">{{post.title}}
@@ -179,7 +179,7 @@
                         </span>
                         <span class="comment_span">
                             <span class="comment">{{ post|get_comments|length }}</span>
-                            <a href="{% url 'App:Blog Post' post.id %}" class=""><i
+                            <a href="{% url 'App:Detail Post' post.author.user.username  post.slug %}" class=""><i
                                     class="fa-regular fa-comment "></i></a>
                         </span>
                     </span>
