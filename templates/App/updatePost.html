@@ -21,49 +21,22 @@
             $('#blog_content').summernote({
                 height: 240,
                 width: '100%',
-                {% comment %} callbacks: {
-                    onInit: function(contents, context) {
-                        contents.find('img').each(function() {
-                            $(this).attr('style', 'max-width: 100%; height: auto; object-fit: contain; object-position: center;');
-                        });
-                    }
-                } {% endcomment %}
             });
         }
 
+        // $("#trigger_cat_dropdown").on("click", function () {
+        //     document.getElementById('Categories').classList.toggle('hidden');
+        // });
     });
 
-    function toggleDropDown() {
-        document.getElementById('Categories').classList.toggle('hidden');
-        let angle_icon=document.getElementsByClassName('angle-icon')[0];
-        if (angle_icon.innerHTML==='<i class="fa-solid fa-angle-down fa-sm" aria-hidden="true"></i>') {
-         angle_icon.innerHTML='<i class="fa-solid fa-angle-up fa-sm" ></i>';
-        }
-        else{
-            angle_icon.innerHTML='<i class="fa-solid fa-angle-down fa-sm" ></i>';
-        }
-        
-    }
-    function selectOption(event) {
-        var selectOption = event.target;
-        if (selectOption.tagName === 'LI') {
-            // var selectedValue = selectedOption.getAttribute('data-value');
-            // Update the hidden input with the selected value
-            document.getElementById('selectedOption').value = selectOption.innerText;
-            document.getElementById('selectedOp').innerText = selectOption.innerText;
-            // Close the dropdown after selecting an option
-            toggleDropDown();
-
-        }
-    }
 </script>
 
 {% endblock js %}
 
-{% block title %}Update Post{% endblock title %}
 {% block body %}
 <div class="container">
-    <h1 class="text-lg text-center font-semibold">Update post</h1>
+
+    <p class="text-center pt-4 text-xl font-medium">Update Post</p>
     <div class="">
         <div class="form">
             <form action="{% url 'App:Update post' post.id %}" class="p-3 flex-col space-y-3 lg:space-y-4 w-full" method="post"
@@ -72,50 +45,33 @@
                 <div class="title">
                     <label for="post_title" class="text-lg font-medium">Title</label>
                     <input type="text" name="post_title"
-                        class="text-lg w-full  border-[1px] rounded border-gray-600 p-1 outline-gray-300  outline-offset-2 outline-2"
-                        id="post_title" placeholder="Enter title of blog here..." value="{{post.title}}" required> 
+                        class="text-3xl w-full   border-[1px] rounded border-gray-600 p-1 outline-gray-300  outline-offset-2 outline-2"
+                        id="post_title" placeholder="Enter title of blog here..." value="{{post.title}}" required >
                 </div>
                 <div class="flex flex-col md:flex-row space-y-4 md:justify-between md:items-center">
-                    <span class="Category-dropDown flex space-x-2 relative">
-                        <span class="flex items-center space-x-4">
-                            <a class=" font-medium text-lg " id="trigger_cat_dropdown" onclick="toggleDropDown()"
-                                role="button">Select
-                                Category <span class="angle-icon mx-1"><i class="fa-solid fa-angle-down fa-sm"></i></span> </a>
-                            <p class="" id="selectedOp">{{post.category}}</p>
-                        </span>
-                        <ul id="Categories"
-                            class="hidden w-fit  absolute z-10 top-[30px] bg-gray-100 font-normal max-h-52 overflow-y-auto p-2 rounded-md"
-                            onclick="selectOption(event)">
-                            {% for cat in Categories %}
-                            <li class="cursor-pointer text-nowrap hover:bg-white active:bg-blue-200 px-1 text-lg"
-                                data-value="{{cat.name}}">
-                                {{cat.name}}</li>
-                            {% endfor %}
-                        </ul>
-                        <input name="category" type="hidden" id="selectedOption" {% if post.category is None %} value=""{%else%} value="{{post.category}}"{%endif%}>
-                    </span>
+
                     <!-- Tag selector -->
-                    <span class="flex space-x-3 items-center">
+                    <span class="flex flex-col items-start">
                         <p class="text-lg font-medium">Tags </p>
                         <input type="text" name="tags" id="tags"
                             class=" w-full lg:w-96 border-[1px] rounded border-gray-600 p-1 outline-gray-300  outline-offset-2 outline-1"
-                            placeholder="#tag_name #tag2_name #tag3_name....." value="{{post.tag}}">
+                            placeholder="#tag_name #tag2_name #tag3_name....." value="{% for tag in post.tags.all %}#{{tag.name}} {%endfor%}">
                     </span>
                 </div>
                 <div class="">
                     <label for="thumbnail" class="text-lg font-medium">Select Thumbnail (If Any) : </label>
-                    {% comment %} Incomplete  {% endcomment %}
-                    <input type="file" id="thumbnail" name="thumbnail"  accept="image/*" value="">
+                    <input type="file" id="thumbnail" name="thumbnail" accept="image/*" > <!-- if post thumbnail is  then assign value-->
                 </div>
-                <div class="no-tailwind-base">
-                    <textarea required name="blog_content" id="blog_content" class="">
-                        {{post.content}}
+
+                <!-- Write blog section -->
+                <div class="no-tailwind-base ">
+                    <textarea required name="blog_content" id="blog_content" class="" >
+                        {{post.content|safe}}
                     </textarea>
                 </div>
                 <div class="post-button">
                     <button type="submit"
-                        class="submit-post-button p-2 rounded bg-gray-900 hover:bg-gray-800 active:outline active:outline-gray-800 active:outline-2 text-white">Update Post</button>
-                    
+                        class="submit-post-button p-2 rounded bg-gray-700 hover:bg-gray-800 active:outline active:outline-gray-800 active:outline-2 text-white">Update</button>
                 </div>
             </form>
         </div>

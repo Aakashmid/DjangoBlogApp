@@ -26,7 +26,7 @@ def home(request):    #fname is filter name
     params={'allPosts':allposts,'filters':filters,'activeFilter':{'name':'All'}}
 
     # for filtering posts
-    filter=request.GET.get('filter','')
+    filter=request.GET.get('tag','')
     if filter:
         filteredPosts=[]
         if filter!='Following' and filter!='All' and filter!='Latest':
@@ -179,13 +179,8 @@ def Create_post(request):
     if request.method=="POST":
         title=request.POST.get('post_title')
         content=request.POST.get('blog_content')
-        cat=request.POST.get('category')
         Tags=request.POST.get('tags')
         thumImg=request.FILES.get('thumbnail')
-        if cat!="":
-            category=PostCategory.objects.get(name=cat)
-        else:
-            category=None   
 
         # Adding tags
         Tagnames=[]
@@ -208,7 +203,7 @@ def Create_post(request):
         author=BlogUser.objects.get(user=request.user)
         author.save()
         # Create post 
-        post=Post.objects.create(author=author,title=title,content=content,category=category)
+        post=Post.objects.create(author=author,title=title,content=content)
         post.tags.add(*Tags)
         if thumImg is not None:
             post.thImg=thumImg
@@ -305,8 +300,8 @@ def post_comment(request):
             messages.success(request," Reply posted successfully ")
         return redirect(f'/post-blogs/{post.id}/')
 
+ 
  # this is for profile  for author profile  # we have pass the same name in parameters as we passed in url    
- # here user_id is bloguser object's id 
 def profile(request,text=None,username=None):
     # whole view function has to update 
 
@@ -336,11 +331,9 @@ def profile(request,text=None,username=None):
         params={'following':following,'follower':follower,'Author':Author,'AllUsers':AllUsers}
         return render(request,'App/followersFollowings.html',params)
     
-    # for liked post by users
+    # for liked post by users (have to resolve error related to likecount -1)
     elif request.method=="POST":
-        print("Post id is none")
         post_id=request.POST.get('post_id')
-        print(f"Post id is {post_id}")
         post=Post.objects.get(id=post_id)
         if "LikedPosts" in request.session:
             if int(post_id) not in request.session['LikedPosts']:
@@ -470,12 +463,13 @@ def Change_profile(request):
             messages.success(request,"Changed profile successfully !!")
             return HttpResponseRedirect(reverse('App:User Profile',args=(request.user.username,)))
 
-def update_post(request,post_id=None):
-    if post_id is not None:
+def update_post(request,slug=None):
+    if slug is not None and Post.objects.get(slug=slug).author.user==request.user:
         # for delete post
         if request.method=="DELETE":
-            post=get_object_or_404(Post,id=post_id)
+            post=get_object_or_404(Post,slug=slug)
             print(f'Post id is {post.id}')
+            post_id=post.id
             post.delete()
             if post_id in request.session['LikedPosts'] :
                 request.session['LikedPosts'].remove(post_id) 
@@ -486,16 +480,11 @@ def update_post(request,post_id=None):
         
         # for update post
         elif request.method=="POST":
-            post=Post.objects.get(id=post_id)
+            post=Post.objects.get(slug=slug)
             title=request.POST.get('post_title')
             content=request.POST.get('blog_content')
-            cat=request.POST.get('category')
             Tags=request.POST.get('tags')
             thumImg=request.FILES.get('thumbnail')
-            if cat !="":
-                category=PostCategory.objects.get(name=cat)
-            else:
-                category=None   
 
             # Collecting  tags
             Tagnames=[]
@@ -519,19 +508,19 @@ def update_post(request,post_id=None):
             # post=Post.objects.create(author=author,title=title,content=content,category=category)
             post.title=title
             post.content=content
-            post.category=category
             post.tags.add(*Tags)
             post.save()
             if thumImg is not None:
                 post.thImg=thumImg
-                post.save()
+            post.save()
             messages.success(request,'Updated post successully ')
-            return HttpResponseRedirect(reverse('App:Update post',args=(post_id,)))
-        post=Post.objects.get(id=post_id)
-        categories=PostCategory.objects.all()
-        params={'post':post,'Categories':categories}
+            return HttpResponseRedirect(reverse('App:Update post',args=(post.slug,)))
+        post=Post.objects.get(slug=slug)
+        params={'post':post}
         return render(request,'App/updatePost.html',params)
-
+    # when post.slug is wrong or another user is trying to access another user's post
+    else:
+        return redirect('/')
 # function for serailize session data
 def serialize_session(session):
     serialized_data = {}

@@ -24,14 +24,15 @@ urlpatterns = [
     path('search/tag/<str:tagName>/', views.SearchResult, name="Blogs by tag"),
     # ----------------------------
 
-    # Post-related
-    path('new-post/', views.Create_post, name="Create Post"),
-    path('<str:author_username>/post-<str:slug>/', views.detail_post, name="Detail Post"),
     # path('<str:author_username>/<str:slug>/', views.detail_post, name="Blog Post"),
     path('post-comment/', views.post_comment, name="Post Comment"),
     path('savepost/', views.SavePost, name='Save Post'),
-    path('edit-post/post-id-<int:post_id>/', views.update_post, name="Update post"),
+    path('edit-post/post-<str:slug>/', views.update_post, name="Update post"),
     
+    # Post-related
+    path('<str:author_username>/post-<str:slug>/', views.detail_post, name="Detail Post"),
+    path('new-post/', views.Create_post, name="Create Post"),
+
     # Profile and settings
     path('settings/', views.Change_profile, name="Profile Change"),
     path('follow-author/', views.profile, name="Follow Author"),
