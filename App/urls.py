@@ -27,6 +27,7 @@ urlpatterns = [
     # path('<str:author_username>/<str:slug>/', views.detail_post, name="Blog Post"),
     path('post-comment/', views.post_comment, name="Post Comment"),
     path('savepost/', views.SavePost, name='Save Post'),
+    path('delete-post/post-<int:post_id>/', views.update_post, name="delete post"),
     path('edit-post/post-<str:slug>/', views.update_post, name="Update post"),
     
     # Post-related

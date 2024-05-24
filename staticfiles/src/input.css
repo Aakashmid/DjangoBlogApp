@@ -19,8 +19,19 @@
         padding: revert;
         list-style: revert;
     }
-
     .no-scrollbar::-webkit-scrollbar{
         display: none;
     }
+    .no-scrollbar::-moz-scrollbar{
+        display: none;
+    }
+    * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+    }
+
+}
+
+@layer components{
 }

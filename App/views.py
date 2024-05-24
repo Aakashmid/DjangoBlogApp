@@ -463,23 +463,10 @@ def Change_profile(request):
             messages.success(request,"Changed profile successfully !!")
             return HttpResponseRedirect(reverse('App:User Profile',args=(request.user.username,)))
 
-def update_post(request,slug=None):
+def update_post(request,slug=None,post_id=None):
     if slug is not None and Post.objects.get(slug=slug).author.user==request.user:
-        # for delete post
-        if request.method=="DELETE":
-            post=get_object_or_404(Post,slug=slug)
-            print(f'Post id is {post.id}')
-            post_id=post.id
-            post.delete()
-            if post_id in request.session['LikedPosts'] :
-                request.session['LikedPosts'].remove(post_id) 
-            if post_id in request.session['SavedPosts'] :
-                request.session['SavedPosts'].remove(post_id) 
-            print(request.session)
-            return JsonResponse({'Message':"Deleted post"})
-        
         # for update post
-        elif request.method=="POST":
+        if request.method=="POST":
             post=Post.objects.get(slug=slug)
             title=request.POST.get('post_title')
             content=request.POST.get('blog_content')
@@ -518,7 +505,19 @@ def update_post(request,slug=None):
         post=Post.objects.get(slug=slug)
         params={'post':post}
         return render(request,'App/updatePost.html',params)
-    # when post.slug is wrong or another user is trying to access another user's post
+        # when post.slug is wrong or another user is trying to access another user's post
+
+    # for delete post
+    elif post_id is not None and request.method=="DELETE" :
+        post=get_object_or_404(Post,id=post_id)
+        post.delete()
+        if post_id in request.session['LikedPosts'] :
+            request.session['LikedPosts'].remove(post_id) 
+        if post_id in request.session['SavedPosts'] :
+            request.session['SavedPosts'].remove(post_id) 
+        print(request.session)
+        return JsonResponse({'Message':"Deleted post"})
+    
     else:
         return redirect('/')
 # function for serailize session data

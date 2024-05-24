@@ -18,7 +18,7 @@
         {% if readingListPosts|length > 0 %}
         <div class="flex flex-col space-y-2">
             {% for post in readingListPosts %}
-            <div class="card  flex flex-col  space-y-1  border-gray-800 rounded-md shadow-xl px-3 py-2 bg-gray-50">
+            <div class="card border-gray-600 border-[1px] rounded-md shadow-md px-3 pt-2">
                 <div class="upper-part flex-col   ">
                     <a href="{% url 'App:Profile' post.author.user.username %}" class="author-name ">
                         <div class="flex items-center space-x-2">
@@ -34,8 +34,8 @@
                         </div>
                     </a>
                 </div>
-
-                <a href="{% url 'App:Detail Post' post.author.user.username  post.slug %}">
+    
+                <a href="{% url 'App:Detail Post' post.author.user.username post.slug %}">
                     <div class=" flex justify-between items-start space-x-2 py-2">
                         <div class="flex flex-col text-wrap {% if post.thImg != '' %} flex-grow {% else %} {% endif %}">
                             <h1 id="title{{post.id}}" class="title font-semibold text-lg lg:text-xl">{{post.title}}
@@ -66,8 +66,7 @@
                         </span>
                         <span class="comment_span">
                             <span class="comment">{{ post|get_comments|length }}</span>
-                            <a href="{% url 'App:Detail Post' post.author.user.username  post.slug %}" class=""><i
-                                    class="fa-regular fa-comment "></i></a>
+                            <a href="{% url 'App:Detail Post' post.author.user.username post.slug %}" class=""><i class="fa-regular fa-comment "></i></a>
                         </span>
                     </span>
                     <span class="flex space-x-6 items-center mx-3 relative">
@@ -85,7 +84,7 @@
                             <ul class="flex flex-col items-start w-fit space-y-1">
                                 {% if post.author == User%}
                                 <li class=" hover:bg-slate-200 active:bg-slate-300 px-1 rounded text-nowrap">
-                                    <a href="{% url 'App:Update post' post.id %}" class="">Update post</a>
+                                    <a href="{% url 'App:Update post' post.slug %}" class="">Update post</a>
                                 </li>
                                 {% else %}
                                 <li class="px-1 hover:bg-gray-200" id="follow_op{{post.id}}">
@@ -101,7 +100,7 @@
                             </ul>
                         </span>
                     </span>
-
+    
                 </div>
             </div>
             <hr class="my-1 bg-gray-800">
@@ -131,7 +130,7 @@
     <div class="blogs mt-4 clear-left w-full">
         <div id="testid" class=" flex flex-col space-y-2">
             {% for post in allPosts %}
-            <div class="card  flex flex-col  space-y-1  border-gray-800 rounded-md shadow-xl px-3 py-2 bg-gray-50">
+            <div class="card border-gray-600 border-[1px] rounded-md shadow-md px-3 pt-2">
                 <div class="upper-part flex-col   ">
                     <a href="{% url 'App:Profile' post.author.user.username %}" class="author-name ">
                         <div class="flex items-center space-x-2">
@@ -147,8 +146,8 @@
                         </div>
                     </a>
                 </div>
-
-                <a href="{% url 'App:Detail Post' post.author.user.username  post.slug %}">
+    
+                <a href="{% url 'App:Detail Post' post.author.user.username post.slug %}">
                     <div class=" flex justify-between items-start space-x-2 py-2">
                         <div class="flex flex-col text-wrap {% if post.thImg != '' %} flex-grow {% else %} {% endif %}">
                             <h1 id="title{{post.id}}" class="title font-semibold text-lg lg:text-xl">{{post.title}}
@@ -179,8 +178,7 @@
                         </span>
                         <span class="comment_span">
                             <span class="comment">{{ post|get_comments|length }}</span>
-                            <a href="{% url 'App:Detail Post' post.author.user.username  post.slug %}" class=""><i
-                                    class="fa-regular fa-comment "></i></a>
+                            <a href="{% url 'App:Detail Post' post.author.user.username post.slug %}" class=""><i class="fa-regular fa-comment "></i></a>
                         </span>
                     </span>
                     <span class="flex space-x-6 items-center mx-3 relative">
@@ -198,7 +196,7 @@
                             <ul class="flex flex-col items-start w-fit space-y-1">
                                 {% if post.author == User%}
                                 <li class=" hover:bg-slate-200 active:bg-slate-300 px-1 rounded text-nowrap">
-                                    <a href="{% url 'App:Update post' post.id %}" class="">Update post</a>
+                                    <a href="{% url 'App:Update post' post.slug %}" class="">Update post</a>
                                 </li>
                                 {% else %}
                                 <li class="px-1 hover:bg-gray-200" id="follow_op{{post.id}}">
@@ -214,7 +212,7 @@
                             </ul>
                         </span>
                     </span>
-
+    
                 </div>
             </div>
             <hr class="my-1 bg-gray-800">
