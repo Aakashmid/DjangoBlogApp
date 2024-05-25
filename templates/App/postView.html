@@ -4,8 +4,8 @@
 {% load extraFilter %}
 {% block body %}
 
-<div class="container pt-2 ">
-    <div class="main-body p-2 flex-col space-y-3 max-w-full">
+<div class="container pt-2 lg:px-3 px-2 ">
+    <div class="main-body flex-col space-y-3 max-w-full">
         <h1 class="font-bold text-2xl">{{post.title}}</h1>
         <div class="post-header flex space-x-2 items-center">
             <span class="w-14 h-14 rounded-full overflow-hidden  ">
@@ -65,19 +65,19 @@
             {{post.content|safe}}
         </div>
     </div>
-    <div class="p-2 ">
-        <h3 class="font-semibold flex space-x-3">
-            <a role="button" class="cursor-pointer" id="comment_btn">
+    <div class="pt-3">
+        <h3 class="font-semibold">
+            <a role="button" class="cursor-pointer " id="comment_btn">
                 Comments({{CommentsDict|length}}) <i class="fa-regular fa-comment"></i>
             </a>
         </h3>
-        <div id="comment-block" class="hidden">
-            <!-- Comment input -->
+        <div id="comment-block" class="hidden py-2">
+            <!-- Comment form -->
             <div class="comment-input flex space-x-3">
                 <span class="w-10 h-10 overflow-hidden rounded-full ">
                     <img src="/media/{{User.profileImg}}" alt="">
                 </span>
-                <form action="/post-comment"  method="get" class="py-2  w-full">
+                <form action="{%url 'App:comment-reply' %}"  method="post" class="py-2  w-full">
                     {% csrf_token %}
                     <input type="hidden" name="postSno" value="{{post.id}}">
                     <input type="hidden" name="parentSno" value="">
@@ -91,8 +91,8 @@
                 </form>
             </div>
 
-            <!-- Comments  -->
-            <div class="All-comments flex flex-col space-y-2  px-2 mt-2">
+            <!-- all Comments message  -->
+            <div class="All-comments flex flex-col space-y-2  mt-2">
                 {% for comment,commentAuthor in CommentsDict.items %}
                 <div class="">
                     <div class="flex space-x-2 ">
@@ -125,8 +125,8 @@
                                 {% endif %}
                             </p>
                             <div class="reply-section hidden " id="replyForm{{comment.sno}}">
-                                <!-- Reply input -->
-                                <form action="/post-comment" method="get" class="">
+         <!-- Reply form  -->
+                                <form action="{% url 'App:comment-reply' %}" method="post" class="">
                                     {% csrf_token %}
                                     <input type="hidden" name="postSno" value="{{post.id}}">
                                     <input type="hidden" name="parentSno" value="{{comment.sno}}">
@@ -181,10 +181,10 @@
             </div>
         </div>
     </div>
-    <hr class="mt-2 mb-3 bg-gray-600   w-auto mx-2">
+    <hr class="my-3 bg-gray-600   w-auto ">
 
     {%if Related_posts%}
-    <div class="related-post-container p-2">
+    <div class="related-post-container ">
         <h3 class="font-semibod text-xl p-2">Related posts :</h3>
         <div class="posts pt-4">
             {% for postr in Related_posts %}

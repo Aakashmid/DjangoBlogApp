@@ -282,11 +282,11 @@ def detail_post(request,slug=None,author_username=None):
     else:
         return redirect('/')
 
-def post_comment(request):
-    if request.method=="GET":
-        postSno=request.GET.get('postSno')
-        parentSno=request.GET.get('parentSno')
-        comment_text=request.GET.get('comment')
+def CommentReplyHandler(request):
+    if request.method=="POST":
+        postSno=request.POST.get('postSno')
+        parentSno=request.POST.get('parentSno')
+        comment_text=request.POST.get('comment')
         user=request.user
         post=Post.objects.get(id=postSno)
         if parentSno=="":
@@ -298,14 +298,13 @@ def post_comment(request):
             comment=Comment(user=user,post=post,comment_text=comment_text,parent=parent)
             comment.save()
             messages.success(request," Reply posted successfully ")
-        return redirect(f'/post-blogs/{post.id}/')
-
+        return HttpResponseRedirect(reverse('App:Detail Post',args=(post.author.user.username,post.slug,)))
+    else:
+        # next_url=request.GET.get('')
+        return redirect('/')
  
  # this is for profile  for author profile  # we have pass the same name in parameters as we passed in url    
 def profile(request,text=None,username=None):
-    # whole view function has to update 
-
-
     # For showing followers following  page
     if username is not None and  text is not None:
         user=User.objects.get(username=username)
