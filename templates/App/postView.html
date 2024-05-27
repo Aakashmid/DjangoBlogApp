@@ -65,13 +65,15 @@
             {{post.content|safe}}
         </div>
     </div>
-    <div class="pt-3">
+    
+    <!-- Comment section -->
+    <div class="pt-3 ">
         <h3 class="font-semibold">
             <a role="button" class="cursor-pointer " id="comment_btn">
                 Comments({{CommentsDict|length}}) <i class="fa-regular fa-comment"></i>
             </a>
         </h3>
-        <div id="comment-block" class="hidden py-2">
+        <div id="comment_block" class=" py-2 hidden">
             <!-- Comment form -->
             <div class="comment-input flex space-x-3">
                 <span class="w-10 h-10 overflow-hidden rounded-full ">
@@ -92,7 +94,7 @@
             </div>
 
             <!-- all Comments message  -->
-            <div class="All-comments flex flex-col space-y-2  mt-2">
+            <div class="All-comments flex flex-col space-y-2  mt-2 ">
                 {% for comment,commentAuthor in CommentsDict.items %}
                 <div class="">
                     <div class="flex space-x-2 ">
@@ -111,7 +113,7 @@
                                     <span id="like_Count{{comment.sno}}" class="like-Count">
                                         {{comment.like}}
                                     </span>
-                                    <span onclick="changeLikeState(this)" id="comment_like{{comment.sno}}"
+                                    <span onclick="ChangeCommentLikes(this)" id="comment_like{{comment.sno}}"
                                         class="like text-[14px] cursor-pointer">
                                         <i class="fa-regular fa-thumbs-up "></i>
                                     </span>
@@ -185,7 +187,7 @@
 
     {%if Related_posts%}
     <div class="related-post-container ">
-        <h3 class="font-semibod text-xl p-2">Related posts :</h3>
+        <h3 class="font-semibod font-bold text-xl p-2">Read Next </h3>
         <div class="posts pt-4">
             {% for postr in Related_posts %}
             {% if postr.id != post.id %}
@@ -294,16 +296,16 @@
     $(document).ready(function () {
         let commnent_btn = document.querySelector('#comment_btn');
         commnent_btn.addEventListener('click', function () {
-            let comment_block = document.getElementById("comment-block");
-            if (comment_block.classList.contains('hidden')) {
-                comment_block.classList.remove('hidden');
-                comment_block.classList.add('block');
-            }
-            else if (comment_block.classList.contains('block')) {
-                comment_block.classList.remove('block');
-                comment_block.classList.add('hidden');
-            }
+            let comment_block = document.getElementById("comment_block");
+            // if (comment_block.classList.contains('hidden')) {
+            comment_block.classList.toggle('hidden');
+            // }
+            // else if (comment_block.classList.contains('block')) {
+            //     comment_block.classList.remove('block');
+            //     comment_block.classList.add('hidden');
+            // }
         })
+
         // Onclick reply button
         let reply_btns = document.getElementsByClassName('reply-button');
         for (let index = 0; index < reply_btns.length; index++) {

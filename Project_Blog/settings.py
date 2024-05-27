@@ -126,7 +126,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 #### Added manually   ####
-STATIC_ROOT=BASE_DIR /'staticfiles'
 if DEBUG:
     STATICFILES_DIRS=[
     BASE_DIR /'static'
@@ -152,9 +151,10 @@ SESSION_COOKIE_AGE = 3600
 ### Settings configuration for production
 
 if not DEBUG:  # checking whether debug is false or true
+    STATIC_ROOT=BASE_DIR /'staticfiles'
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
     SECRET_KEY=os.environ.get('SECRET_KEY')
     # Compress and cache static files for production
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
     # Replace the SQLite DATABASES configuration with PostgreSQL:
     DB_URL=os.environ.get('DATABASE_URL')
     DATABASES = {

@@ -71,7 +71,7 @@ class Comment(models.Model):
     # isLiked=models.BooleanField(default=False)
 
     def __str__(self) -> str:
-        return self.comment_text + "...  by   "+ self.user.username
+        return f"{self.sno}"+" - "+ self.comment_text + "...  by   "+ self.user.username
     
 #store which user like which post
 class PostLike(models.Model):
