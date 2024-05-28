@@ -27,7 +27,7 @@
                 <span id="postlike_count{{post.id}}" class="like-count">
                     {{post.like}}
                 </span>
-                <span  class="like like-icon">
+                <span class="like like-icon">
                     <a role="button" class="" onclick="LikePost({{post.id}})" id="LikePostLink{{post.id}}">
                         {% if post.id in request.session.LikedPosts %}
                         <i id="LikePost{{post.id}}" class="fa-solid fa-heart fa-lg " style="color: #f7022b;"></i>
@@ -65,7 +65,7 @@
             {{post.content|safe}}
         </div>
     </div>
-    
+
     <!-- Comment section -->
     <div class="pt-3 ">
         <h3 class="font-semibold">
@@ -79,7 +79,7 @@
                 <span class="w-10 h-10 overflow-hidden rounded-full ">
                     <img src="/media/{{User.profileImg}}" alt="">
                 </span>
-                <form action="{%url 'App:comment-reply' %}"  method="post" class="py-2  w-full">
+                <form action="{%url 'App:comment-reply' %}" method="post" class="py-2  w-full">
                     {% csrf_token %}
                     <input type="hidden" name="postSno" value="{{post.id}}">
                     <input type="hidden" name="parentSno" value="">
@@ -88,7 +88,9 @@
                             class="p-1 rounded  border-[1px] border-gray-600 focus:outline focus:outline-blue-200 outline-2 outline-offset-1"
                             type="text" name="comment" id="comment" placeholder="Enter your comment here..." required>
                         <button
-                            class="p-1 bg-blue-400 active:bg-white active:text-black active:outline-blue-500 outline-1 outline text-gray-100 rounded  w-[25%]" {% if not user.is_authenticated%} onclick="showLogin()"   type="button"{% else %} type="submit" {% endif %}>Comment</button>
+                            class="p-1 bg-blue-400 active:bg-white active:text-black active:outline-blue-500 outline-1 outline text-gray-100 rounded  w-[25%]"
+                            {% if not user.is_authenticated%} onclick="showLogin()" type="button" {% else %}
+                            type="submit" {% endif %}>Comment</button>
                     </div>
                 </form>
             </div>
@@ -110,12 +112,16 @@
                             <p class="text-[17px] font-normal">{{comment.comment_text}}</p>
                             <p class="flex space-x-5">
                                 <span class="flex space-x-1">
-                                    <span id="like_Count{{comment.sno}}" class="like-Count">
+                                    <span id="CommentLikeCount{{comment.sno}}" class="like-Count">
                                         {{comment.like}}
                                     </span>
                                     <span onclick="ChangeCommentLikes(this)" id="comment_like{{comment.sno}}"
                                         class="like text-[14px] cursor-pointer">
+                                        {% if comment.sno in request.session.likedComments %}
+                                        <i class="fa-solid fa-thumbs-up "></i>
+                                        {% else %}
                                         <i class="fa-regular fa-thumbs-up "></i>
+                                        {% endif %}
                                     </span>
                                 </span>
                                 {% if replies|get_replies:comment.sno|length > 0 %}
@@ -127,7 +133,7 @@
                                 {% endif %}
                             </p>
                             <div class="reply-section hidden " id="replyForm{{comment.sno}}">
-         <!-- Reply form  -->
+                                <!-- Reply form  -->
                                 <form action="{% url 'App:comment-reply' %}" method="post" class="">
                                     {% csrf_token %}
                                     <input type="hidden" name="postSno" value="{{post.id}}">
@@ -145,7 +151,8 @@
                                         <div class="flex mt-2  space-x-2 w-full justify-end">
                                             <button id="cancel{{comment.sno}}" type="button"
                                                 class="cancel-reply hover:bg-gray-300  active:bg-blue-500 active:text-white py-1 px-3 text-[15px] rounded-2xl">Cancel</button>
-                                            <button {% if not user.is_authenticated%} onclick="showLogin()"   type="button"{% else %} type="submit" {% endif %}
+                                            <button {% if not user.is_authenticated%} onclick="showLogin()"
+                                                type="button" {% else %} type="submit" {% endif %}
                                                 class="py-1 px-3 bg-blue-500 text-[15px]   rounded-2xl text-white  ">
                                                 Reply
                                             </button>
@@ -207,21 +214,22 @@
                     </div>
                 </a>
                 <a href="{% url 'App:Detail Post' postr.author.user.username postr.slug %}" id="card_link" class="">
-                       <div class=" flex justify-between items-start space-x-2 py-2">
-                    <div class="flex flex-col text-wrap {% if postr.thImg != '' %} flex-grow {% else %} {% endif %}">
-                        <h1 id="title{{postr.id}}" class="title font-semibold text-lg lg:text-xl">{{postr.title}}
-                        </h1>
-                        <p class="blog-content">
-                        <div class="preview hidden text-lg lg:block">{{postr.content|safe|truncatechars_html:150}}
+                    <div class=" flex justify-between items-start space-x-2 py-2">
+                        <div
+                            class="flex flex-col text-wrap {% if postr.thImg != '' %} flex-grow {% else %} {% endif %}">
+                            <h1 id="title{{postr.id}}" class="title font-semibold text-lg lg:text-xl">{{postr.title}}
+                            </h1>
+                            <p class="blog-content">
+                            <div class="preview hidden text-lg lg:block">{{postr.content|safe|truncatechars_html:150}}
+                            </div>
+                            </p>
                         </div>
-                        </p>
+                        {% if postr.thImg != '' %}
+                        <div class="w-14 h-14 lg:w-28 lg:h-24  overflow-hidden rounded-md flex-shrink-0 ">
+                            <img src="/media/{{postr.thImg}}" alt="">
+                        </div>
+                        {% endif %}
                     </div>
-                    {% if postr.thImg != '' %}
-                    <div class="w-14 h-14 lg:w-28 lg:h-24  overflow-hidden rounded-md flex-shrink-0 ">
-                        <img src="/media/{{postr.thImg}}" alt="">
-                    </div>
-                    {% endif %}
-                </div>
                 </a>
                 <div class="footer-part flex items-center justify-between  py-1">
                     <span class="flex space-x-4 items-center ">
@@ -237,7 +245,8 @@
                         </span>
                         <span class="comment_span">
                             <span class="comment">{{ postr|get_comments|length }}</span>
-                            <a href="{% url 'App:Detail Post' postr.author.user.username postr.slug %}" class=""><i class="fa-regular fa-comment "></i></a>
+                            <a href="{% url 'App:Detail Post' postr.author.user.username postr.slug %}" class=""><i
+                                    class="fa-regular fa-comment "></i></a>
                         </span>
                     </span>
                     <span
@@ -254,27 +263,27 @@
                             {% endif %}
                         </a>
                         <a role="button" class="three-dots cursor-pointer" id="options{{postr.id}}"
-                        onclick="OptionPopover(this)"><i class="fa-solid fa-ellipsis fa-lg"></i></a>
-                    <span id="Option_box{{postr.id}}"
-                        class="absolute z bg-white right-0 top-6 hidden p-1 border-gray-500 border rounded ">
-                        <ul class="flex flex-col items-start w-fit space-y-1">
-                            {% if postr.author == User%}
-                            <li class=" hover:bg-slate-200 active:bg-slate-300 px-1 rounded text-nowrap">
-                                <a href="{% url 'App:Update post' postr.id %}" class="">Update post</a>
-                            </li>
-                            {% else %}
-                            <li class="px-1 hover:bg-gray-200" id="follow_op{{postr.id}}">
-                                {% if postr.author_id in request.session.FollowedAuthor %}
-                                <a onclick="ChangeFollowers(this)" id="follow{{postr.author_id}}"
-                                    class="cursor-pointer">Following</a>
+                            onclick="OptionPopover(this)"><i class="fa-solid fa-ellipsis fa-lg"></i></a>
+                        <span id="Option_box{{postr.id}}"
+                            class="absolute z bg-white right-0 top-6 hidden p-1 border-gray-500 border rounded ">
+                            <ul class="flex flex-col items-start w-fit space-y-1">
+                                {% if postr.author == User%}
+                                <li class=" hover:bg-slate-200 active:bg-slate-300 px-1 rounded text-nowrap">
+                                    <a href="{% url 'App:Update post' postr.id %}" class="">Update post</a>
+                                </li>
                                 {% else %}
-                                <a onclick="ChangeFollowers(this)" id="follow{{postr.author_id}}"
-                                    class="cursor-pointer">Follow</a>
+                                <li class="px-1 hover:bg-gray-200" id="follow_op{{postr.id}}">
+                                    {% if postr.author_id in request.session.FollowedAuthor %}
+                                    <a onclick="ChangeFollowers(this)" id="follow{{postr.author_id}}"
+                                        class="cursor-pointer">Following</a>
+                                    {% else %}
+                                    <a onclick="ChangeFollowers(this)" id="follow{{postr.author_id}}"
+                                        class="cursor-pointer">Follow</a>
+                                    {% endif %}
+                                </li>
                                 {% endif %}
-                            </li>
-                            {% endif %}
-                        </ul>
-                    </span>
+                            </ul>
+                        </span>
                     </span>
 
                 </div>
@@ -297,13 +306,8 @@
         let commnent_btn = document.querySelector('#comment_btn');
         commnent_btn.addEventListener('click', function () {
             let comment_block = document.getElementById("comment_block");
-            // if (comment_block.classList.contains('hidden')) {
             comment_block.classList.toggle('hidden');
-            // }
-            // else if (comment_block.classList.contains('block')) {
-            //     comment_block.classList.remove('block');
-            //     comment_block.classList.add('hidden');
-            // }
+
         })
 
         // Onclick reply button
@@ -348,17 +352,16 @@
 
         }
 
+
         // funtion to increase readcount if user stay for while
 
+        // have to modify change view count on page after successful
         {% if user.is_authenticated %}
         setTimeout(readIncrease, 120000);
         function readIncrease() {
             $.ajax({
                 type: "PATCH",
-                url: "/post-blogs/{{post.id}}/",
-                headers: {
-                    "X-CSRFToken": '{{ csrf_token }}'
-                },
+                url: "{% url 'App:Detail Post' post.author.user.username post.slug %}",
                 success: function (data) {
                 },
                 error: function (error) {
@@ -367,7 +370,35 @@
             });
         }
         {% endif %}
+
     });
+
+    ChangeCommentLikes = (element) => {
+        let commentSno = element.id.slice(12);
+        {% if user.is_authenticated %}
+        $.ajax({
+            type: "post",
+            url: "{% url 'App:Detail Post' post.author.user.username post.slug%}",
+            data: JSON.stringify({ "comment_sno": commentSno }),
+            dataType: "json",
+            success: function (response) {
+                document.getElementById('CommentLikeCount' + commentSno).innerText = response.likeCount;
+                if (response.status == 'liked') {
+                    element.innerHTML = '<i class="fa-solid fa-thumbs-up "></i>';
+                }
+                else if(response.status=='unliked') {
+                    element.innerHTML = '<i class="fa-regular fa-thumbs-up "></i>';
+                }
+            },
+            error: function (error) {
+                console.log("ERROR :", error);
+            }
+        });
+        {% else %}
+        showLogin();
+        {% endif %}
+
+    }
 
 </script>
 {% endblock js %}

@@ -13,6 +13,9 @@ from django.core.paginator import Paginator
 from django.contrib import sessions
 import json
 from django.http import QueryDict
+from django.views.decorators.csrf import csrf_exempt
+
+
 # Create your views here.
 def home(request):    #fname is filter name
     filters=[{'name':'All'},{'name':'Latest'},{'name':'Following'}] if 'FollowedAuthor' in request.session and len(request.session['FollowedAuthor']) > 0 else [{'name':'All'},{'name':'Latest'}]
@@ -215,51 +218,50 @@ def Create_post(request):
         params={'Categories':categories}
         return render(request,'App/createPost.html',params)
 
+@csrf_exempt
 def detail_post(request,slug=None,author_username=None):
-    if request.method=="POST":
-        action=request.POST.get('action')
-        post=Post.objects.get(pk=id)
-        # Liked post login goes here
 
-        #If click like button of comment
-        if action=='CommentlikeIncrease':
-            comment_sno=int(request.POST.get('commentNo'))
+    # for change like count of a comment on post
+    if request.method=="POST":
+        try:
+            likedComments= request.session['likedComments'] if 'likedComments' in request.session  else []
+            data=json.loads(request.body)
+            comment_sno=int(data.get('comment_sno')) 
             comment=Comment.objects.get(sno=comment_sno)
-            if not CommentLike.objects.filter(user=request.user,comment=comment).exists():
+            if CommentLike.objects.filter(comment=comment,user=request.user).exists():
+                CommentLike.objects.get(comment=comment,user=request.user).delete()
+                comment.like-=1
+                comment.save()
+                if comment_sno in  likedComments:
+                    likedComments.remove(comment_sno)
+                response_context={'likeCount':comment.like,'status':'unliked'}
+            else:
+                CommentLike.objects.create(comment=comment,user=request.user)
                 comment.like+=1
                 comment.save()
-                # Create object like and save it ,that keep detailw which user liked  comment
-                Like=CommentLike.objects.create(user=request.user,comment=comment)
-                Like.save()
-                response=JsonResponse({'likeCount':comment.like})
-                return response
-            else:
-                response=JsonResponse({'likeCount':comment.like})
-                return response
+                if comment_sno not in likedComments:
+                    likedComments.append(comment_sno)
+                response_context={'likeCount':comment.like,'status':'liked'}
 
-        elif action=='CommentlikeDecrease': # Decrease like count
-                comment_sno=int(request.POST.get('commentNo'))
-                comment=Comment.objects.get(sno=comment_sno)
-                if CommentLike.objects.filter(user=request.user,comment=comment).exists():
-                    comment.like-=1
-                    comment.save()
-                    CommentLike.objects.get(user=request.user,comment=comment).delete()
-                    response=JsonResponse({'likeCount':comment.like})
-                    return response
-                response=JsonResponse({'likeCount':comment.like})
-                return response
+            request.session['likedComments']=likedComments
+            request.session.modified=True
+            return JsonResponse(response_context)
+        except Exception as e:
+             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+
+
 
     # for increase readcount when user visit blog for sometime check also user is new or old
-    if request.method=="PATCH":    
-        if not PostReadedUser.objects.filter(user=request.user,post=post).exists():
-            post.read_count+=1
-            post.save()
-            reader=PostReadedUser.objects.create(user=request.user,post=post)
-            reader.save()
-            response = JsonResponse({'message': 'post read count is increased successfully'})
-            return response  
-        response = JsonResponse({'message': 'read count is alerdyincreased '})
-        return response
+    # if request.method=="PATCH":    
+    #     if not PostReadedUser.objects.filter(user=request.user,post=post).exists():
+    #         post.read_count+=1
+    #         post.save()
+    #         reader=PostReadedUser.objects.create(user=request.user,post=post)
+    #         reader.save()
+    #         response = JsonResponse({'message': 'post read count is increased successfully'})
+    #         return response  
+    #     response = JsonResponse({'message': 'read count is alerdyincreased '})
+    #     return response
 
     ###  Fitler comments and replies of a post 
     if Post.objects.filter(slug=slug).exists():
