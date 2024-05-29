@@ -245,26 +245,13 @@ def detail_post(request,slug=None,author_username=None):
 
             request.session['likedComments']=likedComments
             request.session.modified=True
+            print(request.session.items())
             return JsonResponse(response_context)
         except Exception as e:
              return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
-
-
-    # for increase readcount when user visit blog for sometime check also user is new or old
-    # if request.method=="PATCH":    
-    #     if not PostReadedUser.objects.filter(user=request.user,post=post).exists():
-    #         post.read_count+=1
-    #         post.save()
-    #         reader=PostReadedUser.objects.create(user=request.user,post=post)
-    #         reader.save()
-    #         response = JsonResponse({'message': 'post read count is increased successfully'})
-    #         return response  
-    #     response = JsonResponse({'message': 'read count is alerdyincreased '})
-    #     return response
-
     ###  Fitler comments and replies of a post 
-    if Post.objects.filter(slug=slug).exists():
+    elif Post.objects.filter(slug=slug).exists():
         post=Post.objects.get(slug=slug)
         comments=Comment.objects.filter(Q(parent=None) & Q(post=post))
         replies=Comment.objects.filter(post=post).exclude(parent=None)
@@ -332,36 +319,41 @@ def profile(request,text=None,username=None):
         params={'following':following,'follower':follower,'Author':Author,'AllUsers':AllUsers}
         return render(request,'App/followersFollowings.html',params)
     
-    # for liked post by users (have to resolve error related to likecount -1)
+    # for liked post 
     elif request.method=="POST":
-        post_id=request.POST.get('post_id')
-        post=Post.objects.get(id=post_id)
-        if "LikedPosts" in request.session:
-            if int(post_id) not in request.session['LikedPosts']:
-                request.session['LikedPosts'].append(int(post_id))
-                request.session.modified=True
-                # PostLike.objects.create(post=post,user=request.user)
-                post.like+=1
-                post.save()
-                return JsonResponse({'Success':"Successfull","like_count":post.like})
-            else:
-                request.session.modified=True
-                request.session['LikedPosts'].remove(int(post_id))
+        try:
+            likedPosts= request.session['likedPosts'] if 'likedPosts' in request.session  else []
+            data=json.loads(request.body)
+            post_id=int(data['post_id']) 
+            # get post of that id
+            post=Post.objects.get(id=post_id)
+            if PostLike.objects.filter(post=post,user=request.user).exists():
+                PostLike.objects.get(post=post, user=request.user).delete()
                 post.like-=1
                 post.save()
-                return JsonResponse({'Success':"Successfull ","like_count":post.like})
-        else:
-            request.session['LikedPosts']=[int(post_id)]
+                if post_id in likedPosts:
+                    likedPosts.remove(post_id)
+                response_context={'likeCount':post.like,'status':'unliked'}
+            else:
+                PostLike.objects.create(post=post,user=request.user)
+                post.like+=1
+                post.save()
+                if post_id not in likedPosts:
+                    likedPosts.append(post_id)
+                response_context={'likeCount':post.like,'status':'liked'}
+            request.session['likedPosts']=likedPosts
             request.session.modified=True
-            post.like+=1
-            return JsonResponse({'Success':"Successfull ","like_count":post.like})
+            return JsonResponse(response_context)
+        except Exception as e:
+             print(e)
+             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
     # for follow a author or unfollow 
     elif request.method=="PATCH": 
         data=json.loads(request.body)  # get author_userid of author   
         if 'FollowedAuthor' not in request.session : 
             request.session['FollowedAuthor']=[]
-        author_id=data['author_id']
+        author_id=int(data['author_id'])
         print(author_id)
         Author=BlogUser.objects.get(pk=author_id)
         follower=BlogUser.objects.get(user=request.user)  # follower user bloguser object
@@ -372,8 +364,8 @@ def profile(request,text=None,username=None):
             follower.following-=1
             Author.save()
             follower.save()
-            if int(author_id) in request.session['FollowedAuthor']:
-                request.session['FollowedAuthor'].remove(int(author_id))
+            if author_id in request.session['FollowedAuthor']:
+                request.session['FollowedAuthor'].remove(author_id)
                 request.session.modified=True
             params={'btnText':'Follow','follower_count':Author.followers}
         else:
@@ -382,7 +374,7 @@ def profile(request,text=None,username=None):
             follower.following+=1
             Author.save()
             follower.save()
-            request.session['FollowedAuthor'].append(int(author_id))
+            request.session['FollowedAuthor'].append(author_id)
             request.session.modified=True
             params={'btnText':'Following','follower_count':Author.followers}
         print(request.session['FollowedAuthor'])
@@ -512,8 +504,8 @@ def update_post(request,slug=None,post_id=None):
     elif post_id is not None and request.method=="DELETE" :
         post=get_object_or_404(Post,id=post_id)
         post.delete()
-        if post_id in request.session['LikedPosts'] :
-            request.session['LikedPosts'].remove(post_id) 
+        if post_id in request.session['likedPosts'] :
+            request.session['likedPosts'].remove(post_id) 
         if post_id in request.session['SavedPosts'] :
             request.session['SavedPosts'].remove(post_id) 
         print(request.session)

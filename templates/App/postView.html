@@ -29,7 +29,7 @@
                 </span>
                 <span class="like like-icon">
                     <a role="button" class="" onclick="LikePost({{post.id}})" id="LikePostLink{{post.id}}">
-                        {% if post.id in request.session.LikedPosts %}
+                        {% if post.id in request.session.likedPosts %}
                         <i id="LikePost{{post.id}}" class="fa-solid fa-heart fa-lg " style="color: #f7022b;"></i>
                         {% else %}
                         <i id="LikePost{{post.id}}" class="fa-regular fa-heart fa-lg" style="color: #f7022b;"></i>
@@ -38,8 +38,6 @@
                 </span>
             </span>
             <span class="">{{CommentsDict|length}} <i class="fa-regular fa-comment fa-lg"></i></span>
-            <span class="">{{post.read_count}} <span class="text-gray-600"><i
-                        class="fa-regular fa-eye fa-lg"></i></span></span>
             <span class="">
                 <a role="button" class="bookmark" onclick="SavePost(this)" id="Save_post{{post.id}}">
                     {% if post.id in request.session.SavedPosts %}
@@ -236,7 +234,7 @@
                         <span class="like_span">
                             <span id="postlike_count{{postr.id}}" class="like-count">{{postr.like}}</span>
                             <a role="button" class="" onclick="LikePost({{postr.id}})" id="LikePostLink{{postr.id}}">
-                                {% if postr.id in request.session.LikedPosts %}
+                                {% if postr.id in request.session.likedPosts %}
                                 <i id="LikePost{{postr.id}}" class="fa-solid fa-thumbs-up text-md lg:text-lg"></i>
                                 {% else %}
                                 <i id="LikePost{{postr.id}}" class="fa-regular fa-thumbs-up text-md lg:text-lg"></i>
@@ -351,25 +349,6 @@
             })
 
         }
-
-
-        // funtion to increase readcount if user stay for while
-
-        // have to modify change view count on page after successful
-        {% if user.is_authenticated %}
-        setTimeout(readIncrease, 120000);
-        function readIncrease() {
-            $.ajax({
-                type: "PATCH",
-                url: "{% url 'App:Detail Post' post.author.user.username post.slug %}",
-                success: function (data) {
-                },
-                error: function (error) {
-                    console.log("Error:", error);
-                }
-            });
-        }
-        {% endif %}
 
     });
 

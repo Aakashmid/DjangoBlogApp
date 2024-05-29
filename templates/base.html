@@ -332,27 +332,24 @@
         LikePost = (post_id) => {
             {% if user.is_authenticated %}
             $.ajax({
-                type: "Post",
+                type: "post",
                 url: "{% url 'App:Profile' user.username %}",
-                data: { 'post_id': post_id },
+                data:JSON.stringify({ 'post_id': post_id }),
+                dataType: "json",
                 headers: {
                     "X-CSRFToken": '{{ csrf_token }}' 
                 },
                 //here  data is response return by server 
-                success: function (data) {
-                    if (document.getElementById("postlike_count" + post_id)) {
-                        document.getElementById("postlike_count" + post_id).innerText = data.like_count;
+                success: function (response) {
+                    if(response.status=='liked'){
+                        document.getElementById('LikePost'+post_id).classList.toggle('fa-regular');
+                        document.getElementById('LikePost'+post_id).classList.toggle('fa-solid');
                     }
-                    let Icon = document.getElementById("LikePost" + post_id);
-                    if (Icon.classList.contains('fa-regular')) {
-                        Icon.classList.remove('fa-regular');
-                        Icon.classList.add('fa-solid');
+                    else if(response.status=="unliked"){
+                        document.getElementById('LikePost'+post_id).classList.toggle('fa-solid');
+                        document.getElementById('LikePost'+post_id).classList.toggle('fa-regular');
                     }
-                    else {
-                        Icon.classList.remove('fa-solid');
-                        Icon.classList.add('fa-regular');
-                    }
-                    document.getElementById('LikePostLink' + post_id).innerHTML = Icon.outerHTML;
+                    document.getElementById('postlike_count'+post_id).innerText=response.likeCount;
 
                 },
                 //here error is error return by the url 
