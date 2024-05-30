@@ -196,6 +196,7 @@
 
     <div class="main-container lg:flex w-full h-full ">
         <!-- navigation for larger screen -->
+
         <div class="z-0 side-navigation-bar lg:fixed top-14  hidden lg:block w-[18%]  h-full ">
             <div id="navigation_bar" class=" bg-gray-200 px-2  z-30 w-auto h-full scroll-auto ">
                 <div class=" flex justify-between items-center px-4 py-2">
@@ -208,7 +209,7 @@
                             <img src="/media/{{User.profileImg}}" class="" alt="">
                         </div>
                         <a href="{%url 'App:Profile' user.username %}" class="">
-                            <!-- <p class="font-semibold text-lg">{{user.first_name}} {{user.last_name}}</p> -->
+
                             <p class="font-semibold text-lg">{{user.first_name}} {{user.last_name}} </p>
                             <p class="text-sm">View profile</p>
                         </a>
@@ -221,7 +222,7 @@
                 </div>
                 <div class="flex flex-col space-y-2 px-4">
                     {% if user.is_authenticated %}
-                    <a href="/create-post/"
+                    <a href="{% url 'App:Create Post'%}"
                         class="px-2 p-1 text-center hover:bg-gray-800 hover:text-white border-[1px] border-gray-900 rounded-md">Write
                         blog</a>
                     <a href="/logout-user"
@@ -235,20 +236,20 @@
                     {% endif %}
                 </div>
                 <hr class="my-3 border-t-[1px] border-gray-800 ">
-                <div class="flex flex-col mt-4">
+                <div  class="flex flex-col mt-4 navigation">
 
                     <a href="/" class="">
-                        <div class="p-1 hover:bg-blue-100   text-lg font-normal rounded-sm flex items-center"><span
+                        <div class="px-2 py-1 hover:bg-gray-50   text-lg font-normal rounded-md flex items-center"><span
                                 class="text-gray-700 mr-4"><i class="fa-solid fa-house fa-sm"></i></span> Home</div>
                     </a>
                     {% if user.is_authenticated %}
                     <a href="{% url 'App:Reading_list'  %}" class="">
-                        <div class="p-1 hover:bg-blue-100 text-lg font-normal  rounded-sm flex items-center"><span
+                        <div class="px-2 py-1 hover:bg-gray-50 text-lg font-normal  rounded-md flex items-center"><span
                                 class="text-gray-700 mr-4"><i class="fa-solid fa-book"></i></span> Library </div>
                     </a>
                     {% endif %}
                     <a href="#" class="">
-                        <div class="p-1 hover:bg-blue-100  text-lg font-normal rounded-sm flex items-center"><span
+                        <div class="px-2 py-1 hover:bg-gray-50  text-lg font-normal rounded-md flex items-center"><span
                                 class="text-gray-700 mr-4"><i class="fa-solid fa-circle-info"></i></span>About</div>
                     </a>
 
