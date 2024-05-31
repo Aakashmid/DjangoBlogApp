@@ -34,6 +34,16 @@
                 </div>
             </a>
             <div class="flex items-center space-x-1">
+                <!-- searchbar -->
+                <div id="searchBar" class="searchBar fixed lg:w-[50%] left-1/2 -translate-x-1/2 w-full  shadow-indigo-100  hidden  ">
+                    <form action="{% url 'App:Search Posts' %}" method="get" class="space-x-2 flex px-1">
+                        <input type="text" name="q" id="q"
+                            class="w-full p-[7px]  bg-gray-50  focus:outline-[2px] shadow-md  focus:outline-blue-200 focus:outline border-[1px] border-gray-500 rounded outline-offset-1"
+                            placeholder="Search..." required>
+                        <button type="submit"
+                            class="hover:bg-blue-900 hover:text-white shadow-sm bg-white text-black rounded text-sm p-[7px] border-[1px] border-gray-500">Search</button>
+                    </form>
+                </div>
                 <a role="button" class="search p-1  rounded-sm" onclick="searchBar_Show()">
                     <span class="text-black p-1 hover:text-gray-600 cursor-pointer"><i
                             class="fa-solid fa-magnifying-glass fa-xl"></i></span>
@@ -61,7 +71,7 @@
     </header>
     <span id="close_modals" class="w-full h-[100%] fixed top-0 bg-black opacity-30 hidden"></span>
     {% for Message in messages %}
-    <div id="alert" class="p-1 block z-10 fixed  top-14 w-full  ">
+    <div id="alert" class="p-1 block z-10 fixed  top-15 w-1/2 -left-1/2 ">
         <div
             class="Dismissable-alert  rounded-md  p-2 mx-auto w-full lg:w-9/12 {% if Message.tags == 'error' %}bg-red-200 opacity-75 {% elif  Message.tags == 'success' %}bg-blue-300 {% endif %}  border   w-full flex justify-between items-center">
             <p
@@ -73,15 +83,6 @@
     </div>
     {% endfor %}
     
-    <div id="searchBar" class="searchBar lg:w-[60%] lg:ml-[18%] shadow-indigo-100 my-2 hidden  ">
-        <form action="{% url 'App:Search Posts' %}" method="get" class="space-x-2 flex px-1">
-            <input type="text" name="q" id="q"
-                class="w-full p-[7px]  bg-gray-50  focus:outline-[2px] shadow-md  focus:outline-blue-200 focus:outline border-[1px] border-gray-500 rounded outline-offset-1"
-                placeholder="Search..." required>
-            <button type="submit"
-                class="hover:bg-blue-900 hover:text-white shadow-sm bg-white text-black rounded text-sm p-[7px] border-[1px] border-gray-500">Search</button>
-        </form>
-    </div>
 
     <!-- popover saved post -->
     <span
@@ -92,7 +93,7 @@
 
     <!-- navigation bar  -->
     <div id="navigation_bar"
-        class="lg:hidden transform translate-x-full  duration-200 fixed right-0 top-0 bg-gray-100 px-2  z-30 w-[72%]  h-full scroll-auto ">
+        class="lg:hidden transform translate-x-full  duration-200 fixed right-0 top-0 bg-gray-100 px-2  z-30 w-[72%] sm:w-1/2  h-full scroll-auto ">
         <div class=" flex justify-between items-center px-1 py-2">
             <span class="">
                 <p class="font-semibold text-lg text-black ml-3 items-center">BlogBlend</p>
@@ -194,14 +195,10 @@
         </div>
     </div>
 
-    <div class="main-container lg:flex w-full h-full ">
-        <!-- navigation for larger screen -->
-
-        <div class="z-0 side-navigation-bar lg:fixed top-14  hidden lg:block w-[18%]  h-full ">
-            <div id="navigation_bar" class=" bg-gray-200 px-2  z-30 w-auto h-full scroll-auto ">
-                <div class=" flex justify-between items-center px-4 py-2">
-                    <p class="font-bold text-lg text-black p-2">BlogBlend</p>
-                </div>
+    <div class="main-container lg:flex ">
+        <!-- navigation for larger screen -->    
+        <div class="z-0 side-navigation-bar lg:fixed top-15   hidden lg:block xl:w-[20%] xl:left-[5%] lg:left-2 lg:w-[23%] h-full ">
+            <div id="navigation_bar" class=" bg-gray-100 px-2  z-30 w-auto h-full scroll-auto rounded-lg">
                 <div class=" mb-6 px-4 py-2">
                     {% if user.is_authenticated %}
                     <div class="p-2 mx-auto flex flex-col justify-start space-y-1">
@@ -239,26 +236,34 @@
                 <div  class="flex flex-col mt-4 navigation">
 
                     <a href="/" class="">
-                        <div class="px-2 py-1 hover:bg-gray-50   text-lg font-normal rounded-md flex items-center"><span
+                        <div class="px-2 py-1 hover:bg-white   text-lg font-normal rounded-md flex items-center"><span
                                 class="text-gray-700 mr-4"><i class="fa-solid fa-house fa-sm"></i></span> Home</div>
                     </a>
                     {% if user.is_authenticated %}
                     <a href="{% url 'App:Reading_list'  %}" class="">
-                        <div class="px-2 py-1 hover:bg-gray-50 text-lg font-normal  rounded-md flex items-center"><span
+                        <div class="px-2 py-1 hover:bg-white text-lg font-normal  rounded-md flex items-center"><span
                                 class="text-gray-700 mr-4"><i class="fa-solid fa-book"></i></span> Library </div>
                     </a>
                     {% endif %}
                     <a href="#" class="">
-                        <div class="px-2 py-1 hover:bg-gray-50  text-lg font-normal rounded-md flex items-center"><span
+                        <div class="px-2 py-1 hover:bg-white  text-lg font-normal rounded-md flex items-center"><span
                                 class="text-gray-700 mr-4"><i class="fa-solid fa-circle-info"></i></span>About</div>
                     </a>
 
                 </div>
             </div>
         </div>
-        <div class="base-body lg:w-[60%] lg:ml-[18%]">
+    
+        <!-- main body -->
+        <div class="base-body lg:w-[50%] md:w-[80%] sm:w-[95%] w-full  mx-auto ">
             {% block body %}
             {% endblock body %}
+        </div>
+
+        <!-- left side content -->
+        <div class="hidden lg:block fixed w-[25%] right-0 h-full ">
+            {% block rightcontent %}
+            {% endblock rightcontent %}
         </div>
     </div>
     {% block js %}
