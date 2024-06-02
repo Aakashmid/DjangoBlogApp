@@ -162,5 +162,5 @@ if not DEBUG:  # checking whether debug is false or true
     'default': dj_database_url.parse(DB_URL)
     }
 
-    if os.environ.get('ALLOWED_HOSTS'):
-        ALLOWED_HOSTS+=os.environ.get('ALLOWED_HOSTS').split(',')
+    # if os.environ.get('ALLOWED_HOSTS'):
+    #     ALLOWED_HOSTS+=os.environ.get('ALLOWED_HOSTS').split(',')
