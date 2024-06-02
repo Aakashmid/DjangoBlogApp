@@ -19,7 +19,7 @@ DEBUG=False if os.environ.get('DEBUG') else True
 
 APPEND_SLASH = True
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['blogblend.onrender.com' ,'127.0.0.1']
 
 
 # Application definitions
