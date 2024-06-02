@@ -130,6 +130,7 @@ if DEBUG:
     STATICFILES_DIRS=[
     BASE_DIR /'static'
     ]
+    WHITENOISE_AUTOFRESH=True
 
 
 MEDIA_ROOT=os.path.join(BASE_DIR,'media')
@@ -160,4 +161,6 @@ if not DEBUG:  # checking whether debug is false or true
     DATABASES = {
     'default': dj_database_url.parse(DB_URL)
     }
-    ALLOWED_HOSTS+=os.environ.get('ALLOWED_HOSTS').split(',')
+
+    if os.environ.get('ALLOWED_HOSTS'):
+        ALLOWED_HOSTS+=os.environ.get('ALLOWED_HOSTS').split(',')

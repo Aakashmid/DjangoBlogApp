@@ -444,7 +444,9 @@ video {
   display: none;
 }
 
-.no-tailwind-base,.no-tailwind-base *,.no-tailwind-base > *{
+.no-tailwind-base,
+    .no-tailwind-base *,
+    .no-tailwind-base>* {
   font-size: revert;
   font-weight: revert;
   margin: revert;
@@ -460,11 +462,21 @@ video {
   list-style: revert;
 }
 
-.no-scrollbar::-webkit-scrollbar{
+/* CSS to make images responsive */
+
+.no-tailwind-base img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.no-scrollbar::-webkit-scrollbar {
   display: none;
 }
 
-.no-scrollbar::-moz-scrollbar{
+.no-scrollbar::-moz-scrollbar {
   display: none;
 }
 
@@ -624,6 +636,10 @@ video {
   position: relative;
 }
 
+.-left-1\/2 {
+  left: -50%;
+}
+
 .-left-\[28px\] {
   left: -28px;
 }
@@ -636,10 +652,6 @@ video {
   left: 50%;
 }
 
-.left-\[5\%\] {
-  left: 5%;
-}
-
 .right-0 {
   right: 0px;
 }
@@ -650,10 +662,6 @@ video {
 
 .top-0 {
   top: 0px;
-}
-
-.top-14 {
-  top: 3.5rem;
 }
 
 .top-16 {
@@ -678,10 +686,6 @@ video {
 
 .top-\[80px\] {
   top: 80px;
-}
-
-.-left-1\/2 {
-  left: -50%;
 }
 
 .z-0 {
@@ -874,6 +878,10 @@ video {
   min-height: 3rem;
 }
 
+.w-1\/2 {
+  width: 50%;
+}
+
 .w-10 {
   width: 2.5rem;
 }
@@ -922,10 +930,6 @@ video {
   width: 18px;
 }
 
-.w-\[20\%\] {
-  width: 20%;
-}
-
 .w-\[25\%\] {
   width: 25%;
 }
@@ -957,10 +961,6 @@ video {
 
 .w-full {
   width: 100%;
-}
-
-.w-1\/2 {
-  width: 50%;
 }
 
 .max-w-full {
@@ -1178,6 +1178,11 @@ video {
   border-radius: 0.125rem;
 }
 
+.rounded-b-lg {
+  border-bottom-right-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+}
+
 .border {
   border-width: 1px;
 }
@@ -1311,11 +1316,6 @@ video {
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
-}
-
-.bg-gray-500 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(107 114 128 / var(--tw-bg-opacity));
 }
 
 .p-1 {
@@ -1578,11 +1578,6 @@ video {
   --tw-shadow: var(--tw-shadow-colored);
 }
 
-.shadow-indigo-100 {
-  --tw-shadow-color: #e0e7ff;
-  --tw-shadow: var(--tw-shadow-colored);
-}
-
 .shadow-white {
   --tw-shadow-color: #fff;
   --tw-shadow: var(--tw-shadow-colored);
@@ -1628,6 +1623,10 @@ video {
   outline-color: #9ca3af;
 }
 
+.outline-gray-500 {
+  outline-color: #6b7280;
+}
+
 .outline-white {
   outline-color: #fff;
 }
@@ -1671,11 +1670,6 @@ video {
 .hover\:bg-blue-800:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(30 64 175 / var(--tw-bg-opacity));
-}
-
-.hover\:bg-blue-900:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(30 58 138 / var(--tw-bg-opacity));
 }
 
 .hover\:bg-gray-100:hover {
@@ -1769,10 +1763,6 @@ video {
   outline-width: 2px;
 }
 
-.focus\:outline-\[2px\]:focus {
-  outline-width: 2px;
-}
-
 .focus\:outline-blue-200:focus {
   outline-color: #bfdbfe;
 }
@@ -1787,6 +1777,10 @@ video {
 
 .focus\:outline-gray-700:focus {
   outline-color: #374151;
+}
+
+.focus\:outline-gray-800:focus {
+  outline-color: #1f2937;
 }
 
 .focus\:outline-gray-900:focus {
@@ -1880,20 +1874,16 @@ video {
 }
 
 @media (min-width: 640px) {
+  .sm\:w-1\/2 {
+    width: 50%;
+  }
+
   .sm\:w-3\/4 {
     width: 75%;
   }
 
-  .sm\:w-\[90\%\] {
-    width: 90%;
-  }
-
   .sm\:w-\[95\%\] {
     width: 95%;
-  }
-
-  .sm\:w-1\/2 {
-    width: 50%;
   }
 }
 
@@ -1908,10 +1898,6 @@ video {
 
   .md\:w-\[40\%\] {
     width: 40%;
-  }
-
-  .md\:w-80 {
-    width: 20rem;
   }
 
   .md\:w-\[80\%\] {
@@ -1936,16 +1922,8 @@ video {
     position: fixed;
   }
 
-  .lg\:left-4 {
-    left: 1rem;
-  }
-
   .lg\:left-2 {
     left: 0.5rem;
-  }
-
-  .lg\:ml-\[18\%\] {
-    margin-left: 18%;
   }
 
   .lg\:block {
@@ -1988,6 +1966,10 @@ video {
     width: 24rem;
   }
 
+  .lg\:w-\[23\%\] {
+    width: 23%;
+  }
+
   .lg\:w-\[300px\] {
     width: 300px;
   }
@@ -1996,16 +1978,8 @@ video {
     width: 50%;
   }
 
-  .lg\:w-\[60\%\] {
-    width: 60%;
-  }
-
   .lg\:w-full {
     width: 100%;
-  }
-
-  .lg\:w-\[23\%\] {
-    width: 23%;
   }
 
   .lg\:space-y-4 > :not([hidden]) ~ :not([hidden]) {
@@ -2058,16 +2032,16 @@ video {
     margin-right: auto;
   }
 
-  .xl\:w-9\/12 {
-    width: 75%;
-  }
-
-  .xl\:w-\[25\%\] {
-    width: 25%;
+  .xl\:w-10\/12 {
+    width: 83.333333%;
   }
 
   .xl\:w-\[20\%\] {
     width: 20%;
+  }
+
+  .xl\:w-\[25\%\] {
+    width: 25%;
   }
 
   .xl\:text-lg {

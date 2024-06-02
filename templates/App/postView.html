@@ -6,7 +6,8 @@
 
 <div class="container pt-2 lg:px-3 px-2 ">
     <div class="main-body flex-col space-y-3 max-w-full">
-        <h1 class="font-bold text-2xl">{{post.title}}</h1>
+        <h1 class="font-bold text-3xl">{{post.title}}</h1>
+  
         <div class="post-header flex space-x-2 items-center">
             <span class="w-14 h-14 rounded-full overflow-hidden  ">
                 <img src="/media/{{post.author.profileImg}}" alt="..." class=" ">
@@ -37,7 +38,7 @@
                     </a>
                 </span>
             </span>
-            <span class="">{{CommentsDict|length}} <i class="fa-regular fa-comment fa-lg"></i></span>
+            <span class=""><a href="#comments" class="">{{CommentsDict|length}} <i class="fa-regular fa-comment fa-lg"></i> </a></span>
             <span class="">
                 <a role="button" class="bookmark" onclick="SavePost(this)" id="Save_post{{post.id}}">
                     {% if post.id in request.session.SavedPosts %}
@@ -65,13 +66,13 @@
     </div>
 
     <!-- Comment section -->
-    <div class="pt-3 ">
+    <div id="comments" class="pt-3 ">
         <h3 class="font-semibold">
             <a role="button" class="cursor-pointer " id="comment_btn">
                 Comments({{CommentsDict|length}}) <i class="fa-regular fa-comment"></i>
             </a>
         </h3>
-        <div id="comment_block" class=" py-2 hidden">
+        <div  class=" py-2">
             <!-- Comment form -->
             <div class="comment-input flex space-x-3">
                 <span class="w-10 h-10 overflow-hidden rounded-full ">
@@ -94,7 +95,7 @@
             </div>
 
             <!-- all Comments message  -->
-            <div class="All-comments flex flex-col space-y-2  mt-2 ">
+            <div id="comment_block" class="All-comments flex flex-col space-y-2  mt-2 hidden">
                 {% for comment,commentAuthor in CommentsDict.items %}
                 <div class="">
                     <div class="flex space-x-2 ">
@@ -109,7 +110,7 @@
                             </p>
                             <p class="text-[17px] font-normal">{{comment.comment_text}}</p>
                             <p class="flex space-x-5">
-                                <span class="flex space-x-1">
+                                <span class="flex space-x-1 items-center">
                                     <span id="CommentLikeCount{{comment.sno}}" class="like-Count">
                                         {{comment.like}}
                                     </span>
@@ -197,7 +198,7 @@
             {% for postr in Related_posts %}
             {% if postr.id != post.id %}
             <div
-                class="card flex  flex-col space-y-1 mt-2 outline outline-gray-400 rounded-lg py-2 px-3 outline-1 xl:w-9/12 xl:mx-auto">
+                class="card flex  flex-col space-y-1 mt-2 outline outline-gray-400 rounded-lg py-2 px-3 outline-1 xl:w-10/12 xl:mx-auto">
                 <a href="{% url 'App:Profile' postr.author.user.username %}" class="author-name ">
                     <div class="flex items-center space-x-2">
                         <div class="author-profile-image w-8 rounded-full h-8 overflow-hidden">
@@ -243,7 +244,7 @@
                         </span>
                         <span class="comment_span">
                             <span class="comment">{{ postr|get_comments|length }}</span>
-                            <a href="{% url 'App:Detail Post' postr.author.user.username postr.slug %}" class=""><i
+                            <a href="{% url 'App:Detail Post' postr.author.user.username postr.slug %}#comments" class=""><i
                                     class="fa-regular fa-comment "></i></a>
                         </span>
                     </span>

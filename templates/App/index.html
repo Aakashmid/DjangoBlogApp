@@ -13,9 +13,8 @@
             BlogBlend today.</p>
 
     </div>
-    <hr>
     {% endif %}
-    <!-- <div class="p-2">TEsting element</div> -->
+    
     <!-- Search post option by filters -->
     <div class="filters-Box mt-4 bg-white  px-4" >
         <ul class="flex  space-x-1 p-2 overflow-x-scroll no-scrollbar " id="filtersContainer">
@@ -84,8 +83,8 @@
                         </a>
                     </span>
                     <span class="comment_span">
-                        <span class="comment">{{ post|get_comments|length }}</span>
-                        <a href="{% url 'App:Detail Post' post.author.user.username post.slug %}" class=""><i class="fa-regular fa-comment "></i></a>
+                        <span class="comment-count">{{ post|get_comments|length }}</span>
+                        <a href="{% url 'App:Detail Post' post.author.user.username post.slug %}#comments" class=""><i class="fa-regular fa-comment "></i></a>
                     </span>
                 </span>
                 <span class="flex space-x-6 items-center mx-3 relative">

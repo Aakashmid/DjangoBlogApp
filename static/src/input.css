@@ -2,8 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base{
-    .no-tailwind-base,.no-tailwind-base *,.no-tailwind-base > *{
+@layer base {
+
+    .no-tailwind-base,
+    .no-tailwind-base *,
+    .no-tailwind-base>* {
         font-size: revert;
         font-weight: revert;
         margin: revert;
@@ -15,23 +18,36 @@
         border-width: revert;
         border-color: revert;
         outline: revert;
-        
+
         padding: revert;
         list-style: revert;
     }
-    .no-scrollbar::-webkit-scrollbar{
+
+    /* CSS to make images responsive */
+    .no-tailwind-base img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
         display: none;
     }
-    .no-scrollbar::-moz-scrollbar{
+
+    .no-scrollbar::-moz-scrollbar {
         display: none;
     }
+
     * {
         padding: 0;
         margin: 0;
         box-sizing: border-box;
     }
 
+
+
 }
 
-@layer components{
-}
+@layer components {}
