@@ -19,7 +19,7 @@ DEBUG=True if os.environ.get('DEBUG') else True
 
 APPEND_SLASH = True
 
-ALLOWED_HOSTS = ['blogblend.onrender.com' ,'127.0.0.1']
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definitions
@@ -162,5 +162,5 @@ if DEBUG:  # checking whether debug is false or true
     'default': dj_database_url.parse(DB_URL)
     }
 
-    # if os.environ.get('ALLOWED_HOSTS'):
-    #     ALLOWED_HOSTS+=os.environ.get('ALLOWED_HOSTS').split(',')
+    if os.environ.get('ALLOWED_HOSTS'):
+        ALLOWED_HOSTS+=os.environ.get('ALLOWED_HOSTS').split(',')
