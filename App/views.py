@@ -431,7 +431,7 @@ def Change_profile(request):
         profilImage=request.FILES.get('imageInput')
         if User.objects.filter(username=username).exclude(username=request.user.username):
             messages.error(request,'This username is taken !!')
-            return HttpResponseRedirect(reverse('App:User Profile'))
+            return HttpResponseRedirect(reverse('App:Profile'))
         else:
             firstname=name.split(' ')[0]
         # here length is storing how many word is list name is
@@ -454,7 +454,7 @@ def Change_profile(request):
             bloguser.Bio=bio
             bloguser.save()
             messages.success(request,"Changed profile successfully !!")
-            return HttpResponseRedirect(reverse('App:User Profile',args=(request.user.username,)))
+            return HttpResponseRedirect(reverse('App:Profile',args=(request.user.username,)))
 
 def update_post(request,slug=None,post_id=None):
     if slug is not None and Post.objects.get(slug=slug).author.user==request.user:
@@ -522,7 +522,6 @@ def serialize_session(session):
 
 # for saving post (adding in reading list of user)
 def SavePost(request):
-    print("post")
     if request.method=="POST":
         post_id=request.POST.get('Post_id') 
         if post_id :
