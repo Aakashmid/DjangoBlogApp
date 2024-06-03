@@ -159,10 +159,7 @@ if not DEBUG:  # checking whether debug is false or true
     # Replace the SQLite DATABASES configuration with PostgreSQL:
     DB_URL=os.environ.get('DATABASE_URL')
     DATABASES = {
-    # 'default': dj_database_url.parse(DB_URL)
-    'default': dj_database_url.parse('postgres://blogblenddb_0pbt_user:lpUzhspBsBcgsHdNo46XsWy3dbFt7qaR@dpg-cpe8d7n109ks73ered9g-a.oregon-postgres.render.com/blogblenddb_0pbt')
-
+    'default': dj_database_url.parse(DB_URL)
     }
-
     if os.environ.get('ALLOWED_HOSTS'):
         ALLOWED_HOSTS+=os.environ.get('ALLOWED_HOSTS').split(',')
