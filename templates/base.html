@@ -338,6 +338,7 @@
         // for like a post
         LikePost = (post_id) => {
             {% if user.is_authenticated %}
+            console.log('Send request');            
             $.ajax({
                 type: "post",
                 url: "{% url 'App:Profile' user.username %}",
@@ -348,6 +349,7 @@
                 },
                 //here  data is response return by server 
                 success: function (response) {
+                    console.log('Success response');
                     if (response.status == 'liked') {
                         document.getElementById('LikePost' + post_id).classList.toggle('fa-regular');
                         document.getElementById('LikePost' + post_id).classList.toggle('fa-solid');
