@@ -224,7 +224,7 @@ def detail_post(request,slug=None,author_username=None):
     # for change like count of a comment on post
     if request.method=="POST":
         try:
-            likedComments= request.session['likedComments'] if 'likedComments' in request.session  else []
+            likedComments= request.session.get('likedComments',[])
             data=json.loads(request.body)
             comment_sno=int(data.get('comment_sno')) 
             comment=Comment.objects.get(sno=comment_sno)
@@ -520,29 +520,25 @@ def serialize_session(session):
         serialized_data[key] = value
     return json.dumps(serialized_data)
 
-# for saving post (adding in reading list of user)
+
 def SavePost(request):
-    if request.method=="POST":
-        post_id=request.POST.get('Post_id') 
-        if post_id :
-            post_id=int(post_id)
-            if 'SavedPosts' in request.session:
-                if post_id not in request.session['SavedPosts']:
-                    request.session['SavedPosts'].append(post_id)
-                    response=JsonResponse({'Result':'Post_saved'})
-                    request.session.modified=True
-                    return response
-                else:
-                    request.session['SavedPosts'].remove(post_id)
-                    request.session.modified=True
-                    response=JsonResponse({'Result':'Post_unsaved'})
-                    return response
+    if request.method == "POST":
+        post_id = request.POST.get('Post_id')
+        if post_id:
+            post_id = int(post_id)
+            saved_posts = request.session.get('SavedPosts', [])
+            
+            if post_id in saved_posts:
+                saved_posts.remove(post_id)
+                result = 'Post_unsaved'
             else:
-                request.session['SavedPosts']=[post_id]
-                request.session.modified=True
-                return JsonResponse({'Result':'Post_saved'})
+                saved_posts.append(post_id)
+                result = 'Post_saved'
+            
+            request.session['SavedPosts'] = saved_posts
+            request.session.modified = True
+            return JsonResponse({'Result': result})
         else:
-            # return HttpResponseRedirect(reverse('App:Author profile',args=(,)))
-            return HttpResponse('testingdslf')
+            return HttpResponse('Invalid Post ID', status=400)
     else:
         return redirect('/')

@@ -15,7 +15,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-8kbo$_-*8irf^50#5kdmn4=lm)o*w*7=a7*$git!+9ie-u$qyf'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG=True if os.environ.get('DEBUG') else True
+DEBUG=False if os.environ.get('DEBUG') else True
 
 APPEND_SLASH = True
 
@@ -151,7 +151,7 @@ SESSION_COOKIE_AGE = 3600
 
 ### Settings configuration for production
 
-if  DEBUG:  # checking whether debug is false or true
+if not  DEBUG:  # checking whether debug is false or true
     STATIC_ROOT=BASE_DIR /'staticfiles'
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
     SECRET_KEY=os.environ.get('SECRET_KEY')

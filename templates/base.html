@@ -187,8 +187,8 @@
     <div class="main-container lg:flex ">
         <!-- navigation for larger screen -->
         <div
-            class="z-0 side-navigation-bar lg:fixed top-15   hidden lg:block xl:w-[20%] xl:left-[5%] lg:left-2 lg:w-[23%] h-full ">
-            <div id="navigation_bar" class=" bg-gray-100 px-3  z-20 w-auto h-full scroll-auto rounded-lg">
+            class="z-0 side-navigation-bar lg:fixed top-15  bg-gray-100 rounded-lg hidden lg:block xl:w-[25%]   lg:w-[25%] h-full ">
+            <div id="navigation_bar" class="  px-3 float-right  xl:w-9/12 lg:w-10/12 h-full scroll-auto rounded-lg">
                 <div class=" mb-6 px-4 py-4">
                     {% if user.is_authenticated %}
                     <div class="p-2 mx-auto flex flex-col justify-start space-y-1">
@@ -222,7 +222,7 @@
                         class="px-2 p-1 text-center hover:bg-gray-800 hover:text-white border-[1px] border-gray-900 rounded-md">Login</a>
                     {% endif %}
                 </div>
-                <hr class="my-3 border-t-[1px] border-gray-800 ">
+                <hr class="my-3 border-t-[1px] border-gray-400 ">
                 <div class="flex flex-col mt-4 navigation">
 
                     <a href="/" class="">
@@ -239,14 +239,13 @@
                         <div class="px-2 py-1 hover:bg-white  text-lg font-normal rounded-md flex items-center"><span
                                 class="text-gray-700 mr-4"><i class="fa-solid fa-circle-info"></i></span>About</div>
                     </a>
-
                 </div>
             </div>
         </div>
 
         <!-- searchbar -->
         <div id="searchBar"
-            class="searchBar fixed lg:w-[50%] md:w-[80%] rounded-b-lg left-1/2 top-16 -translate-x-1/2 w-full  bg-white   p-2 hidden  ">
+            class="z-10 searchBar fixed lg:w-[50%] md:w-[80%] rounded-b-lg left-1/2 top-15 -translate-x-1/2 w-full  bg-white   p-2 hidden  ">
             <form action="{% url 'App:Search Posts' %}" method="get" class="space-x-2 flex px-1">
                 <input type="text" name="q" id="q"
                     class="w-full p-[7px]  bg-gray-50  outline outline-1 focus:outline-2 outline-gray-500 shadow-md   focus:outline-gray-800  rounded"
@@ -256,7 +255,7 @@
             </form>
         </div>
         <!-- main body -->
-        <div class="base-body lg:w-[50%] md:w-[80%] sm:w-[95%] w-full  mx-auto ">
+        <div class="base-body lg:w-[50%] md:w-[80%] sm:w-[95%] w-full  px-1 mx-auto ">
             {% block body %}
             {% endblock body %}
         </div>
