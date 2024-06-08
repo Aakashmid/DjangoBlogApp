@@ -111,10 +111,13 @@ def Login_hand(request):
     else:
          return redirect('/')
 def Logout_hand(request):
-    user=BlogUser.objects.get(user=request.user)
-    user.session_data= serialize_session(request.session)
-    user.save()
-    print(user.session_data)
+    try:
+        user=BlogUser.objects.get(user=request.user)
+        user.session_data= serialize_session(request.session)
+        user.save()
+        print(user.session_data)
+    except Exception as e :
+        pass
     logout(request)
     messages.success(request,"Successsfully logout !!")
     return redirect('/')

@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'App',  #updated part
     # 'compressor',
     'django_summernote',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -46,6 +47,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 
 ]
 
@@ -133,6 +135,14 @@ if DEBUG:
     WHITENOISE_AUTOFRESH=True
 
 
+# debug toolbar settings
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
+
+# loggin details
+
+
 MEDIA_ROOT=os.path.join(BASE_DIR,'media')
 MEDIA_URL="/media/"
 X_FRAME_OPTIONS='SAMEORIGIN'
@@ -163,3 +173,43 @@ if not DEBUG:  # checking whether debug is false or true
     }
     if os.environ.get('ALLOWED_HOSTS'):
         ALLOWED_HOSTS+=os.environ.get('ALLOWED_HOSTS').split(',')
+
+        
+if not DEBUG:
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'formatters': {
+            'verbose': {
+                'format': '{levelname} {asctime} {module} {message}',
+                'style': '{',
+            },
+            'simple': {
+                'format': '{levelname} {message}',
+                'style': '{',
+            },
+        },
+        'handlers': {
+            'console': {
+                'level': 'DEBUG',
+                'class': 'logging.StreamHandler',
+                'formatter': 'verbose',
+            },
+        },
+        'loggers': {
+            'django': {
+                'handlers': ['console'],
+                'level': 'DEBUG',
+                'propagate': True,
+            },
+            'myapp': {
+                'handlers': ['console'],
+                'level': 'DEBUG',
+                'propagate': True,
+            },
+        },
+        'root': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    }
