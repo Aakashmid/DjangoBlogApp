@@ -163,7 +163,7 @@ SESSION_COOKIE_AGE = 3600
 
 if not DEBUG:  # checking whether debug is false or true
     STATIC_ROOT=BASE_DIR /'staticfiles'
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
     SECRET_KEY=os.environ.get('SECRET_KEY')
     # Compress and cache static files for production
     # Replace the SQLite DATABASES configuration with PostgreSQL:
