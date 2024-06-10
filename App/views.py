@@ -77,10 +77,7 @@ def Create_account(request):
             user.last_name=lname
             user.save()
             request.session.set_expiry(2592000)  # user is logged in for 30 days
-            bloguser=BlogUser.objects.create(user=user)
-            bloguser.save()
             login(request,user=user)
-            
             messages.success(request,"Account is created successfully")
             return redirect('/')
     else:

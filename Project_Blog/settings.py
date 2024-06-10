@@ -85,6 +85,13 @@ DATABASES = {
 }
 
 
+# for testing production database
+# DATABASES = {
+#     'default': dj_database_url.parse('postgres://blogblenddb_x6a0_user:C8N7OqUHrsNpz0T2Oi0AQI6Y9ErEjHaL@dpg-cpjhnmed3nmc73bnv4tg-a.singapore-postgres.render.com/blogblenddb_x6a0', conn_max_age=600)
+#     }
+
+
+
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -135,12 +142,11 @@ if DEBUG:
     WHITENOISE_AUTOFRESH=True
 
 
-# debug toolbar settings
+# debug toolbar setting
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
 
-# loggin details
 
 
 MEDIA_ROOT=os.path.join(BASE_DIR,'media')
@@ -163,13 +169,13 @@ SESSION_COOKIE_AGE = 3600
 
 if not DEBUG:  # checking whether debug is false or true
     STATIC_ROOT=BASE_DIR /'staticfiles'
+    # Compress and cache static files for production
     # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
     SECRET_KEY=os.environ.get('SECRET_KEY')
-    # Compress and cache static files for production
     # Replace the SQLite DATABASES configuration with PostgreSQL:
     DB_URL=os.environ.get('DATABASE_URL')
     DATABASES = {
-    'default': dj_database_url.parse(DB_URL)
+    'default': dj_database_url.parse(DB_URL,conn_max_age=600)
     }
     if os.environ.get('ALLOWED_HOSTS'):
         ALLOWED_HOSTS+=os.environ.get('ALLOWED_HOSTS').split(',')
