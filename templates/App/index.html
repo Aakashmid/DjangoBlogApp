@@ -36,7 +36,7 @@
         {% if activeFilter and allPosts|length == 0%}
         {% else %}
         {% for post in allPosts %}
-        <div class="card border-gray-600 border-[1px] rounded-md shadow-md px-3 pt-2">
+        <div class="card border-gray-400 border-[1px] rounded-md shadow-md px-3 pt-2">
             <div class="upper-part flex-col   ">
                 <a href="{% url 'App:Profile' post.author.user.username %}" class="author-name ">
                     <div class="flex items-center space-x-2">
@@ -64,9 +64,9 @@
                         </p>
                     </div>
                     {% if post.thImg != '' %}
-                    <div class="w-14 h-14 lg:w-28 lg:h-24  overflow-hidden rounded-md flex-shrink-0 ">
-                        <img src="/media/{{post.thImg}}" alt="">
-                    </div>
+                     <div class="w-14 h-14 lg:w-24 lg:h-24   rounded-md flex-shrink-0 ">
+                        <img src="/media/{{post.thImg}}" class="object-fit object-center w-full h-full" alt="">
+                    </div> 
                     {% endif %}
                 </div>
             </a>

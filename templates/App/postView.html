@@ -198,7 +198,7 @@
             {% for postr in Related_posts %}
             {% if postr.id != post.id %}
             <div
-                class="card flex  flex-col space-y-1 mt-2 outline outline-gray-400 rounded-lg py-2 px-3 outline-1 xl:w-10/12 xl:mx-auto">
+                class="card flex  flex-col space-y-1 mt-3 outline outline-gray-400 rounded-lg py-2 px-3 outline-1 xl:w-11/12 xl:mx-auto">
                 <a href="{% url 'App:Profile' postr.author.user.username %}" class="author-name ">
                     <div class="flex items-center space-x-2">
                         <div class="author-profile-image w-8 rounded-full h-8 overflow-hidden">
