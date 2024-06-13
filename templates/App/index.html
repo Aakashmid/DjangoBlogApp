@@ -32,7 +32,7 @@
     </div>
 
     <!-- showing all posts  -->
-    <div class="mt-8 flex flex-col lg:space-y-4 space-y-2 lg:px-4 px-2">
+    <div class="mt-8 flex flex-col lg:space-y-3 space-y-2 lg:px-4 px-2">
         {% if activeFilter and allPosts|length == 0%}
         {% else %}
         {% for post in allPosts %}
@@ -71,7 +71,7 @@
                 </div>
             </a>
             <div class="footer-part flex items-center justify-between py-2">
-                <span class="flex space-x-4 items-center ">
+                <span class="flex space-x-4 items-center ">s
                     <span class="like_span">
                         <span id="postlike_count{{post.id}}" class="like-count">{{post.like}}</span>
                         <a role="button" class="" onclick="LikePost({{post.id}})" id="LikePostLink{{post.id}}">

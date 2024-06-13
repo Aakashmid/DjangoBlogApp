@@ -43,7 +43,6 @@ def home(request):    #fname is filter name
             if not request.user.is_anonymous:
                 followedAuthorPosts=[]
                 for post in allposts:
-                    # print(request.session['FollowedAuthor'])
                     if 'FollowedAuthor' in request.session and post.author.pk in request.session['FollowedAuthor']:
                         followedAuthorPosts.append(post) 
             else:
@@ -99,7 +98,6 @@ def Login_hand(request):
                 for key,value in deserialize_data.items():
                     request.session[key] =value
                     request.session.modified=True
-            print(request.session.items())
             messages.success(request,"Successsfully logged in user !!")
             return redirect('/')
         else:
@@ -112,7 +110,6 @@ def Logout_hand(request):
         user=BlogUser.objects.get(user=request.user)
         user.session_data= serialize_session(request.session)
         user.save()
-        print(user.session_data)
     except Exception as e :
         pass
     logout(request)
@@ -245,7 +242,6 @@ def detail_post(request,slug=None,author_username=None):
 
             request.session['likedComments']=likedComments
             request.session.modified=True
-            print(request.session.items())
             return JsonResponse(response_context)
         except Exception as e:
              return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
@@ -345,7 +341,6 @@ def profile(request,text=None,username=None):
             request.session.modified=True
             return JsonResponse(response_context)
         except Exception as e:
-             print(e)
              return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
     # for follow a author or unfollow 
@@ -354,11 +349,9 @@ def profile(request,text=None,username=None):
         if 'FollowedAuthor' not in request.session : 
             request.session['FollowedAuthor']=[]
         author_id=int(data['author_id'])
-        print(author_id)
         Author=BlogUser.objects.get(pk=author_id)
         follower=BlogUser.objects.get(user=request.user)  # follower user bloguser object
         if AuthorFollower.objects.filter(Author=Author,follower=request.user).exists():
-            print(True)
             AuthorFollower.objects.get(Author=Author,follower=request.user).delete()
             Author.followers-=1
             follower.following-=1
@@ -377,7 +370,6 @@ def profile(request,text=None,username=None):
             request.session['FollowedAuthor'].append(author_id)
             request.session.modified=True
             params={'btnText':'Following','follower_count':Author.followers}
-        print(request.session['FollowedAuthor'])
         return JsonResponse(params)
     
     # for show profile page of user 
@@ -508,7 +500,6 @@ def update_post(request,slug=None,post_id=None):
             request.session['likedPosts'].remove(post_id) 
         if post_id in request.session['SavedPosts'] :
             request.session['SavedPosts'].remove(post_id) 
-        print(request.session)
         return JsonResponse({'Message':"Deleted post"})
     
     else:
