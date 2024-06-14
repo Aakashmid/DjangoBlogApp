@@ -7,7 +7,7 @@
 <div class="container pt-2 lg:px-3 px-2 ">
     <div class="main-body flex-col space-y-3 max-w-full">
         <h1 class="font-bold text-3xl">{{post.title}}</h1>
-  
+
         <div class="post-header flex space-x-2 items-center">
             <span class="w-14 h-14 rounded-full overflow-hidden  ">
                 <img src="/media/{{post.author.profileImg}}" alt="..." class=" ">
@@ -29,16 +29,17 @@
                     {{post.like}}
                 </span>
                 <span class="like like-icon">
-                    <a role="button" class="" onclick="LikePost({{post.id}})" id="LikePostLink{{post.id}}">
+                    <a role="button" class="" onclick="ChangePostLikes({{post.id}})" id="LikePostLink{{post.id}}">
                         {% if post.id in request.session.likedPosts %}
-                        <i id="LikePost{{post.id}}" class="fa-solid fa-heart fa-lg " style="color: #f7022b;"></i>
+                        <i id="post_like_icon{{post.id}}" class="fa-solid fa-heart fa-lg " style="color: #f7022b;"></i>
                         {% else %}
-                        <i id="LikePost{{post.id}}" class="fa-regular fa-heart fa-lg" style="color: #f7022b;"></i>
+                        <i id="post_like_icon{{post.id}}" class="fa-regular fa-heart fa-lg" style="color: #f7022b;"></i>
                         {% endif %}
                     </a>
                 </span>
             </span>
-            <span class=""><a href="#comments" class="">{{CommentsDict|length}} <i class="fa-regular fa-comment fa-lg"></i> </a></span>
+            <span class=""><a href="#comments" class="">{{CommentsDict|length}} <i
+                        class="fa-regular fa-comment fa-lg"></i> </a></span>
             <span class="">
                 <a role="button" class="bookmark" onclick="SavePost(this)" id="Save_post{{post.id}}">
                     {% if post.id in request.session.SavedPosts %}
@@ -71,7 +72,7 @@
                 Comments({{CommentsDict|length}}) <i class="fa-regular fa-comment"></i>
             </a>
         </h3>
-        <div  class=" py-2">
+        <div class=" py-2">
             <!-- Comment form -->
             <div class="comment-input flex space-x-3">
                 <span class="w-10 h-10 overflow-hidden rounded-full ">
@@ -113,12 +114,11 @@
                                     <span id="CommentLikeCount{{comment.sno}}" class="like-Count">
                                         {{comment.like}}
                                     </span>
-                                    <span onclick="ChangeCommentLikes(this)" id="comment_like{{comment.sno}}"
-                                        class="like text-[14px] cursor-pointer">
+                                    <span onclick="ChangeCommentLikes({{comment.sno}})" class="like text-[14px] cursor-pointer">
                                         {% if comment.sno in request.session.likedComments %}
-                                        <i class="fa-solid fa-thumbs-up "></i>
+                                        <i id="comment_like_icon{{comment.sno}}" class="fa-solid fa-thumbs-up "></i>
                                         {% else %}
-                                        <i class="fa-regular fa-thumbs-up "></i>
+                                        <i id="comment_like_icon{{comment.sno}}" class="fa-regular fa-thumbs-up "></i>
                                         {% endif %}
                                     </span>
                                 </span>
@@ -212,10 +212,11 @@
                         </div>
                     </a>
                 </div>
-    
+
                 <a href="{% url 'App:Detail Post' postr.author.user.username postr.slug %}">
                     <div class=" flex justify-between items-start space-x-2 py-2">
-                        <div class="flex flex-col text-wrap {% if postr.thImg != '' %} flex-grow {% else %} {% endif %}">
+                        <div
+                            class="flex flex-col text-wrap {% if postr.thImg != '' %} flex-grow {% else %} {% endif %}">
                             <h1 id="title{{postr.id}}" class="title font-semibold text-lg lg:text-xl">{{postr.title}}
                             </h1>
                             <p class="blog-content">
@@ -224,27 +225,28 @@
                             </p>
                         </div>
                         {% if postr.thImg != '' %}
-                         <div class="w-14 h-14 lg:w-24 lg:h-24   rounded-md flex-shrink-0 ">
+                        <div class="w-14 h-14 lg:w-24 lg:h-24   rounded-md flex-shrink-0 ">
                             <img src="/media/{{postr.thImg}}" class="object-fit object-center w-full h-full" alt="">
-                        </div> 
+                        </div>
                         {% endif %}
                     </div>
                 </a>
                 <div class="footer-part flex items-center justify-between py-2">
                     <span class="flex space-x-4 items-center ">
                         <span class="like_span">
-                            <span id="postlike_count{{postr.id}}" class="like-count">{{postr.like}}</span>
-                            <a role="button" class="" onclick="LikePost({{postr.id}})" id="LikePostLink{{postr.id}}">
+                            <span id="postlike_count{{postr.id}}" class="like-count">{% if postr.like != 0 %}{{postr.like}}{% endif %}</span>
+                            <a role="button" class="" onclick="ChangePostLikes({{postr.id}})" id="LikePostLink{{postr.id}}">
                                 {% if postr.id in request.session.likedPosts %}
-                                <i id="LikePost{{postr.id}}" class="fa-solid fa-thumbs-up text-md lg:text-lg"></i>
+                                <i id="post_like_icon{{postr.id}}" class="fa-solid fa-thumbs-up text-md lg:text-lg"></i>
                                 {% else %}
-                                <i id="LikePost{{postr.id}}" class="fa-regular fa-thumbs-up text-md lg:text-lg"></i>
+                                <i id="post_like_icon{{postr.id}}" class="fa-regular fa-thumbs-up text-md lg:text-lg"></i>
                                 {% endif %}
                             </a>
                         </span>
                         <span class="comment_span">
                             <span class="comment-count">{{ postr|get_comments|length }}</span>
-                            <a href="{% url 'App:Detail Post' postr.author.user.username postr.slug %}#comments" class=""><i class="fa-regular fa-comment "></i></a>
+                            <a href="{% url 'App:Detail Post' postr.author.user.username postr.slug %}#comments"
+                                class=""><i class="fa-regular fa-comment "></i></a>
                         </span>
                     </span>
                     <span class="flex space-x-6 items-center mx-3 relative">
@@ -278,7 +280,7 @@
                             </ul>
                         </span>
                     </span>
-    
+
                 </div>
             </div>
             {% endif %}
@@ -347,8 +349,9 @@
 
     });
 
-    ChangeCommentLikes = (element) => {
-        let commentSno = element.id.slice(12);
+    // function to change like of a commment
+    ChangeCommentLikes = (sno) => {
+        let commentSno = sno;
         {% if user.is_authenticated %}
         $.ajax({
             type: "post",
@@ -357,11 +360,13 @@
             dataType: "json",
             success: function (response) {
                 document.getElementById('CommentLikeCount' + commentSno).innerText = response.likeCount;
-                if (response.status == 'liked') {
-                    element.innerHTML = '<i class="fa-solid fa-thumbs-up "></i>';
+                CommentLikeIcon = document.getElementById('comment_like_icon' + commentSno);
+                if (response.status == 'liked' && CommentLikeIcon.classList.contains('fa-regular')) {
+                    CommentLikeIcon.classList.replace('fa-regular', 'fa-solid');
                 }
-                else if(response.status=='unliked') {
-                    element.innerHTML = '<i class="fa-regular fa-thumbs-up "></i>';
+
+                else if (response.status == 'unliked' && CommentLikeIcon.classList.contains('fa-solid')) {
+                    CommentLikeIcon.classList.replace('fa-solid', 'fa-regular');
                 }
             },
             error: function (error) {

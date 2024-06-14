@@ -39,7 +39,7 @@
     <p class="text-center pt-4 text-xl font-medium">Update Post</p>
     <div class="">
         <div class="form">
-            <form action="{% url 'App:Update post' post.id %}" class="p-3 flex-col space-y-3 lg:space-y-4 w-full" method="post"
+            <form action="{% url 'App:Update post' post.slug %}" class="p-3 flex-col space-y-3 lg:space-y-4 w-full" method="post"
                 enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="title">

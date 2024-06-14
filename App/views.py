@@ -69,7 +69,7 @@ def Create_account(request):
         email=request.POST.get('email')
         if User.objects.filter(username=username).exists():
             messages.error(request,"This username is taken !!")
-            return redirect('/')
+            return HttpResponseRedirect(reverse('App:Home'))
         else:
             user=User.objects.create_user(username=username,email=email,password=password)
             user.first_name=fname
@@ -78,7 +78,7 @@ def Create_account(request):
             request.session.set_expiry(2592000)  # user is logged in for 30 days
             login(request,user=user)
             messages.success(request,"Account is created successfully")
-            return redirect('/')
+            return HttpResponseRedirect(reverse('App:Home'))
     else:
         return render(request,'signup.html')
 def Login_hand(request):
@@ -99,10 +99,10 @@ def Login_hand(request):
                     request.session[key] =value
                     request.session.modified=True
             messages.success(request,"Successsfully logged in user !!")
-            return redirect('/')
+            return HttpResponseRedirect(reverse('App:Home'))
         else:
             messages.error(request,"Username or Password is incorrect !!")
-            return redirect('/')
+            return HttpResponseRedirect(reverse('App:Home'))
     else:
          return redirect('/')
 def Logout_hand(request):
@@ -209,13 +209,13 @@ def Create_post(request):
             post.thImg=thumImg
             post.save()
         messages.success(request,"Blog is posted successfuly !!")
-        return redirect('/')
+        return HttpResponseRedirect(reverse('App:Home'))
     else :
         categories=PostCategory.objects.all()
         params={'Categories':categories}
         return render(request,'App/createPost.html',params)
 
-@csrf_exempt
+@csrf_exempt   # when use handling post request
 def detail_post(request,slug=None,author_username=None):
 
     # for change like count of a comment on post

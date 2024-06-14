@@ -335,7 +335,7 @@
         }
 
         // for like a post
-        LikePost = (post_id) => {
+        ChangePostLikes = (post_id) => {
             {% if user.is_authenticated %}
             console.log('Send request');            
             $.ajax({
@@ -348,14 +348,17 @@
                 },
                 //here  data is response return by server 
                 success: function (response) {
+                    likedPostElement=document.getElementById('post_like_icon' + post_id);
                     console.log('Success response');
                     if (response.status == 'liked') {
-                        document.getElementById('LikePost' + post_id).classList.toggle('fa-regular');
-                        document.getElementById('LikePost' + post_id).classList.toggle('fa-solid');
+                        if(likedPostElement.classList.contains('fa-regular')){
+                            likedPostElement.classList.replace('fa-regular', 'fa-solid');
+                        }
                     }
                     else if (response.status == "unliked") {
-                        document.getElementById('LikePost' + post_id).classList.toggle('fa-solid');
-                        document.getElementById('LikePost' + post_id).classList.toggle('fa-regular');
+                        if(likedPostElement.classList.contains('fa-solid')){
+                            likedPostElement.classList.replace('fa-solid', 'fa-regular');
+                        }
                     }
                     document.getElementById('postlike_count' + post_id).innerText = response.likeCount;
 
