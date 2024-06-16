@@ -4,20 +4,21 @@
 {% load extraFilter %}
 {% block body %}
 
-<div class="container pt-2">
-    <div class="main-body p-2 flex-col space-y-3 max-w-full">
-        <h1 class="font-bold text-2xl">{{post.title}}</h1>
+<div class="container pt-2 lg:px-3 px-2 ">
+    <div class="main-body flex-col space-y-3 max-w-full">
+        <h1 class="font-bold text-3xl">{{post.title}}</h1>
+
         <div class="post-header flex space-x-2 items-center">
-            <span class="w-14 h-14 rounded-full overflow-hidden ">
+            <span class="w-14 h-14 rounded-full overflow-hidden  ">
                 <img src="/media/{{post.author.profileImg}}" alt="..." class=" ">
             </span>
             <div class="flex flex-col space-y-1">
                 <p class=" ">
-                    <span class="font-normal">By </span><a href="{% url 'App:Author Profile' post.author_id %}"
+                    <span class="font-normal">By </span><a href="{% url 'App:Profile' post.author.user.username %}"
                         class="text-blue-500 font-medium "> {{post.author.user.first_name}}
                         {{post.author.user.last_name}}</a>
                 </p>
-                <p class="time text-xs  font-light">
+                <p class="time text-xs  font-light ">
                     Posted on {{post.publish_time}}
                 </p>
             </div>
@@ -27,19 +28,18 @@
                 <span id="postlike_count{{post.id}}" class="like-count">
                     {{post.like}}
                 </span>
-                <span  class="like like-icon">
-                    <a role="button" class="" onclick="LikePost({{post.id}})" id="LikePostLink{{post.id}}">
-                        {% if post.id in request.session.LikedPosts %}
-                        <i id="LikePost{{post.id}}" class="fa-solid fa-heart fa-lg " style="color: #f7022b;"></i>
+                <span class="like like-icon">
+                    <a role="button" class="" onclick="ChangePostLikes({{post.id}})" id="LikePostLink{{post.id}}">
+                        {% if post.id in request.session.likedPosts %}
+                        <i id="post_like_icon{{post.id}}" class="fa-solid fa-heart fa-lg " style="color: #f7022b;"></i>
                         {% else %}
-                        <i id="LikePost{{post.id}}" class="fa-regular fa-heart fa-lg" style="color: #f7022b;"></i>
+                        <i id="post_like_icon{{post.id}}" class="fa-regular fa-heart fa-lg" style="color: #f7022b;"></i>
                         {% endif %}
                     </a>
                 </span>
             </span>
-            <span class="">{{CommentsDict|length}} <i class="fa-regular fa-comment fa-lg"></i></span>
-            <span class="">{{post.read_count}} <span class="text-gray-600"><i
-                        class="fa-regular fa-eye fa-lg"></i></span></span>
+            <span class=""><a href="#comments" class="">{{CommentsDict|length}} <i
+                        class="fa-regular fa-comment fa-lg"></i> </a></span>
             <span class="">
                 <a role="button" class="bookmark" onclick="SavePost(this)" id="Save_post{{post.id}}">
                     {% if post.id in request.session.SavedPosts %}
@@ -60,23 +60,25 @@
         </p>
 
         <hr class="mt-2 mb-3 bg-gray-600   w-auto ">
-        <div class="no-tailwind-base">
+        <div class="no-tailwind-base  w-full ">
             {{post.content|safe}}
         </div>
     </div>
-    <div class="p-2 ">
-        <h3 class="font-semibold flex space-x-3">
-            <a role="button" class="cursor-pointer" id="comment_btn">
+
+    <!-- Comment section -->
+    <div id="comments" class="pt-3 ">
+        <h3 class="font-semibold">
+            <a role="button" class="cursor-pointer " id="comment_btn">
                 Comments({{CommentsDict|length}}) <i class="fa-regular fa-comment"></i>
             </a>
         </h3>
-        <div id="comment-block" class="hidden">
-            <!-- Comment input -->
+        <div class=" py-2">
+            <!-- Comment form -->
             <div class="comment-input flex space-x-3">
                 <span class="w-10 h-10 overflow-hidden rounded-full ">
                     <img src="/media/{{User.profileImg}}" alt="">
                 </span>
-                <form action="/post-comment"  method="get" class="py-2  w-full">
+                <form action="{%url 'App:comment-reply' %}" method="post" class="py-2  w-full">
                     {% csrf_token %}
                     <input type="hidden" name="postSno" value="{{post.id}}">
                     <input type="hidden" name="parentSno" value="">
@@ -85,13 +87,15 @@
                             class="p-1 rounded  border-[1px] border-gray-600 focus:outline focus:outline-blue-200 outline-2 outline-offset-1"
                             type="text" name="comment" id="comment" placeholder="Enter your comment here..." required>
                         <button
-                            class="p-1 bg-blue-400 active:bg-white active:text-black active:outline-blue-500 outline-1 outline text-gray-100 rounded  w-[25%]" {% if not user.is_authenticated%} onclick="showLogin()"   type="button"{% else %} type="submit" {% endif %}>Comment</button>
+                            class="px-2  py-1 bg-blue-400 active:bg-white active:text-black active:outline-blue-500 outline-1 outline text-gray-100 rounded  w-fit"
+                            {% if not user.is_authenticated%} onclick="showLogin()" type="button" {% else %}
+                            type="submit" {% endif %}>Comment</button>
                     </div>
                 </form>
             </div>
 
-            <!-- Comments  -->
-            <div class="All-comments flex flex-col space-y-2  px-2 mt-2">
+            <!-- all Comments message  -->
+            <div id="comment_block" class="All-comments flex flex-col space-y-2  mt-2 hidden">
                 {% for comment,commentAuthor in CommentsDict.items %}
                 <div class="">
                     <div class="flex space-x-2 ">
@@ -106,13 +110,16 @@
                             </p>
                             <p class="text-[17px] font-normal">{{comment.comment_text}}</p>
                             <p class="flex space-x-5">
-                                <span class="flex space-x-1">
-                                    <span id="like_Count{{comment.sno}}" class="like-Count">
+                                <span class="flex space-x-1 items-center">
+                                    <span id="CommentLikeCount{{comment.sno}}" class="like-Count">
                                         {{comment.like}}
                                     </span>
-                                    <span onclick="changeLikeState(this)" id="comment_like{{comment.sno}}"
-                                        class="like text-[14px] cursor-pointer">
-                                        <i class="fa-regular fa-thumbs-up "></i>
+                                    <span onclick="ChangeCommentLikes({{comment.sno}})" class="like text-[14px] cursor-pointer">
+                                        {% if comment.sno in request.session.likedComments %}
+                                        <i id="comment_like_icon{{comment.sno}}" class="fa-solid fa-thumbs-up "></i>
+                                        {% else %}
+                                        <i id="comment_like_icon{{comment.sno}}" class="fa-regular fa-thumbs-up "></i>
+                                        {% endif %}
                                     </span>
                                 </span>
                                 {% if replies|get_replies:comment.sno|length > 0 %}
@@ -124,8 +131,8 @@
                                 {% endif %}
                             </p>
                             <div class="reply-section hidden " id="replyForm{{comment.sno}}">
-                                <!-- Reply input -->
-                                <form action="/post-comment" method="get" class="">
+                                <!-- Reply form  -->
+                                <form action="{% url 'App:comment-reply' %}" method="post" class="">
                                     {% csrf_token %}
                                     <input type="hidden" name="postSno" value="{{post.id}}">
                                     <input type="hidden" name="parentSno" value="{{comment.sno}}">
@@ -142,7 +149,8 @@
                                         <div class="flex mt-2  space-x-2 w-full justify-end">
                                             <button id="cancel{{comment.sno}}" type="button"
                                                 class="cancel-reply hover:bg-gray-300  active:bg-blue-500 active:text-white py-1 px-3 text-[15px] rounded-2xl">Cancel</button>
-                                            <button {% if not user.is_authenticated%} onclick="showLogin()"   type="button"{% else %} type="submit" {% endif %}
+                                            <button {% if not user.is_authenticated%} onclick="showLogin()"
+                                                type="button" {% else %} type="submit" {% endif %}
                                                 class="py-1 px-3 bg-blue-500 text-[15px]   rounded-2xl text-white  ">
                                                 Reply
                                             </button>
@@ -180,96 +188,97 @@
             </div>
         </div>
     </div>
-    <hr class="mt-2 mb-3 bg-gray-600   w-auto mx-2">
-    <div class="related-post-container p-2">
-        <h3 class="font-semibod text-xl p-2">Related posts :</h3>
+    <hr class="my-3 bg-gray-600   w-auto ">
+
+    {%if Related_posts%}
+    <div class="related-post-container ">
+        <h3 class="font-semibod font-bold text-xl p-2">Read Next </h3>
         <div class="posts pt-4">
             {% for postr in Related_posts %}
             {% if postr.id != post.id %}
-            <div
-                class="card flex  flex-col space-y-1 mt-2 outline outline-gray-400 rounded-lg py-2 px-3 outline-1 xl:w-9/12 xl:mx-auto">
-                <a href="{% url 'App:Author Profile' postr.author_id %}" class="author-name ">
-                    <div class="flex items-center space-x-2">
-                        <div class="author-profile-image w-8 rounded-full h-8 overflow-hidden">
-                            <img src="/media/{{postr.author.profileImg}}" class="" alt="">
+            <div class="card border-gray-400 border-[1px] rounded-md shadow-md px-3 pt-2 xl:w-11/12 mx-auto mt-2 ">
+                <div class="upper-part flex-col   ">
+                    <a href="{% url 'App:Profile' postr.author.user.username %}" class="author-name ">
+                        <div class="flex items-center space-x-2">
+                            <div class="author-profile-image w-8 rounded-full h-8 overflow-hidden">
+                                <img src="/media/{{postr.author.profileImg}}" class="" alt="">
+                            </div>
+                            <span class="flex space-x-2 items-center  font-sans ">
+                                <p class="font-medium">
+                                    {{postr.author.user.first_name}} {{postr.author.user.last_name}}
+                                </p>
+                                <p class="text-xs font-light">. Posted on {{postr.publish_time}}</p>
+                            </span>
                         </div>
-                        <span class="flex space-x-2 items-center  font-sans ">
-                            <p class="font-medium">
-                                {{postr.author.user.first_name}} {{postr.author.user.last_name}}
-                            </p>
-                            <p class="text-xs font-light">. Posted on {{postr.publish_time}}</p>
-                        </span>
-                    </div>
-                </a>
-                <a href="{% url 'App:Blog Post' postr.id %}" id="card_link" class="">
-                       <div class=" flex justify-between items-start space-x-2 py-2">
-                    <div class="flex flex-col text-wrap {% if postr.thImg != '' %} flex-grow {% else %} {% endif %}">
-                        <h1 id="title{{postr.id}}" class="title font-semibold text-lg lg:text-xl">{{postr.title}}
-                        </h1>
-                        <p class="blog-content">
-                        <div class="preview hidden text-lg lg:block">{{postr.content|safe|truncatechars_html:150}}
-                        </div>
-                        </p>
-                    </div>
-                    {% if postr.thImg != '' %}
-                    <div class="w-14 h-14 lg:w-28 lg:h-24  overflow-hidden rounded-md flex-shrink-0 ">
-                        <img src="/media/{{postr.thImg}}" alt="">
-                    </div>
-                    {% endif %}
+                    </a>
                 </div>
+
+                <a href="{% url 'App:Detail Post' postr.author.user.username postr.slug %}">
+                    <div class=" flex justify-between items-start space-x-2 py-2">
+                        <div
+                            class="flex flex-col text-wrap {% if postr.thImg != '' %} flex-grow {% else %} {% endif %}">
+                            <h1 id="title{{postr.id}}" class="title font-semibold text-lg lg:text-xl">{{postr.title}}
+                            </h1>
+                            <p class="blog-content">
+                            <div class="preview hidden text-lg lg:block">{{postr.content|safe|truncatechars_html:150}}
+                            </div>
+                            </p>
+                        </div>
+                        {% if postr.thImg != '' %}
+                        <div class="w-14 h-14 lg:w-24 lg:h-24   rounded-md flex-shrink-0 ">
+                            <img src="/media/{{postr.thImg}}" class="object-fit object-center w-full h-full" alt="">
+                        </div>
+                        {% endif %}
+                    </div>
                 </a>
-                <div class="footer-part flex items-center justify-between  py-1">
+                <div class="footer-part flex items-center justify-between py-2">
                     <span class="flex space-x-4 items-center ">
                         <span class="like_span">
-                            <span id="postlike_count{{postr.id}}" class="like-count">{{postr.like}}</span>
-                            <a role="button" class="" onclick="LikePost({{postr.id}})" id="LikePostLink{{postr.id}}">
-                                {% if postr.id in request.session.LikedPosts %}
-                                <i id="LikePost{{postr.id}}" class="fa-solid fa-thumbs-up text-md lg:text-lg"></i>
+                            <span id="postlike_count{{postr.id}}" class="like-count">{% if postr.like != 0 %}{{postr.like}}{% endif %}</span>
+                            <a role="button" class="" onclick="ChangePostLikes({{postr.id}})" id="LikePostLink{{postr.id}}">
+                                {% if postr.id in request.session.likedPosts %}
+                                <i id="post_like_icon{{postr.id}}" class="fa-solid fa-thumbs-up text-md lg:text-lg"></i>
                                 {% else %}
-                                <i id="LikePost{{postr.id}}" class="fa-regular fa-thumbs-up text-md lg:text-lg"></i>
+                                <i id="post_like_icon{{postr.id}}" class="fa-regular fa-thumbs-up text-md lg:text-lg"></i>
                                 {% endif %}
                             </a>
                         </span>
                         <span class="comment_span">
-                            <span class="comment">{{ postr|get_comments|length }}</span>
-                            <a href="{% url 'App:Blog Post' postr.id %}" class=""><i class="fa-regular fa-comment "></i></a>
+                            <span class="comment-count">{{ postr|get_comments|length }}</span>
+                            <a href="{% url 'App:Detail Post' postr.author.user.username postr.slug %}#comments"
+                                class=""><i class="fa-regular fa-comment "></i></a>
                         </span>
-                    </span>
-                    <span
-                        class="p-2 hidden fixed top-16 left-1/2  transform duration-300 -translate-y-full -translate-x-1/2 w-32 text-center text-white font-semibold rounded shadow-green-100 bg-black"
-                        id="SavePost_popover">
-                        Post saved
                     </span>
                     <span class="flex space-x-6 items-center mx-3 relative">
                         <a role="button" class="bookmark" onclick="SavePost(this)" id="Save_post{{postr.id}}">
                             {% if postr.id in request.session.SavedPosts %}
-                            <i id="saveIcon{{postr.id}}" class="fa-solid fa-bookmark  text-md lg:text-lg"></i>
+                            <i id="saveIcon{{postr.id}}" class="fa-solid fa-bookmark text-md lg:text-lg"></i>
                             {% else %}
-                            <i id="saveIcon{{postr.id}}" class="fa-regular fa-bookmark  text-md lg:text-lg"></i>
+                            <i id="saveIcon{{postr.id}}" class="fa-regular fa-bookmark text-md lg:text-lg"></i>
                             {% endif %}
                         </a>
                         <a role="button" class="three-dots cursor-pointer" id="options{{postr.id}}"
-                        onclick="OptionPopover(this)"><i class="fa-solid fa-ellipsis fa-lg"></i></a>
-                    <span id="Option_box{{postr.id}}"
-                        class="absolute z bg-white right-0 top-6 hidden p-1 border-gray-500 border rounded ">
-                        <ul class="flex flex-col items-start w-fit space-y-1">
-                            {% if postr.author == User%}
-                            <li class=" hover:bg-slate-200 active:bg-slate-300 px-1 rounded text-nowrap">
-                                <a href="{% url 'App:Update post' postr.id %}" class="">Update post</a>
-                            </li>
-                            {% else %}
-                            <li class="px-1 hover:bg-gray-200" id="follow_op{{postr.id}}">
-                                {% if postr.author_id in request.session.FollowedAuthor %}
-                                <a onclick="ChangeFollowers(this)" id="follow{{postr.author_id}}"
-                                    class="cursor-pointer">Following</a>
+                            onclick="OptionPopover(this)"><i class="fa-solid fa-ellipsis fa-lg"></i></a>
+                        <span id="Option_box{{postr.id}}"
+                            class="absolute z bg-white right-0 top-6 hidden p-1 border-gray-500 border rounded ">
+                            <ul class="flex flex-col items-start w-fit space-y-1">
+                                {% if postr.author == User%}
+                                <li class="px-1 rounded  text-nowrap text-gray-900 hover:text-gray-600">
+                                    <a href="{% url 'App:Update post' postr.slug %}" class="">Update post</a>
+                                </li>
                                 {% else %}
-                                <a onclick="ChangeFollowers(this)" id="follow{{postr.author_id}}"
-                                    class="cursor-pointer">Follow</a>
+                                <li class="px-1 rounded text-gray-900 hover:text-gray-600" id="follow_op{{postr.id}}">
+                                    {% if postr.author_id in request.session.FollowedAuthor %}
+                                    <a onclick="ChangeFollowers(this)" id="follow{{postr.author_id}}"
+                                        class="cursor-pointer">Following</a>
+                                    {% else %}
+                                    <a onclick="ChangeFollowers(this)" id="follow{{postr.author_id}}"
+                                        class="cursor-pointer">Follow</a>
+                                    {% endif %}
+                                </li>
                                 {% endif %}
-                            </li>
-                            {% endif %}
-                        </ul>
-                    </span>
+                            </ul>
+                        </span>
                     </span>
 
                 </div>
@@ -278,6 +287,7 @@
             {% endfor %}
         </div>
     </div>
+    {% endif %}
 
 
 </div>
@@ -290,16 +300,11 @@
     $(document).ready(function () {
         let commnent_btn = document.querySelector('#comment_btn');
         commnent_btn.addEventListener('click', function () {
-            let comment_block = document.getElementById("comment-block");
-            if (comment_block.classList.contains('hidden')) {
-                comment_block.classList.remove('hidden');
-                comment_block.classList.add('block');
-            }
-            else if (comment_block.classList.contains('block')) {
-                comment_block.classList.remove('block');
-                comment_block.classList.add('hidden');
-            }
+            let comment_block = document.getElementById("comment_block");
+            comment_block.classList.toggle('hidden');
+
         })
+
         // Onclick reply button
         let reply_btns = document.getElementsByClassName('reply-button');
         for (let index = 0; index < reply_btns.length; index++) {
@@ -342,26 +347,37 @@
 
         }
 
-        // funtion to increase readcount if user stay for while
-
-        {% if user.is_authenticated %}
-        setTimeout(readIncrease, 120000);
-        function readIncrease() {
-            $.ajax({
-                type: "PATCH",
-                url: "/post-blogs/{{post.id}}/",
-                headers: {
-                    "X-CSRFToken": '{{ csrf_token }}'
-                },
-                success: function (data) {
-                },
-                error: function (error) {
-                    console.log("Error:", error);
-                }
-            });
-        }
-        {% endif %}
     });
+
+    // function to change like of a commment
+    ChangeCommentLikes = (sno) => {
+        let commentSno = sno;
+        {% if user.is_authenticated %}
+        $.ajax({
+            type: "post",
+            url: "{% url 'App:Detail Post' post.author.user.username post.slug%}",
+            data: JSON.stringify({ "comment_sno": commentSno }),
+            dataType: "json",
+            success: function (response) {
+                document.getElementById('CommentLikeCount' + commentSno).innerText = response.likeCount;
+                CommentLikeIcon = document.getElementById('comment_like_icon' + commentSno);
+                if (response.status == 'liked' && CommentLikeIcon.classList.contains('fa-regular')) {
+                    CommentLikeIcon.classList.replace('fa-regular', 'fa-solid');
+                }
+
+                else if (response.status == 'unliked' && CommentLikeIcon.classList.contains('fa-solid')) {
+                    CommentLikeIcon.classList.replace('fa-solid', 'fa-regular');
+                }
+            },
+            error: function (error) {
+                console.log("ERROR :", error);
+            }
+        });
+        {% else %}
+        showLogin();
+        {% endif %}
+
+    }
 
 </script>
 {% endblock js %}

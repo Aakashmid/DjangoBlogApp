@@ -5,7 +5,7 @@
 
 <div class="author-page-container">
     <div class="">
-        <div class="h-24 w-full bg-gray-800"></div>
+        <div class="h-24 w-full bg-gray-800 rounded-b-lg"></div>
         <div class="py-3 px-4 flex flex-col space-y-6">
             <div class="flex space-x-3 items-center  ">
                 <div class="h-20 rounded-full w-20 outline outline-4 outline-gray-100 overflow-hidden">
@@ -15,10 +15,10 @@
                     <span class="Author-name font-semibold text-black text-2xl">{{Author.user.first_name}}
                         {{Author.user.last_name}}</span>
                     <span class="flex space-x-8 mt-2">
-                        <a href="{% url 'App:Followers Following'  'followers' Author.user.username Author.id %}"
+                        <a href="{% url 'App:Followers Following'   Author.user.username 'followers' %}"
                             class="text-[17px]   hover:text-blue-900  transition-transform active:scale-105 active:text-blue-900"><span
                                 id="follower_count">{{Author.followers}}</span> Followers</a>
-                        <a href="{%  url 'App:Followers Following' 'following' Author.user.username Author.id %}"
+                        <a href="{%  url 'App:Followers Following'  Author.user.username 'following' %}"
                             class="text-[17px]   hover:text-blue-900  transition-transform active:scale-105 active:text-blue-900">{{Author.following}}
                             Following</a>
                     </span><!-- Here user is author who's profile is viewing -->
@@ -55,7 +55,7 @@
                 {% for post in Posts %}
                 <div class="Card-blog-post flex mt-4 flex-col space-y-1 px-1">
                     <div class="upper-part text-sm">Posted on {{post.publish_time}} </div>
-                    <a href="{% url 'App:Blog Post' post.id %}">
+                    <a href="{% url 'App:Detail Post' post.author.user.username  post.slug %}">
                         <div class=" flex justify-between items-start space-x-2 py-2">
                             <div class="flex flex-col text-wrap {% if post.thImg != '' %} flex-grow {% else %} {% endif %}">
                                 <h1 id="title{{post.id}}" class="title font-semibold text-lg lg:text-xl">{{post.title}}
@@ -75,18 +75,18 @@
                     <div class="footer-part flex items-center justify-between py-2">
                         <span class="flex space-x-4 items-center ">
                             <span class="like_span">
-                                <span id="postlike_count{{post.id}}" class="like-count">{{post.like}}</span>
-                                <a role="button" class="" onclick="LikePost({{post.id}})" id="LikePostLink{{post.id}}">
-                                    {% if post.id in request.session.LikedPosts %}
-                                    <i id="LikePost{{post.id}}" class="fa-solid fa-thumbs-up text-md lg:text-lg"></i>
+                                <span id="postlike_count{{post.id}}" class="like-count">{% if post.like != 0 %}{{post.like}}{% endif %}</span>
+                                <a role="button" class="" onclick="ChangePostLikes({{post.id}})" id="LikePostLink{{post.id}}">
+                                    {% if post.id in request.session.likedPosts %}
+                                    <i id="post_like_icon{{post.id}}" class="fa-solid fa-thumbs-up text-md lg:text-lg"></i>
                                     {% else %}
-                                    <i id="LikePost{{post.id}}" class="fa-regular fa-thumbs-up text-md lg:text-lg"></i>
+                                    <i id="post_like_icon{{post.id}}" class="fa-regular fa-thumbs-up text-md lg:text-lg"></i>
                                     {% endif %}
                                 </a>
                             </span>
                             <span class="comment_span">
                                 <span class="comment">{{ post|get_comments|length }}</span>
-                                <a href="{% url 'App:Blog Post' post.id %}" class=""><i
+                                <a href="{% url 'App:Detail Post' post.author.user.username  post.slug %}" class=""><i
                                         class="fa-regular fa-comment "></i></a>
                             </span>
                         </span>

@@ -4,7 +4,7 @@
 {% endblock title %}
 {% block body %}
 {% load extraFilter %}
-<div class="container ">
+<div class="container">
     {% if user.is_authenticated %}
     {% else %}
     <div class="w-[92%] p-3   mb-5 mt-2  jumbotron mx-auto border-[1px] rounded-md text-white bg-gray-800 ">
@@ -13,33 +13,32 @@
             BlogBlend today.</p>
 
     </div>
-    <hr>
     {% endif %}
-
+    
     <!-- Search post option by filters -->
     <div class="filters-Box mt-4 bg-white  px-4" >
         <ul class="flex  space-x-1 p-2 overflow-x-scroll no-scrollbar " id="filtersContainer">
             {% for filter in filters %}
             {% if activeFilter and activeFilter.name == filter.name %}
-            <li class="filter-op px-3 py-1  border bg-gray-200 rounded-md text-nowrap" ><a
-                    href="{% url 'App:filter_posts' %} {% if activeFilter.name == 'All' %}{% else %}?filter={{activeFilter.name}}{%endif %}" id="{{activeFilter.name}}"
-                    class="text-lg">{{activeFilter.name}}</a></li>
+            <li class="" ><a
+                    href="{% url 'App:Home' %} {% if activeFilter.name == 'All' %}{% else %}?tag={{activeFilter.name}}{%endif %}" id="{{activeFilter.name}}"
+                    class="filter-op px-3 py-1  border bg-gray-100 rounded-md text-nowrap font-medium text-lg">{{activeFilter.name}}</a></li>
             {% else %}
-            <li class="filter-op px-3 py-1 bg-white border active:bg-gray-200 hover:font-medium rounded-md text-nowrap " ><a
-                    href="{% url 'App:filter_posts' %}{% if filter.name == 'All' %}{% else %}?filter={{filter.name}}{%endif %}"  id="{{filter.name}}"  class="text-lg">{{filter.name}}</a></li>
+            <li class="" ><a
+                    href="{% url 'App:Home' %}{% if filter.name == 'All' %}{% else %}?tag={{filter.name}}{%endif %}"  id="{{filter.name}}"  class="text-lg filter-op px-3 py-1 bg-white border active:bg-gray-200  hover:bg-gray-100  rounded-md text-nowrap ">{{filter.name}}</a></li>
             {% endif %}
             {% endfor %}
         </ul>
     </div>
 
     <!-- showing all posts  -->
-    <div class="mt-8 flex flex-col lg:space-y-4 space-y-2 lg:px-4 px-2">
+    <div class="mt-8 flex flex-col lg:space-y-3 space-y-2 lg:px-4 px-2">
         {% if activeFilter and allPosts|length == 0%}
         {% else %}
         {% for post in allPosts %}
-        <div class="card border-gray-600 border-[1px] rounded-md shadow-md px-3 pt-2">
+        <div class="card border-gray-400 border-[1px] rounded-md shadow-md px-3 pt-2">
             <div class="upper-part flex-col   ">
-                <a href="{% url 'App:Author Profile' post.author_id %}" class="author-name ">
+                <a href="{% url 'App:Profile' post.author.user.username %}" class="author-name ">
                     <div class="flex items-center space-x-2">
                         <div class="author-profile-image w-8 rounded-full h-8 overflow-hidden">
                             <img src="/media/{{post.author.profileImg}}" class="" alt="">
@@ -54,7 +53,7 @@
                 </a>
             </div>
 
-            <a href="{% url 'App:Blog Post' post.id %}">
+            <a href="{% url 'App:Detail Post' post.author.user.username post.slug %}">
                 <div class=" flex justify-between items-start space-x-2 py-2">
                     <div class="flex flex-col text-wrap {% if post.thImg != '' %} flex-grow {% else %} {% endif %}">
                         <h1 id="title{{post.id}}" class="title font-semibold text-lg lg:text-xl">{{post.title}}
@@ -65,27 +64,27 @@
                         </p>
                     </div>
                     {% if post.thImg != '' %}
-                    <div class="w-14 h-14 lg:w-28 lg:h-24  overflow-hidden rounded-md flex-shrink-0 ">
-                        <img src="/media/{{post.thImg}}" alt="">
-                    </div>
+                     <div class="w-14 h-14 lg:w-24 lg:h-24   rounded-md flex-shrink-0 ">
+                        <img src="/media/{{post.thImg}}" class="object-fit object-center w-full h-full" alt="">
+                    </div> 
                     {% endif %}
                 </div>
             </a>
             <div class="footer-part flex items-center justify-between py-2">
                 <span class="flex space-x-4 items-center ">
                     <span class="like_span">
-                        <span id="postlike_count{{post.id}}" class="like-count">{{post.like}}</span>
-                        <a role="button" class="" onclick="LikePost({{post.id}})" id="LikePostLink{{post.id}}">
-                            {% if post.id in request.session.LikedPosts %}
-                            <i id="LikePost{{post.id}}" class="fa-solid fa-thumbs-up text-md lg:text-lg"></i>
+                        <span id="postlike_count{{post.id}}" class="like-count">{% if post.like != 0 %}{{post.like}}{% endif %}</span>
+                        <a role="button" class="" onclick="ChangePostLikes({{post.id}})" id="LikePostLink{{post.id}}">
+                            {% if post.id in request.session.likedPosts %}
+                            <i id="post_like_icon{{post.id}}" class="fa-solid fa-thumbs-up text-md lg:text-lg"></i>
                             {% else %}
-                            <i id="LikePost{{post.id}}" class="fa-regular fa-thumbs-up text-md lg:text-lg"></i>
+                            <i id="post_like_icon{{post.id}}" class="fa-regular fa-thumbs-up text-md lg:text-lg"></i>
                             {% endif %}
                         </a>
                     </span>
                     <span class="comment_span">
-                        <span class="comment">{{ post|get_comments|length }}</span>
-                        <a href="{% url 'App:Blog Post' post.id %}" class=""><i class="fa-regular fa-comment "></i></a>
+                        <span class="comment-count">{{ post|get_comments|length }}</span>
+                        <a href="{% url 'App:Detail Post' post.author.user.username post.slug %}#comments" class=""><i class="fa-regular fa-comment "></i></a>
                     </span>
                 </span>
                 <span class="flex space-x-6 items-center mx-3 relative">
@@ -102,11 +101,11 @@
                         class="absolute z bg-white right-0 top-6 hidden p-1 border-gray-500 border rounded ">
                         <ul class="flex flex-col items-start w-fit space-y-1">
                             {% if post.author == User%}
-                            <li class=" hover:bg-slate-200 active:bg-slate-300 px-1 rounded text-nowrap">
-                                <a href="{% url 'App:Update post' post.id %}" class="">Update post</a>
+                            <li class="px-1 rounded  text-nowrap text-gray-900 hover:text-gray-600">
+                                <a href="{% url 'App:Update post' post.slug %}" class="">Update post</a>
                             </li>
                             {% else %}
-                            <li class="px-1 hover:bg-gray-200" id="follow_op{{post.id}}">
+                            <li class="px-1 rounded text-gray-900 hover:text-gray-600" id="follow_op{{post.id}}">
                                 {% if post.author_id in request.session.FollowedAuthor %}
                                 <a onclick="ChangeFollowers(this)" id="follow{{post.author_id}}"
                                     class="cursor-pointer">Following</a>

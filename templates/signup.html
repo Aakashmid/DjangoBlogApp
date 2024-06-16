@@ -35,7 +35,7 @@
             </div>
             <div class="flex-col flex space-y-1">
                 <label for="password" class="text-[17px] ">Password</label>
-                <input name="password" id="spassword" type="password"
+                <input name="password" id="password" type="password"
                     class="text-[17px] rounded px-2 py-1 border-[1px] border-gray-700 focus:outline  focus:outline-1 shadow-md focus:outline-gray-900"
                     required>
             </div>
@@ -56,7 +56,7 @@
 
     $(document).ready(function(){
         let body_element=document.getElementsByTagName('body')[0];
-        body_element.classList.add('bg-gray-100');
+        {% comment %} body_element.classList.add('bg-gray-50'); {% endcomment %}
 
     });
 </script>

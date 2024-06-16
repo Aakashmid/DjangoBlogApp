@@ -1,4 +1,3 @@
-{% load compress %}
 {% load static %}
 {% load humanize %}
 {% load extraFilter %}
@@ -11,9 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% comment %} <title> {% block title %}{% endblock title %}</title> {% endcomment %}
     <title> BlogBlend </title>
-    {% compress css %}
     <link rel="stylesheet" href="{% static 'src/output.css' %}">
-    {% endcompress %}
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
@@ -44,7 +41,7 @@
                     {% if user.is_authenticated %}
                     <a id="Create_postBtn"
                         class="text-gray-800  font-medium hover:bg-gray-800 hover:text-white hover:border-white border-gray-700 border-[1px] rounded-md p-2"
-                        href="/create-post/" role="button">Create post</a>
+                        href="{% url 'App:Create Post' %}" role="button">Create post</a>
                     {% else %}
                     <a id="signupBtn"
                         class="text-gray-800 font-medium hover:bg-gray-800 hover:text-white active:disabled: border-gray-700 border-[1px] rounded-md p-2"
@@ -61,9 +58,9 @@
         </nav>
         <div class="empty-box w-full h-14"></div>
     </header>
-    <span id="close_modals" class="w-full h-[100%] fixed top-0 bg-black opacity-30 hidden"></span>
+    <span id="close_modals" class="w-full h-[100%] z-20 fixed top-0 bg-black opacity-30 hidden"></span>
     {% for Message in messages %}
-    <div id="alert" class="p-1 block z-10 fixed  top-14 w-full  ">
+    <div id="alert" class="p-1 block z-10 fixed  top-15 w-1/2 -left-1/2 ">
         <div
             class="Dismissable-alert  rounded-md  p-2 mx-auto w-full lg:w-9/12 {% if Message.tags == 'error' %}bg-red-200 opacity-75 {% elif  Message.tags == 'success' %}bg-blue-300 {% endif %}  border   w-full flex justify-between items-center">
             <p
@@ -74,15 +71,7 @@
         </div>
     </div>
     {% endfor %}
-    <div id="searchBar" class="searchBar lg:w-[60%] lg:ml-[18%] shadow-indigo-100 my-2 hidden  ">
-        <form action="{% url 'App:Search Posts' %}" method="get" class="space-x-2 flex px-1">
-            <input type="text" name="q" id="q"
-                class="w-full p-[7px]  bg-gray-50  focus:outline-[2px] shadow-md  focus:outline-blue-200 focus:outline border-[1px] border-gray-500 rounded outline-offset-1"
-                placeholder="Search..." required>
-            <button type="submit"
-                class="hover:bg-blue-900 hover:text-white shadow-sm bg-white text-black rounded text-sm p-[7px] border-[1px] border-gray-500">Search</button>
-        </form>
-    </div>
+
 
     <!-- popover saved post -->
     <span
@@ -93,7 +82,7 @@
 
     <!-- navigation bar  -->
     <div id="navigation_bar"
-        class="lg:hidden transform translate-x-full  duration-200 fixed right-0 top-0 bg-gray-100 px-2  z-30 w-[72%]  h-full scroll-auto ">
+        class="lg:hidden transform translate-x-full  duration-200 fixed right-0 top-0 bg-gray-100 px-2  z-20 w-[72%] sm:w-1/2  h-full scroll-auto ">
         <div class=" flex justify-between items-center px-1 py-2">
             <span class="">
                 <p class="font-semibold text-lg text-black ml-3 items-center">BlogBlend</p>
@@ -107,7 +96,7 @@
                 <div class="w-20 h-20 outline outline-white rounded-full overflow-hidden">
                     <img src="/media/{{User.profileImg}}" class="" alt="">
                 </div>
-                <a href="/profile" class="flex flex-col items-center">
+                <a href="{%url 'App:Profile' user.username %}" class="flex flex-col items-center">
                     <!-- <p class="font-semibold text-lg">{{user.first_name}} {{user.last_name}}</p> -->
                     <p class="font-semibold text-lg">{{user.first_name}} {{user.last_name}} </p>
                     <p class="text-sm font-light">View profile</p>
@@ -121,7 +110,7 @@
         </div>
         <div class="flex flex-col space-y-2 px-6">
             {% if user.is_authenticated %}
-            <a href="/create-post/"
+            <a href="{% url 'App:Create Post' %}"
                 class="px-2 p-1 text-center hover:bg-gray-800 hover:text-white border-[1px] border-gray-900 rounded-md">Write
                 blog</a>
             <a href="/logout-user"
@@ -143,7 +132,7 @@
                         class="text-gray-700 mr-4"><i class="fa-solid fa-house fa-sm"></i></span> Home</div>
             </a>
             {% if user.is_authenticated %}
-            <a href="/post-blogs" class="">
+            <a href="{% url 'App:Reading_list'  %}" class="">
                 <div class="p-1 hover:bg-blue-100 text-lg font-normal  rounded-sm flex items-center"><span
                         class="text-gray-700 mr-4"><i class="fa-solid fa-book"></i></span> Library </div>
             </a>
@@ -159,7 +148,7 @@
     <!-- Login modal -->
     <div id='login_modal' class="login-container hidden">
         <div
-            class="  lg:h-1/2   p-4 bg-gray-200 mx-auto rounded-lg shadow-sm shadow-white w-[90%] sm:[60%] md:w-[40%] xl:w-[25%] fixed top-[40%] left-1/2  -translate-x-1/2 -translate-y-1/2 transform ">
+            class="  lg:h-1/2 z-30  p-4 bg-gray-200 mx-auto rounded-lg shadow-sm shadow-white w-[90%] sm:[60%] md:w-[40%] xl:w-[25%] fixed top-[40%] left-1/2  -translate-x-1/2 -translate-y-1/2 transform ">
             <div class="float-right">
                 <span onclick="closeLoginModal()"
                     class="text-gray-800 hover:bg-slate-300  transform -translate-y-3 px-1 translate-x-3 close float-end  text-3xl   text-semibold cursor-pointer">&times;</span>
@@ -195,21 +184,19 @@
         </div>
     </div>
 
-    <div class="main-container lg:flex w-full h-full ">
+    <div class="main-container ">
         <!-- navigation for larger screen -->
-        <div class="z-0 side-navigation-bar lg:fixed top-14  hidden lg:block w-[18%]  h-full ">
-            <div id="navigation_bar" class=" bg-gray-200 px-2  z-30 w-auto h-full scroll-auto ">
-                <div class=" flex justify-between items-center px-4 py-2">
-                    <p class="font-bold text-lg text-black p-2">BlogBlend</p>
-                </div>
-                <div class=" mb-6 px-4 py-2">
+        <div
+            class="z-0 side-navigation-bar lg:fixed top-14  bg-gray-100 rounded-lg hidden lg:block xl:w-[25%]   lg:w-[25%] h-full ">
+            <div id="navigation_bar" class="  px-3 float-right  xl:w-9/12 lg:w-10/12 h-full scroll-auto rounded-lg">
+                <div class=" mb-6 px-4 py-4">
                     {% if user.is_authenticated %}
                     <div class="p-2 mx-auto flex flex-col justify-start space-y-1">
                         <div class="w-16 h-16 outline outline-white rounded-full overflow-hidden">
                             <img src="/media/{{User.profileImg}}" class="" alt="">
                         </div>
-                        <a href="/profile" class="">
-                            <!-- <p class="font-semibold text-lg">{{user.first_name}} {{user.last_name}}</p> -->
+                        <a href="{%url 'App:Profile' user.username %}" class="">
+
                             <p class="font-semibold text-lg">{{user.first_name}} {{user.last_name}} </p>
                             <p class="text-sm">View profile</p>
                         </a>
@@ -222,7 +209,7 @@
                 </div>
                 <div class="flex flex-col space-y-2 px-4">
                     {% if user.is_authenticated %}
-                    <a href="/create-post/"
+                    <a href="{% url 'App:Create Post'%}"
                         class="px-2 p-1 text-center hover:bg-gray-800 hover:text-white border-[1px] border-gray-900 rounded-md">Write
                         blog</a>
                     <a href="/logout-user"
@@ -235,42 +222,62 @@
                         class="px-2 p-1 text-center hover:bg-gray-800 hover:text-white border-[1px] border-gray-900 rounded-md">Login</a>
                     {% endif %}
                 </div>
-                <hr class="my-3 border-t-[1px] border-gray-800 ">
-                <div class="flex flex-col mt-4">
+                <hr class="my-3 border-t-[1px] border-gray-400 ">
+                <div class="flex flex-col mt-4 navigation">
 
                     <a href="/" class="">
-                        <div class="p-1 hover:bg-blue-100   text-lg font-normal rounded-sm flex items-center"><span
+                        <div class="px-2 py-1 hover:bg-white   text-lg font-normal rounded-md flex items-center"><span
                                 class="text-gray-700 mr-4"><i class="fa-solid fa-house fa-sm"></i></span> Home</div>
                     </a>
                     {% if user.is_authenticated %}
-                    <a href="/post-blogs" class="">
-                        <div class="p-1 hover:bg-blue-100 text-lg font-normal  rounded-sm flex items-center"><span
+                    <a href="{% url 'App:Reading_list'  %}" class="">
+                        <div class="px-2 py-1 hover:bg-white text-lg font-normal  rounded-md flex items-center"><span
                                 class="text-gray-700 mr-4"><i class="fa-solid fa-book"></i></span> Library </div>
                     </a>
                     {% endif %}
                     <a href="#" class="">
-                        <div class="p-1 hover:bg-blue-100  text-lg font-normal rounded-sm flex items-center"><span
+                        <div class="px-2 py-1 hover:bg-white  text-lg font-normal rounded-md flex items-center"><span
                                 class="text-gray-700 mr-4"><i class="fa-solid fa-circle-info"></i></span>About</div>
                     </a>
-
                 </div>
             </div>
         </div>
-        <div class="base-body lg:w-[60%] lg:ml-[18%]">
+
+        <!-- searchbar -->
+        <div id="searchBar"
+            class="z-10 searchBar fixed lg:w-[50%] md:w-[80%] rounded-b-lg left-1/2 top-15 -translate-x-1/2 w-full  bg-white   p-2 hidden  ">
+            <form action="{% url 'App:Search Posts' %}" method="get" class="space-x-2 flex px-1">
+                <input type="text" name="q" id="q"
+                    class="w-full p-[7px]  bg-gray-50  outline outline-1 focus:outline-2 outline-gray-500 shadow-md   focus:outline-gray-800  rounded"
+                    placeholder="Search..." required>
+                <button type="submit"
+                    class="hover:bg-gray-800 hover:text-white shadow-sm bg-white text-black rounded text-sm p-[7px] border-[1px] border-gray-500">Search</button>
+            </form>
+        </div>
+        <!-- main body -->
+        <div class="base-body lg:w-[50%] md:w-[80%] sm:w-[95%] w-full   mx-auto ">
             {% block body %}
             {% endblock body %}
+        </div>
+
+        <!-- left side content -->
+        <div class="hidden lg:block fixed w-[25%] right-0 h-full ">
+            {% block rightcontent %}
+            {% endblock rightcontent %}
         </div>
     </div>
     {% block js %}
     {% endblock js %}
     <script src="{% static 'Js/base.js' %}"></script>
     <script>
+
+        // for saving post in request.session
         function SavePost(element) {
             {% if user.is_authenticated %}
             let post_id = element.id.slice(9);
             $.ajax({
                 type: "Post",
-                url: "{% url 'App:Author Profile' user.id %}",
+                url: "{% url 'App:Save Post' %}",
                 data: { 'Post_id': post_id },
                 dataType: "json",
                 headers: {
@@ -308,7 +315,9 @@
             showLogin();
             {% endif %}
         }
-        function showSavePostModel(text) {
+
+
+        function showSavePostModel(text) {  //popover
             let box_post = document.getElementById('popover');
             if (text === 'Saved') {
                 box_post.innerText = 'Saved a new post';
@@ -325,30 +334,33 @@
             box_post.classList.toggle('translate-y-full');
         }
 
-        LikePost = (post_id) => {
+        // for like a post
+        ChangePostLikes = (post_id) => {
             {% if user.is_authenticated %}
+            console.log('Send request');            
             $.ajax({
-                type: "Post",
-                url: "{% url 'App:User Profile' %}",
-                data: { 'post_id': post_id },
+                type: "post",
+                url: "{% url 'App:Profile' user.username %}",
+                data: JSON.stringify({ 'post_id': post_id }),
+                dataType: "json",
                 headers: {
                     "X-CSRFToken": '{{ csrf_token }}'
                 },
                 //here  data is response return by server 
-                success: function (data) {
-                    if (document.getElementById("postlike_count" + post_id)) {
-                        document.getElementById("postlike_count" + post_id).innerText = data.like_count;
+                success: function (response) {
+                    likedPostElement=document.getElementById('post_like_icon' + post_id);
+                    console.log('Success response');
+                    if (response.status == 'liked') {
+                        if(likedPostElement.classList.contains('fa-regular')){
+                            likedPostElement.classList.replace('fa-regular', 'fa-solid');
+                        }
                     }
-                    let Icon = document.getElementById("LikePost" + post_id);
-                    if (Icon.classList.contains('fa-regular')) {
-                        Icon.classList.remove('fa-regular');
-                        Icon.classList.add('fa-solid');
+                    else if (response.status == "unliked") {
+                        if(likedPostElement.classList.contains('fa-solid')){
+                            likedPostElement.classList.replace('fa-solid', 'fa-regular');
+                        }
                     }
-                    else {
-                        Icon.classList.remove('fa-solid');
-                        Icon.classList.add('fa-regular');
-                    }
-                    document.getElementById('LikePostLink' + post_id).innerHTML = Icon.outerHTML;
+                    document.getElementById('postlike_count' + post_id).innerText = response.likeCount;
 
                 },
                 //here error is error return by the url 
@@ -369,7 +381,7 @@
             followCount = document.getElementById('follow_count');
             $.ajax({
                 type: "Patch",
-                url: "{% url 'App:User Profile' %}",
+                url: "{% url 'App:Follow Author' %}",
                 data: JSON.stringify({ "author_id": author_id }),
                 dataType: "json",
                 headers: {
@@ -381,12 +393,12 @@
                     if (document.getElementById('follower_count')) {
                         document.getElementById('follower_count').innerText = data.follower_count;
                     }
-                    if(element.classList.contains('bg-white')){
+                    if (element.classList.contains('bg-white')) {
                         element.classList.remove('bg-white');
                         element.classList.add('bg-blue-950');
                         element.classList.toggle('text-white');
                     }
-                    else if(element.classList.contains('bg-blue-950')){
+                    else if (element.classList.contains('bg-blue-950')) {
                         element.classList.remove('bg-blue-950');
                         element.classList.add('bg-white');
                         element.classList.toggle('text-white');
@@ -398,6 +410,7 @@
                 }
             });
         }
+
         function ChangeFollowers(followBtn) {
             {% if user.is_authenticated %}
             SenAjaxchangeFollower(followBtn);

@@ -10,35 +10,40 @@ Profile
 <div id="profile_page" class="profile-container">
     <div class="upper">
         <div class="flex flex-col justify-center relative">
-            <div class="h-24 flex flex-col justify-center bg-gray-800">
+            <div class="h-24  bg-gray-800 rounded-b-lg">
             </div>
             <div class="p-3 ">
                 <span class="flex space-x-5 items-center ">
                     <div class="h-20 rounded-full w-20 outline outline-4 outline-gray-100 overflow-hidden"
-                    onclick="showimage()">
-                    <img src='/media/{{User.profileImg}}' alt="..." class=" ">
-                </div>
-                <div
-                class="hidden image-box overflow-hidden absolute border-[1px] top-1/3 left-1/2 rounded-lg transform  -translate-y-3/4 -translate-x-1/2 w-[250px] lg:w-[300px]  lg:h-[300px] h-[250px]">
-                <img src="/media/{{User.profileImg}}" alt="..">
-            </div>
-            <span class="">
-                <h1 class="text-2xl font-semibold ">{{user.first_name}} {{user.last_name}}</h1>
-                <span class="flex space-x-8 mt-2">
-                    <a href="{% url 'App:Followers Following'  'followers' user.username User.id %}" class="text-[17px]   hover:text-blue-900  transition-transform active:scale-105 active:text-blue-900">{{User.followers}} Followers</a>
-                    <a href="{%  url 'App:Followers Following' 'following' user.username User.id %}" class="text-[17px]   hover:text-blue-900  transition-transform active:scale-105 active:text-blue-900">{{User.following}} Following</a>
-                </span>
-            </span>
-           <span onclick="ShowEditForm()" class="absolute right-4  w-auto  font-medium rounded-full text-sm  text-white bg-gray-800 hover:bg-slate-900 active:bg-slate-700 px-3 py-2  active:outline active:outline-1
+                        onclick="showimage()">
+                        <img src='/media/{{User.profileImg}}' alt="..." class=" ">
+                    </div>
+                    <div
+                        class="hidden image-box overflow-hidden absolute border-[1px]  w-[250px] lg:w-[300px]  lg:h-[300px] h-[250px] left-1/2 transform -translate-x-1/2 ">
+                        <img src="/media/{{User.profileImg}}" alt="..">
+                    </div>
+                    <span class="">
+                        <h1 class="text-2xl font-semibold ">{{user.first_name}} {{user.last_name}}</h1>
+                        <span class="flex space-x-8 mt-2">
+                            <a href="{% url 'App:Followers Following'  user.username 'followers'  %}"
+                                class="text-[17px]   hover:text-blue-900  transition-transform active:scale-105 active:text-blue-900">{{User.followers}}
+                                Followers</a>
+                            <a href="{%  url 'App:Followers Following' user.username 'following'  %}"
+                                class="text-[17px]   hover:text-blue-900  transition-transform active:scale-105 active:text-blue-900">{{User.following}}
+                                Following</a>
+                        </span>
+                    </span>
+                    <span onclick="ShowEditForm()" class="absolute right-4  w-auto  font-medium rounded-full text-sm  text-white bg-gray-800 hover:bg-slate-900 active:bg-slate-700 px-3 py-2  active:outline active:outline-1
             "><i class="fa-solid fa-pen"></i></span>
-        </span>
-    </div>
+                </span>
+            </div>
         </div>
     </div>
     <div class="mt-6">
         <span class="w-full">
             <ul class="flex space-x-4 py-2 px-4">
-                <li id="profile_home" class="profile-link cursor-pointer underline underline-offset-[14px] hover:text-blue-950"
+                <li id="profile_home"
+                    class="profile-link cursor-pointer underline underline-offset-[14px] hover:text-blue-950"
                     onclick="changeLinkAppearence(this)">Home </li>
                 <li id="profile_about" class="profile-link cursor-pointer underline-offset-[14px] hover:text-blue-950"
                     onclick="changeLinkAppearence(this)">About </li>
@@ -47,100 +52,124 @@ Profile
         <hr class="mx-3 bg-gray-900 ">
         <!-- Home section -->
         <div class="Home-page py-3 px-2">
-            <div class="border-2 rounded-lg p-4 lg:text-xl text-lg font-semibold my-2 hover:bg-gray-300 active:bg-gray-300 cursor-pointer" onclick="showUsersPosts(this)">
-                Your Posts >></div>
-                <div class="Users-Posts-Container hidden">
+            <div class="border-2 rounded-lg p-4 lg:text-xl text-lg font-semibold my-2  active:bg-gray-200 cursor-pointer"
+                onclick="showUsersPosts(this)">
+                Your Posts >> </div>
+            <div id="UsersPostsContainer" class="xl:px-2 hidden">
                 {% if UsersPosts|length > 0 %}
-                {% for post in UsersPosts %}
-                <div id="MyPost{{post.id}}"
-                    class="card border-gray-600 border-[1px] rounded-md shadow-md p-2 mt-2 min-h-[120px] xl:min-h-[130px]">
-                    <div class="upper-part flex-col ">
-                        <a href="{% url 'App:Author Profile' post.author_id %}" class="author-name">
-                            <div class="flex items-center space-x-2">
-                                <div class="author-profile-image w-8 rounded-full h-8 overflow-hidden">
-                                    <img src="/media/{{post.author.profileImg}}" class="" alt="">
+                <div  class="flex flex-col lg:space-y-3 space-y-2">
+                    {% for post in UsersPosts %}
+                    <div id="MyPost{{post.id}}" class="card border-gray-400 border-[1px] rounded-md shadow-md px-3 pt-2">
+                        <div class="upper-part flex-col ">
+                            <a href="{% url 'App:Profile' post.author.user.username %}" class="author-name ">
+                                <div class="flex items-center space-x-2">
+                                    <div class="author-profile-image w-8 rounded-full h-8 overflow-hidden">
+                                        <img src="/media/{{post.author.profileImg}}" class="" alt="">
+                                    </div>
+                                    <span class="flex space-x-2 items-center  font-sans ">
+                                        <p class="font-medium">
+                                            {{post.author.user.first_name}} {{post.author.user.last_name}}
+                                        </p>
+                                        <p class="text-xs font-light">. Posted on {{post.publish_time}}</p>
+                                    </span>
                                 </div>
-                                <span class="flex flex-col  font-sans ">
-                                    <p class="font-normal">
-                                        {{post.author.user.first_name}} {{post.author.user.last_name}}
+                            </a>
+                        </div>
+
+                        <a href="{% url 'App:Detail Post' post.author.user.username post.slug %}">
+                            <div class=" flex justify-between items-start space-x-2 py-2">
+                                <div
+                                    class="flex flex-col text-wrap {% if post.thImg != '' %} flex-grow {% else %} {% endif %}">
+                                    <h1 id="title{{post.id}}" class="title font-semibold text-lg lg:text-xl">
+                                        {{post.title}}
+                                    </h1>
+                                    <p class="blog-content">
+                                    <div class="preview hidden text-lg lg:block">
+                                        {{post.content|safe|truncatechars_html:150}}
+                                    </div>
                                     </p>
-                                    <p class="text-xs font-light">{{post.publish_time}}</p>
-                                </span>
+                                </div>
+                                {% if post.thImg != '' %}
+                                <div class="w-14 h-14 lg:w-24 lg:h-24   rounded-md flex-shrink-0 ">
+                                    <img src="/media/{{post.thImg}}" class="object-fit object-center w-full h-full"
+                                        alt="">
+                                </div>
+                                {% endif %}
                             </div>
                         </a>
-                    </div>
+                        <div class="footer-part flex items-center justify-between py-2">
+                            <span class="flex space-x-4 items-center ">
+                                <span class="like_span">
+                                    <span id="postlike_count{{post.id}}" class="like-count">{% if post.like != 0 %}{{post.like}}{% endif %}</span>
+                                    <a role="button" class="" onclick="ChangePostLikes({{post.id}})" id="LikePostLink{{post.id}}">
+                                        {% if post.id in request.session.likedPosts %}
+                                        <i id="post_like_icon{{post.id}}" class="fa-solid fa-thumbs-up text-md lg:text-lg"></i>
+                                        {% else %}
+                                        <i id="post_like_icon{{post.id}}" class="fa-regular fa-thumbs-up text-md lg:text-lg"></i>
+                                        {% endif %}
+                                    </a>
+                                </span>
+                                <span class="comment_span">
+                                    <span class="comment-count">{{ post|get_comments|length }}</span>
+                                    <a href="{% url 'App:Detail Post' post.author.user.username post.slug %}#comments"
+                                        class=""><i class="fa-regular fa-comment "></i></a>
+                                </span>
+                            </span>
+                            <span class="flex space-x-6 items-center mx-3 relative">
+                                <a role="button" class="bookmark" onclick="SavePost(this)" id="Save_post{{post.id}}">
+                                    {% if post.id in request.session.SavedPosts %}
+                                    <i id="saveIcon{{post.id}}" class="fa-solid fa-bookmark text-md lg:text-lg"></i>
+                                    {% else %}
+                                    <i id="saveIcon{{post.id}}" class="fa-regular fa-bookmark text-md lg:text-lg"></i>
+                                    {% endif %}
+                                </a>
+                                <a role="button" class="three-dots cursor-pointer" id="options{{post.id}}"
+                                    onclick="OptionPopover(this)"><i class="fa-solid fa-ellipsis fa-lg"></i></a>
+                                <span id="Option_box{{post.id}}"
+                                    class="absolute z bg-white right-0 top-6 hidden p-1 border-gray-500 border rounded ">
+                                    <ul class="flex flex-col items-start w-fit space-y-1">
+                                        {% if post.author == User%}
+                                        <li class="px-1 rounded  text-nowrap text-gray-900 hover:text-gray-600">
+                                            <a href="{% url 'App:Update post' post.slug %}" class="">Update post</a>
+                                        </li>
+                                        <li onclick="RemovePost({{post.id}})" class="px-1 rounded  text-nowrap text-gray-900 hover:text-gray-600">
+                                            <a role="button" >Remove post</a>
+                                        </li>
+                                        {% else %}
+                                        <li class="px-1 rounded text-gray-900 hover:text-gray-600"
+                                            id="follow_op{{post.id}}">
+                                            {% if post.author_id in request.session.FollowedAuthor %}
+                                            <a onclick="ChangeFollowers(this)" id="follow{{post.author_id}}"
+                                                class="cursor-pointer">Following</a>
+                                            {% else %}
+                                            <a onclick="ChangeFollowers(this)" id="follow{{post.author_id}}"
+                                                class="cursor-pointer">Follow</a>
+                                            {% endif %}
+                                        </li>
+                                        {% endif %}
+                                    </ul>
+                                </span>
+                            </span>
 
-                    <a href="{% url 'App:Blog Post' post.id %}">
-                        <div class=" flex justify-between items-center">
-                            <div
-                                class="flex flex-col text-wrap   {% if post.thImg != '' %} w-[80%] {% else %}w-auto {% endif %} ">
-                                <h1 id="title{{post.id}}" class="title font-semibold text-xl lg:text-2xl">{{post.title}}</h1>
-                                <p class="blog-content">
-                                <div class="preview hidden text-lg lg:block">{{post.content|safe|truncatechars_html:150}}</div>
-                                </p>
-                            </div>
-                            {% if post.thImg != '' %}
-                            <div class="w-14 h-14 lg:w-28 lg:h-24 overflow-hidden rounded-md">
-                                <img src="/media/{{post.thImg}}" alt="">
-                            </div>
-                            {% endif %}
                         </div>
-                    </a>
-                    <div class="footer-part flex items-center justify-between pb-1 pt-2 px-2">
-                        <span class="flex space-x-4 items-center ">
-                            <a role="button" class="" onclick="LikePost({{post.id}})" id="LikePostLink{{post.id}}">
-                                {% if post.id in request.session.LikedPosts %}
-                                <i id="LikePost{{post.id}}" class="fa-solid fa-thumbs-up text-md lg:text-lg"></i>
-                                {% else %}
-                                <i id="LikePost{{post.id}}" class="fa-regular fa-thumbs-up text-md lg:text-lg"></i>
-                                {% endif %}
-                            </a>
-                            <a href="" class=""><i class="fa-regular fa-comment fa-md"></i></a>
-                        </span>
-                        <span
-                            class="p-2 hidden fixed top-16 left-1/2  transform duration-300 -translate-y-full -translate-x-1/2 w-32 text-center text-white font-semibold rounded shadow-green-100 bg-black"
-                            id="SavePost_popover">
-                            Post saved
-                        </span>
-                        <span class="flex space-x-6 items-center mx-3 relative">
-                            <a role="button" class="bookmark" onclick="SavePost(this)" id="Save_post{{post.id}}">
-                                {% if post.id in request.session.SavedPosts %}
-                                <i id="saveIcon{{post.id}}" class="fa-solid fa-bookmark  text-md lg:text-lg"></i>
-                                {% else %}
-                                <i id="saveIcon{{post.id}}" class="fa-regular fa-bookmark  text-md lg:text-lg"></i>
-                                {% endif %}
-                            </a>
-                            <a role="button" class="three-dots cursor-pointer" id="options{{post.id}}"
-                                onclick="OptionPopover(this)"><i class="fa-solid fa-ellipsis fa-lg"></i></a>
-
-                            <!-- options -->
-                            <div id="Option_box{{post.id}}"
-                                class="absolute bg-white right-0 p-1 hidden top-5 border-gray-500 border rounded ">
-                                <ul class="flex flex-col  items-center  w-fit">
-                                    <li class=" hover:bg-slate-200 active:bg-slate-300 p-1 rounded text-nowrap">
-                                        <a href="{% url 'App:Update post' post.id %}" class="">Update post</a>
-                                    </li>
-                                    <li class=" hover:bg-slate-200 active:bg-slate-300 p-1 rounded text-nowrap">
-                                        <a role="button" onclick="RemovePost({{post.id}})">Remove post</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </span>
-
                     </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
                 {% else %}
-                <p class="text-center text-md lg:text-lg font-medium lg:font-semibold text-wrap">You didn't have any post yet !! </p>
+                <p class="text-center text-md lg:text-lg font-medium lg:font-semibold text-wrap">You didn't have any
+                    post yet !! </p>
                 <a href="{% url 'App:Create Post' %}"
-                    class="px-3 py-2 float-end m-2  xl:text-lg  text-sm rounded-md text-white bg-black hover:bg-slate-900 active:bg-slate-900">Create Post</a>
+                    class="px-3 py-2 float-end m-2  xl:text-lg  text-sm rounded-md text-white bg-black hover:bg-slate-900 active:bg-slate-900">Create
+                    Post</a>
                 {% endif %}
             </div>
-            <a href="{% url 'App:Reading_list' %}" class="">
-                <div class="border-2 rounded-lg p-4 clear-end lg:text-xl text-lg font-semibold mt-4 hover:bg-gray-300 active:bg-gray-300 cursor-pointer">Your
+            <a href="{% url 'App:Reading_list'  %}" class="">
+                <div
+                    class="border-2 rounded-lg p-4 clear-end lg:text-xl text-lg font-semibold mt-4 hover:bg-gray-200 active:bg-gray-200 cursor-pointer">
+                    Your
                     Reading List >></div>
-                </div>
-            </a>
+        </div>
+        </a>
 
         <!-- About Section -->
         <div class="about-page hidden p-3">
@@ -211,7 +240,9 @@ Profile
         </form>
     </div>
 </div>
+
 <div class="h-10 w-full "></div>
+
 {% endblock body %}
 {% block js %}
 <script>
@@ -223,17 +254,12 @@ Profile
     }
     var profile_Page = document.getElementById('profile_page');
     let prHtml = profile_Page.innerHTML;
+
     //change page of editform to default profile page
     function profilePage() {
         let profilePage = document.getElementById('profile_page');
         profilePage.innerHTML = prHtml;
     }
-
-    $(document).ready(function () {
-        let body_element = document.getElementsByTagName('body')[0];
-        body_element.classList.add('bg-gray-100');
-
-    });
 
 
     //underline element clicked
@@ -285,11 +311,11 @@ Profile
     RemovePost = (post_id) => {
         {% if user.is_authenticated %}
         let ans = confirm("You want to delete this post permanently ");
-        if (ans){
+        if (ans) {
 
             $.ajax({
                 type: "Delete",
-                url: "{% url 'App:Update post' 0 %}".replace('0', post_id),
+                url: "{% url 'App:delete post' 0 %}".replace('0', post_id),
                 data: { 'post_id': post_id },
                 headers: {
                     "X-CSRFToken": '{{ csrf_token }}'
@@ -309,6 +335,11 @@ Profile
         {% endif %}
     }
 
+    showUsersPosts = (button) => {
+        let postsContainer = document.getElementById('UsersPostsContainer');
+        button.classList.toggle('bg-gray-200');
+        postsContainer.classList.toggle('hidden');
+    }
 </script>
 
 {% endblock js%}

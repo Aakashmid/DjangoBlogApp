@@ -29,29 +29,6 @@
         // });
     });
 
-    function toggleDropDown() {
-        document.getElementById('Categories').classList.toggle('hidden');
-        let angle_icon=document.getElementsByClassName('angle-icon')[0];
-        if (angle_icon.innerHTML==='<i class="fa-solid fa-angle-down fa-sm" aria-hidden="true"></i>') {
-         angle_icon.innerHTML='<i class="fa-solid fa-angle-up fa-sm" ></i>';
-        }
-        else{
-            angle_icon.innerHTML='<i class="fa-solid fa-angle-down fa-sm" ></i>';
-        }
-        
-    }
-    function selectOption(event) {
-        var selectOption = event.target;
-        if (selectOption.tagName === 'LI') {
-            // var selectedValue = selectedOption.getAttribute('data-value');
-            // Update the hidden input with the selected value
-            document.getElementById('selectedOption').value = selectOption.innerText;
-            document.getElementById('selectedOp').innerText = selectOption.innerText;
-            // Close the dropdown after selecting an option
-            toggleDropDown();
-
-        }
-    }
 </script>
 
 {% endblock js %}
@@ -61,17 +38,19 @@
 <div class="container">
     <div class="">
         <div class="form">
-            <form action="/create-post/" class="p-3 flex-col space-y-3 lg:space-y-4 w-full" method="post"
+            <form action="{% url 'App:Create Post' %}" class="p-3 flex-col space-y-3 lg:space-y-4 w-full" method="post"
                 enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="title">
                     <label for="post_title" class="text-lg font-medium">Title</label>
                     <input type="text" name="post_title"
-                        class="text-lg w-full  border-[1px] rounded border-gray-600 p-1 outline-gray-300  outline-offset-2 outline-2"
+                        class="text-3xl w-full   border-[1px] rounded border-gray-600 p-1 outline-gray-300  outline-offset-2 outline-2"
                         id="post_title" placeholder="Enter title of blog here..." required>
                 </div>
                 <div class="flex flex-col md:flex-row space-y-4 md:justify-between md:items-center">
-                    <span class="Category-dropDown flex space-x-2">
+
+                    <!-- Categories sectio -->
+                    <!-- <span class="Category-dropDown flex space-x-2">
                         <span class="flex items-center space-x-4">
                             <a class=" font-medium text-lg " id="trigger_cat_dropdown" onclick="toggleDropDown()"
                                 role="button">Select
@@ -88,9 +67,9 @@
                             {% endfor %}
                         </ul>
                         <input name="category" type="hidden" id="selectedOption" value="">
-                    </span>
+                    </span> -->
                     <!-- Tag selector -->
-                    <span class="flex space-x-3 items-center">
+                    <span class="flex flex-col items-start">
                         <p class="text-lg font-medium">Tags </p>
                         <input type="text" name="tags" id="tags"
                             class=" w-full lg:w-96 border-[1px] rounded border-gray-600 p-1 outline-gray-300  outline-offset-2 outline-1"
@@ -99,11 +78,12 @@
                 </div>
                 <div class="">
                     <label for="thumbnail" class="text-lg font-medium">Select Thumbnail (If Any) : </label>
-                    <input type="file" id="thumbnail" name="thumbnail"  accept="image/*" value="">
+                    <input type="file" id="thumbnail" name="thumbnail" accept="image/*" value="">
                 </div>
-                <div class="no-tailwind-base">
+
+                <!-- Write blog section -->
+                <div class="no-tailwind-base ">
                     <textarea required name="blog_content" id="blog_content" class="">
-                        Write your blog here...
                     </textarea>
                 </div>
                 <div class="post-button">
