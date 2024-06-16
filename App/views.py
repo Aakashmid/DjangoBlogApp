@@ -1,3 +1,4 @@
+from django.db.models import Count
 from django.shortcuts import render,redirect,HttpResponse,HttpResponseRedirect,get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.models import User
@@ -315,7 +316,7 @@ def profile(request,text=None,username=None):
         params={'following':following,'follower':follower,'Author':Author,'AllUsers':AllUsers}
         return render(request,'App/followersFollowings.html',params)
     
-    # for liked post 
+    # for changing post likes
     elif request.method=="POST":
         try:
             likedPosts= request.session['likedPosts'] if 'likedPosts' in request.session  else []
@@ -342,7 +343,6 @@ def profile(request,text=None,username=None):
             return JsonResponse(response_context)
         except Exception as e:
              return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
-
     # for follow a author or unfollow 
     elif request.method=="PATCH": 
         data=json.loads(request.body)  # get author_userid of author   
