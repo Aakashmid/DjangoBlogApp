@@ -33,11 +33,11 @@ class Post(models.Model):
     title=models.CharField( max_length=200)
     content=models.TextField()
     publish_time=models.DateField(default=datetime.today)
-    read_count=models.IntegerField(default=0)
+    read_count=models.IntegerField(default=0,db_index=True)
     author=models.ForeignKey(BlogUser, on_delete=models.CASCADE)
     like=models.IntegerField(default=0)
     category=models.ForeignKey(PostCategory, verbose_name="Post_Categories", on_delete=models.SET_NULL,null=True,blank=True)
-    tags=models.ManyToManyField(Tag, related_name='posts',blank=True)
+    tags=models.ManyToManyField(Tag, related_name='tagPosts',blank=True)
     thImg=models.ImageField("Post Thumbnail", upload_to='App/thumbnail/', default='',blank=True ,null=True)
     slug = models.SlugField(unique=True, max_length=200, blank=True)
 

@@ -18,16 +18,26 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 # Create your views here.
+
+# # Cache the view for 15 minutes
+# @cache_page(60 * 15)
 def home(request):    #fname is filter name
     filters=[{'name':'All'},{'name':'Latest'},{'name':'Following'}] if 'FollowedAuthor' in request.session and len(request.session['FollowedAuthor']) > 0 else [{'name':'All'},{'name':'Latest'}]
-    postTags=Tag.objects.all()
+
+    postTags = Tag.objects.annotate(post_count=Count('tagPosts')).filter(post_count__gt=0)  # posts is related name of  # tag in post model ,get tag whose posts are more than 0
     for tag in postTags:
-        # getting those tag whose post exists
-        if len(tag.name) >0 and Post.objects.filter(tags=tag).exists():
-            filters.append({'name':str(tag.name)})
-            
+        filters.append({'name':str(tag.name)})
+
     allposts=Post.objects.all()
-    params={'allPosts':allposts,'filters':filters,'activeFilter':{'name':'All'}}
+    # allposts=Post.objects.all().order_by('?')  
+
+    # Get the page number from the request
+    page = request.GET.get('page', 1)
+
+    # Create a Paginator object with 10 posts per page
+    paginator = Paginator(allposts, 10)
+    posts=paginator.page(page)
+    params={'allPosts':posts,'filters':filters,'activeFilter':{'name':'All'}}
 
     # for filtering posts
     filter=request.GET.get('tag','')
@@ -328,20 +338,26 @@ def profile(request,text=None,username=None):
                 PostLike.objects.get(post=post, user=request.user).delete()
                 post.like-=1
                 post.save()
-                if post_id in likedPosts:
-                    likedPosts.remove(post_id)
+                likedPosts = [pid for pid in likedPosts if pid != post_id]
                 response_context={'likeCount':post.like,'status':'unliked'}
             else:
                 PostLike.objects.create(post=post,user=request.user)
                 post.like+=1
                 post.save()
-                if post_id not in likedPosts:
-                    likedPosts.append(post_id)
+                likedPosts.append(post_id) if post_id not in likedPosts else None
                 response_context={'likeCount':post.like,'status':'liked'}
             request.session['likedPosts']=likedPosts
             request.session.modified=True
+            
             return JsonResponse(response_context)
+        except PostLike.MultipleObjectsReturned:
+            PostLike.objects.filter(post=post, user=request.user).delete()
+            post.like-=1
+            post.save()
+            likedPosts = [pid for pid in likedPosts if pid != post_id]
+            response_context={'likeCount':post.like,'status':'unliked'}
         except Exception as e:
+             print(request.session.items())
              return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
     # for follow a author or unfollow 
     elif request.method=="PATCH": 
