@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib.auth import login,logout,authenticate
 from django.contrib import messages
-from .models import Post,Comment,PostLike,CommentLike,PostReadedUser ,BlogUser,AuthorFollower,Tag,PostCategory,SavedPost
+from .models import Post,Comment,PostLike,CommentLike,PostReadedUser ,BlogUser,AuthorFollower,Tag,SavedPost
 from .templatetags import extraFilter
 from django.db.models import Q
 from django.http import JsonResponse
@@ -28,7 +28,8 @@ def home(request):    #fname is filter name
     for tag in postTags:
         filters.append({'name':str(tag.name)})
 
-    allposts=Post.objects.all()
+    allposts= Post.objects.select_related('author__user').annotate(comment_count=Count('comment', filter=Q(comment__parent=None)))
+
     # allposts=Post.objects.all().order_by('?')  
 
     # Get the page number from the request
@@ -142,11 +143,7 @@ def SearchResult(request,filterOrder=None,category=None,tagName=None):
         params={"allPosts":Posts,'Search':"Search_result_page"}
 
 # --------------------------- handle later
-    elif category is not  None:
-        cat=PostCategory.objects.get(name=category)
-        Posts=Post.objects.filter(category=cat)
-        params={"allPosts":Posts}
-
+ 
     elif tagName is not None:
         allPosts=Post.objects.all()
         Posts=[]
@@ -222,9 +219,7 @@ def Create_post(request):
         messages.success(request,"Blog is posted successfuly !!")
         return HttpResponseRedirect(reverse('App:Home'))
     else :
-        categories=PostCategory.objects.all()
-        params={'Categories':categories}
-        return render(request,'App/createPost.html',params)
+        return render(request,'App/createPost.html')
 
 @csrf_exempt   # when use handling post request
 def detail_post(request,slug=None,author_username=None):
@@ -262,7 +257,9 @@ def detail_post(request,slug=None,author_username=None):
         post=Post.objects.get(slug=slug)
         comments=Comment.objects.filter(Q(parent=None) & Q(post=post))
         replies=Comment.objects.filter(post=post).exclude(parent=None)
-        related_posts=Post.objects.filter(category=post.category)
+        # related_posts=Post.objects.filter(category=post.category)
+        tags=post.tags.all()
+        related_posts=Post.objects.filter(tags__in=tags).exclude(id=post.id).distinct().annotate(same_tag_count=Count('tags')).order_by('-same_tag_count')
         # Author=BlogUser.objects.get(user=post.author)
         CommentsDict={}
         replyDict={}

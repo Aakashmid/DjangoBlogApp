@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Post,Comment,PostLike,CommentLike,BlogUser,AuthorFollower,PostCategory,Tag
+from .models import Post,Comment,PostLike,CommentLike,BlogUser,AuthorFollower,Tag
 from django_summernote.admin import SummernoteModelAdmin
 from django.contrib.admin import AdminSite
 from .models import User
@@ -23,13 +23,13 @@ blog_site=BlogAdminArea()
 
 # registering models
 # blog_site.register(Post, SummerAdmin)
-blog_site.register([Comment,User,AuthorFollower,PostCategory,CommentLike,PostLike,Tag])
+blog_site.register([Comment,User,AuthorFollower,CommentLike,PostLike,Tag])
 
 @admin.register(Post,site=blog_site)
 class PostAdmin(admin.ModelAdmin):
     search_fields=('author__user__first_name','author__user__last_name','author__user__username')
-    list_display=['author','title','category','publish_time']
-    list_filter=['publish_time','category','author']
+    list_display=['author','title','publish_time']
+    list_filter=['publish_time','author']
     # def author_name(self,obj):
     #     return obj.author.first_name+" "+obj.author.last_name
 
