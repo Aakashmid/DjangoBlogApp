@@ -28,7 +28,7 @@ def home(request):    #fname is filter name
     for tag in postTags:
         filters.append({'name':str(tag.name)})
 
-    allposts= Post.objects.select_related('author__user').annotate(comment_count=Count('comment', filter=Q(comment__parent=None)))
+    allposts= Post.objects.select_related('author__user').annotate(comment_count=Count('comment', filter=Q(comment__parent=None))).order_by('?')  
 
     # allposts=Post.objects.all().order_by('?')  
 
@@ -47,7 +47,8 @@ def home(request):    #fname is filter name
         if filter!='Following' and filter!='All' and filter!='Latest':
             try :
                 activefilter=Tag.objects.get(name=filter)
-                filteredPosts=Post.objects.filter(tags=activefilter)
+                filteredPosts=Post.objects.select_related('author__user').filter(tags=activefilter).annotate(comment_count=Count('comment', filter=Q(comment__parent=None)))
+                # filteredPosts=Post.objects.filter(tags=activefilter)
                 params={'allPosts':filteredPosts,'filters':filters,'activeFilter':activefilter}
             except Exception as e:
                 pass
@@ -64,7 +65,7 @@ def home(request):    #fname is filter name
             params={'allPosts':followedAuthorPosts,'filters':filters,'activeFilter':activefilter }
         elif filter=='Latest':
             activefilter={'name':'Latest'} 
-            latest_posts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=3))
+            latest_posts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=3)).select_related('author__user').annotate(comment_count=Count('comment',filter=Q(comment__parent=None)))
             # latest_posts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=3)).order_by('-read_count')
             params={'allPosts':latest_posts,'filters':filters,'activeFilter':activefilter }
         else:
@@ -132,14 +133,11 @@ def SearchResult(request,filterOrder=None,category=None,tagName=None):
     # Handling search query 
     if request.method=="GET" and 'q' in  request.GET:
         query=request.GET.get('q')
-        allPosts=Post.objects.all()
+        allPosts=Post.objects.select_related('author__user').annotate(comment_count=Count('comment', filter=Q(comment__parent=None)))
         Posts=[]
         for post in allPosts:
             if query.lower() in  post.title.lower() :
                 Posts.append(post)
-            if post.category is not None:
-                if post.category.name.lower()==query.lower():
-                    Posts.append(post)
         params={"allPosts":Posts,'Search':"Search_result_page"}
 
 # --------------------------- handle later
@@ -174,12 +172,9 @@ def SearchResult(request,filterOrder=None,category=None,tagName=None):
         SavedPosts=[]
         postIds=request.session['SavedPosts'] if 'SavedPosts' in request.session else []
         if len(postIds)>0:
-            for id in postIds:
-                try:
-                    SavedPosts.append(Post.objects.get(id=id))
-                except Exception as e:
-                    request.session['SavedPosts'].remove(id)
-                    request.session.modified=True
+            posts = Post.objects.filter(id__in=postIds).select_related('author__user').annotate(comment_count=Count('comment', filter=Q(comment__parent=None)))
+            for post in posts:
+                SavedPosts.append(post)
         params={'readingList':True, 'readingListPosts':SavedPosts}
     return render(request,'App/SearchedPosts.html',params)
 
