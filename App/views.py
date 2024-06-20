@@ -18,6 +18,8 @@ from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 
+# # Cache the view for 15 minutes
+# @cache_page(60 * 15)
 def home(request):    #fname is filter name
     filters=[{'name':'All'},{'name':'Latest'},{'name':'Following'}] if 'FollowedAuthor' in request.session and len(request.session['FollowedAuthor']) > 0 else [{'name':'All'},{'name':'Latest'}]
 

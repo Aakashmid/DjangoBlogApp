@@ -195,7 +195,6 @@
         <h3 class="font-semibod font-bold text-xl p-2">Read Next </h3>
         <div class="posts pt-4">
             {% for postr in Related_posts %}
-            {% if postr.id != post.id %}
             <div class="card border-gray-400 border-[1px] rounded-md shadow-md px-3 pt-2 xl:w-11/12 mx-auto mt-2 ">
                 <div class="upper-part flex-col   ">
                     <a href="{% url 'App:Profile' postr.author.user.username %}" class="author-name ">
@@ -283,7 +282,6 @@
 
                 </div>
             </div>
-            {% endif %}
             {% endfor %}
         </div>
     </div>
