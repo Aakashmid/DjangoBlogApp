@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib.auth import login,logout,authenticate
 from django.contrib import messages
-from .models import Post,Comment,PostLike,CommentLike,PostReadedUser ,BlogUser,AuthorFollower,Tag,PostCategory,SavedPost
+from .models import Post,Comment,PostLike,CommentLike,PostReadedUser ,BlogUser,AuthorFollower,Tag,SavedPost
 from .templatetags import extraFilter
 from django.db.models import Q
 from django.http import JsonResponse
@@ -16,18 +16,26 @@ import json
 from django.http import QueryDict
 from django.views.decorators.csrf import csrf_exempt
 
-
 # Create your views here.
+
 def home(request):    #fname is filter name
     filters=[{'name':'All'},{'name':'Latest'},{'name':'Following'}] if 'FollowedAuthor' in request.session and len(request.session['FollowedAuthor']) > 0 else [{'name':'All'},{'name':'Latest'}]
-    postTags=Tag.objects.all()
+
+    postTags = Tag.objects.annotate(post_count=Count('tagPosts')).filter(post_count__gt=0)  # posts is related name of  # tag in post model ,get tag whose posts are more than 0
     for tag in postTags:
-        # getting those tag whose post exists
-        if len(tag.name) >0 and Post.objects.filter(tags=tag).exists():
-            filters.append({'name':str(tag.name)})
-            
-    allposts=Post.objects.all()
-    params={'allPosts':allposts,'filters':filters,'activeFilter':{'name':'All'}}
+        filters.append({'name':str(tag.name)})
+
+    allposts= Post.objects.select_related('author__user').annotate(comment_count=Count('comment', filter=Q(comment__parent=None))).order_by('?')  
+
+    # allposts=Post.objects.all().order_by('?')  
+
+    # Get the page number from the request
+    page = request.GET.get('page', 1)
+
+    # Create a Paginator object with 10 posts per page
+    paginator = Paginator(allposts, 10)
+    posts=paginator.page(page)
+    params={'allPosts':posts,'filters':filters,'activeFilter':{'name':'All'}}
 
     # for filtering posts
     filter=request.GET.get('tag','')
@@ -36,7 +44,8 @@ def home(request):    #fname is filter name
         if filter!='Following' and filter!='All' and filter!='Latest':
             try :
                 activefilter=Tag.objects.get(name=filter)
-                filteredPosts=Post.objects.filter(tags=activefilter)
+                filteredPosts=Post.objects.select_related('author__user').filter(tags=activefilter).annotate(comment_count=Count('comment', filter=Q(comment__parent=None)))
+                # filteredPosts=Post.objects.filter(tags=activefilter)
                 params={'allPosts':filteredPosts,'filters':filters,'activeFilter':activefilter}
             except Exception as e:
                 pass
@@ -53,7 +62,7 @@ def home(request):    #fname is filter name
             params={'allPosts':followedAuthorPosts,'filters':filters,'activeFilter':activefilter }
         elif filter=='Latest':
             activefilter={'name':'Latest'} 
-            latest_posts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=3))
+            latest_posts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=3)).select_related('author__user').annotate(comment_count=Count('comment',filter=Q(comment__parent=None)))
             # latest_posts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=3)).order_by('-read_count')
             params={'allPosts':latest_posts,'filters':filters,'activeFilter':activefilter }
         else:
@@ -121,22 +130,15 @@ def SearchResult(request,filterOrder=None,category=None,tagName=None):
     # Handling search query 
     if request.method=="GET" and 'q' in  request.GET:
         query=request.GET.get('q')
-        allPosts=Post.objects.all()
+        allPosts=Post.objects.select_related('author__user').annotate(comment_count=Count('comment', filter=Q(comment__parent=None)))
         Posts=[]
         for post in allPosts:
             if query.lower() in  post.title.lower() :
                 Posts.append(post)
-            if post.category is not None:
-                if post.category.name.lower()==query.lower():
-                    Posts.append(post)
         params={"allPosts":Posts,'Search':"Search_result_page"}
 
 # --------------------------- handle later
-    elif category is not  None:
-        cat=PostCategory.objects.get(name=category)
-        Posts=Post.objects.filter(category=cat)
-        params={"allPosts":Posts}
-
+ 
     elif tagName is not None:
         allPosts=Post.objects.all()
         Posts=[]
@@ -167,12 +169,9 @@ def SearchResult(request,filterOrder=None,category=None,tagName=None):
         SavedPosts=[]
         postIds=request.session['SavedPosts'] if 'SavedPosts' in request.session else []
         if len(postIds)>0:
-            for id in postIds:
-                try:
-                    SavedPosts.append(Post.objects.get(id=id))
-                except Exception as e:
-                    request.session['SavedPosts'].remove(id)
-                    request.session.modified=True
+            posts = Post.objects.filter(id__in=postIds).select_related('author__user').annotate(comment_count=Count('comment', filter=Q(comment__parent=None)))
+            for post in posts:
+                SavedPosts.append(post)
         params={'readingList':True, 'readingListPosts':SavedPosts}
     return render(request,'App/SearchedPosts.html',params)
 
@@ -212,9 +211,7 @@ def Create_post(request):
         messages.success(request,"Blog is posted successfuly !!")
         return HttpResponseRedirect(reverse('App:Home'))
     else :
-        categories=PostCategory.objects.all()
-        params={'Categories':categories}
-        return render(request,'App/createPost.html',params)
+        return render(request,'App/createPost.html')
 
 @csrf_exempt   # when use handling post request
 def detail_post(request,slug=None,author_username=None):
@@ -252,7 +249,9 @@ def detail_post(request,slug=None,author_username=None):
         post=Post.objects.get(slug=slug)
         comments=Comment.objects.filter(Q(parent=None) & Q(post=post))
         replies=Comment.objects.filter(post=post).exclude(parent=None)
-        related_posts=Post.objects.filter(category=post.category)
+        # related_posts=Post.objects.filter(category=post.category)
+        tags=post.tags.all()
+        related_posts=Post.objects.filter(tags__in=tags).exclude(id=post.id).distinct().annotate(same_tag_count=Count('tags')).order_by('-same_tag_count')
         # Author=BlogUser.objects.get(user=post.author)
         CommentsDict={}
         replyDict={}
@@ -328,20 +327,26 @@ def profile(request,text=None,username=None):
                 PostLike.objects.get(post=post, user=request.user).delete()
                 post.like-=1
                 post.save()
-                if post_id in likedPosts:
-                    likedPosts.remove(post_id)
+                likedPosts = [pid for pid in likedPosts if pid != post_id]
                 response_context={'likeCount':post.like,'status':'unliked'}
             else:
                 PostLike.objects.create(post=post,user=request.user)
                 post.like+=1
                 post.save()
-                if post_id not in likedPosts:
-                    likedPosts.append(post_id)
+                likedPosts.append(post_id) if post_id not in likedPosts else None
                 response_context={'likeCount':post.like,'status':'liked'}
             request.session['likedPosts']=likedPosts
             request.session.modified=True
+            
             return JsonResponse(response_context)
+        except PostLike.MultipleObjectsReturned:
+            PostLike.objects.filter(post=post, user=request.user).delete()
+            post.like-=1
+            post.save()
+            likedPosts = [pid for pid in likedPosts if pid != post_id]
+            response_context={'likeCount':post.like,'status':'unliked'}
         except Exception as e:
+             print(request.session.items())
              return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
     # for follow a author or unfollow 
     elif request.method=="PATCH": 

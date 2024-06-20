@@ -7,10 +7,6 @@ from django.utils.text import slugify
 
 # Create your models here.
 
-class PostCategory(models.Model):
-    name=models.CharField(max_length=100)
-    def __str__(self):
-        return self.name
 class Tag(models.Model):
     name=models.CharField(max_length=100)
     def __str__(self):
@@ -36,8 +32,7 @@ class Post(models.Model):
     read_count=models.IntegerField(default=0)
     author=models.ForeignKey(BlogUser, on_delete=models.CASCADE)
     like=models.IntegerField(default=0)
-    category=models.ForeignKey(PostCategory, verbose_name="Post_Categories", on_delete=models.SET_NULL,null=True,blank=True)
-    tags=models.ManyToManyField(Tag, related_name='posts',blank=True)
+    tags=models.ManyToManyField(Tag, related_name='tagPosts',blank=True)
     thImg=models.ImageField("Post Thumbnail", upload_to='App/thumbnail/', default='',blank=True ,null=True)
     slug = models.SlugField(unique=True, max_length=200, blank=True)
 

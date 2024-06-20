@@ -11,7 +11,3 @@ def BlogUser_context(request):
     else:
         user=None
     return {'User': user}
-
-def PostCateg_context(request):  #Categories returning to templates to use 
-    Categ=PostCategory.objects.all()
-    return {"ForAllCategories":Categ}
