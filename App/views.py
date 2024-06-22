@@ -17,27 +17,24 @@ from django.http import QueryDict
 from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
-
-# # Cache the view for 15 minutes
-# @cache_page(60 * 15)
 def home(request):    #fname is filter name
     filters=[{'name':'All'},{'name':'Latest'},{'name':'Following'}] if 'FollowedAuthor' in request.session and len(request.session['FollowedAuthor']) > 0 else [{'name':'All'},{'name':'Latest'}]
 
     postTags = Tag.objects.annotate(post_count=Count('tagPosts')).filter(post_count__gt=0)  # posts is related name of  # tag in post model ,get tag whose posts are more than 0
+
     for tag in postTags:
         filters.append({'name':str(tag.name)})
 
     allposts= Post.objects.select_related('author__user').annotate(comment_count=Count('comment', filter=Q(comment__parent=None))).order_by('?')  
 
-    # allposts=Post.objects.all().order_by('?')  
-
     # Get the page number from the request
-    page = request.GET.get('page', 1)
+    # page = request.GET.get('page', 1)
 
     # Create a Paginator object with 10 posts per page
-    paginator = Paginator(allposts, 20)
-    posts=paginator.page(page)
-    params={'allPosts':posts,'filters':filters,'activeFilter':{'name':'All'}}
+    # paginator = Paginator(allposts, 20)
+    # posts=paginator.page(page)
+    # params={'allPosts':posts,'filters':filters,'activeFilter':{'name':'All'}}
+    params={'allPosts':allposts,'filters':filters,'activeFilter':{'name':'All'}}
 
     # for filtering posts
     filter=request.GET.get('tag','')
@@ -71,6 +68,8 @@ def home(request):    #fname is filter name
             params={'allPosts':allposts,'filters':filters,'activeFilter':{'name':'All'} }
     return render(request,'App/index.html',params)
 
+def homeLoadPosts(request):
+    pass
 
 def Create_account(request):
     if request.method=="POST":
@@ -248,12 +247,12 @@ def detail_post(request,slug=None,author_username=None):
 
     ###  Fitler comments and replies of a post 
     elif Post.objects.filter(slug=slug).exists():
-        post=Post.objects.get(slug=slug)
+        post=Post.objects.select_related('author__user').get(slug=slug)
         comments=Comment.objects.filter(Q(parent=None) & Q(post=post))
         replies=Comment.objects.filter(post=post).exclude(parent=None)
         # related_posts=Post.objects.filter(category=post.category)
         tags=post.tags.all()
-        related_posts=Post.objects.filter(tags__in=tags).exclude(id=post.id).distinct().annotate(same_tag_count=Count('tags')).annotate(comment_count=Count('comment', filter=Q(comment__parent=None))).order_by('-same_tag_count')
+        related_posts=Post.objects.filter(tags__in=tags).select_related('author__user').exclude(id=post.id).distinct().annotate(same_tag_count=Count('tags')).annotate(comment_count=Count('comment', filter=Q(comment__parent=None))).order_by('-same_tag_count')
         # Author=BlogUser.objects.get(user=post.author)
         CommentsDict={}
         replyDict={}

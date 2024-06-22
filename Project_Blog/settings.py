@@ -152,11 +152,6 @@ MEDIA_ROOT=os.path.join(BASE_DIR,'media')
 MEDIA_URL="/media/"
 X_FRAME_OPTIONS='SAMEORIGIN'
 
-
-# COMPRESS_ROOT=BASE_DIR /'static'
-# COMPRESS_ENABLED=True
-# STATICFILES_FINDERS=('compressor.finders.CompressorFinder',)
-
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_AGE = 3600
 
