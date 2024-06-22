@@ -95,7 +95,7 @@
             </div>
 
             <!-- all Comments message  -->
-            <div id="comment_block" class="All-comments flex flex-col space-y-2  mt-2 hidden">
+            <div id="comment_block" class="All-comments flex flex-col space-y-2  mt-2 ">
                 {% for comment,commentAuthor in CommentsDict.items %}
                 <div class="">
                     <div class="flex space-x-2 ">
@@ -243,7 +243,7 @@
                             </a>
                         </span>
                         <span class="comment_span">
-                            <span class="comment-count">{{ postr|get_comments|length }}</span>
+                            <span class="comment-count">{{ postr.comment_count}}</span>
                             <a href="{% url 'App:Detail Post' postr.author.user.username postr.slug %}#comments"
                                 class=""><i class="fa-regular fa-comment "></i></a>
                         </span>

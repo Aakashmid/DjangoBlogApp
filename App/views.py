@@ -35,7 +35,7 @@ def home(request):    #fname is filter name
     page = request.GET.get('page', 1)
 
     # Create a Paginator object with 10 posts per page
-    paginator = Paginator(allposts, 10)
+    paginator = Paginator(allposts, 20)
     posts=paginator.page(page)
     params={'allPosts':posts,'filters':filters,'activeFilter':{'name':'All'}}
 
@@ -253,7 +253,7 @@ def detail_post(request,slug=None,author_username=None):
         replies=Comment.objects.filter(post=post).exclude(parent=None)
         # related_posts=Post.objects.filter(category=post.category)
         tags=post.tags.all()
-        related_posts=Post.objects.filter(tags__in=tags).exclude(id=post.id).distinct().annotate(same_tag_count=Count('tags')).order_by('-same_tag_count')
+        related_posts=Post.objects.filter(tags__in=tags).exclude(id=post.id).distinct().annotate(same_tag_count=Count('tags')).annotate(comment_count=Count('comment', filter=Q(comment__parent=None))).order_by('-same_tag_count')
         # Author=BlogUser.objects.get(user=post.author)
         CommentsDict={}
         replyDict={}
