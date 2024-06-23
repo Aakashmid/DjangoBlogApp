@@ -85,7 +85,7 @@
                                 </a>
                             </span>
                             <span class="comment_span">
-                                <span class="comment">{{ post|get_comments|length }}</span>
+                                <span class="comment">{{ post.comment_count }}</span>
                                 <a href="{% url 'App:Detail Post' post.author.user.username  post.slug %}" class=""><i
                                         class="fa-regular fa-comment "></i></a>
                             </span>

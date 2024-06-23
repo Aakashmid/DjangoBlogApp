@@ -66,6 +66,10 @@ def home(request):    #fname is filter name
             params={'allPosts':latest_posts,'filters':filters,'activeFilter':activefilter }
         else:
             params={'allPosts':allposts,'filters':filters,'activeFilter':{'name':'All'} }
+    paginator=Paginator(params['allPosts'],10)
+    page = request.GET.get('page', 1)
+    posts=paginator.page(page)
+    params['allPosts']=posts
     return render(request,'App/index.html',params)
 
 def homeLoadPosts(request):
@@ -92,6 +96,7 @@ def Create_account(request):
             return HttpResponseRedirect(reverse('App:Home'))
     else:
         return render(request,'signup.html')
+
 def Login_hand(request):
     if request.method=="POST":
         username=request.POST.get('username')
@@ -116,6 +121,7 @@ def Login_hand(request):
             return HttpResponseRedirect(reverse('App:Home'))
     else:
          return redirect('/')
+
 def Logout_hand(request):
     try:
         user=BlogUser.objects.get(user=request.user)
@@ -290,6 +296,7 @@ def CommentReplyHandler(request):
         return redirect('/')
  
  # this is for profile  for author profile  # we have pass the same name in parameters as we passed in url    
+
 def profile(request,text=None,username=None):
     # For showing followers following  page
     if username is not None and  text is not None:
@@ -382,44 +389,33 @@ def profile(request,text=None,username=None):
     elif username is not None:
         # for showing current user profile
         if not request.user.is_anonymous and  username==request.user.username:
-            bloguser=BlogUser.objects.get(user=request.user)
-            SavedPosts=[]
-            postIds=request.session['SavedPosts'] if 'SavedPosts' in request.session else []
-            if len(postIds)>0:
-                for id in postIds:
-                    try:
-                        SavedPosts.append(Post.objects.get(id=id))
-                    except Exception as e:
-                        request.session['SavedPosts'].remove(id)
-                        request.session.modified=True
             CurrentUser=BlogUser.objects.get(user=request.user)
-            UsersPosts=Post.objects.filter(author=CurrentUser) if Post.objects.filter(author=CurrentUser).exists() else []
-            context={"User":bloguser,'saved_posts':SavedPosts,'UsersPosts':UsersPosts}
+            UsersPosts=Post.objects.filter(author=CurrentUser).select_related('author__user').annotate(comment_count=Count('comment', filter=Q(comment__parent=None))) if Post.objects.filter(author=CurrentUser).exists() else []
+            # context={'saved_posts':SavedPosts,'UsersPosts':UsersPosts}
+            context={'UsersPosts':UsersPosts}
             return render(request,'App/profile.html',context=context)
         
         # for showing  author profile
         elif User.objects.filter(username=username).exists():
             user=User.objects.get(username=username)
-            bloguser=BlogUser.objects.get(user=user)
-            allPosts=Post.objects.filter(author=bloguser)
+            author=BlogUser.objects.select_related('user').get(user=user)
+            allPosts=Post.objects.filter(author=author).select_related('author__user').annotate(comment_count=Count('comment', filter=Q(comment__parent=None))) if Post.objects.filter(author=author).exists() else []
             if not request.user.is_anonymous:
-                if AuthorFollower.objects.filter(follower=request.user,Author=bloguser).exists():
+                if AuthorFollower.objects.filter(follower=request.user,Author=author).exists():
                     userFollower=True
                 else:
                     userFollower=False
             else:
                 userFollower=False
             # here Author is author of post
-            return render(request,'App/author.html',{"Author":bloguser,'Posts':allPosts,'userFollower':userFollower})
+            return render(request,'App/author.html',{"Author":author,'Posts':allPosts,'userFollower':userFollower})
             # return render(request,'App/author.html',{'Posts':allPosts})
 
         else:
             return redirect('/')
     else:
         return redirect('/')
-
-
-    
+  
 def Change_profile(request):
     if request.method=="POST":
         username=request.POST.get('username')
@@ -486,7 +482,7 @@ def update_post(request,slug=None,post_id=None):
             # post=Post.objects.create(author=author,title=title,content=content,category=category)
             post.title=title
             post.content=content
-            post.tags.add(*Tags)
+            post.tags.set(Tags)
             post.save()
             if thumImg is not None:
                 post.thImg=thumImg
@@ -510,13 +506,13 @@ def update_post(request,slug=None,post_id=None):
     
     else:
         return redirect('/')
+
 # function for serailize session data
 def serialize_session(session):
     serialized_data = {}
     for key, value in session.items():
         serialized_data[key] = value
     return json.dumps(serialized_data)
-
 
 def SavePost(request):
     if request.method == "POST":
