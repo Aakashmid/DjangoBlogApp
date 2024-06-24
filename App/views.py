@@ -26,14 +26,6 @@ def home(request):    #fname is filter name
         filters.append({'name':str(tag.name)})
 
     allposts= Post.objects.select_related('author__user').annotate(comment_count=Count('comment', filter=Q(comment__parent=None))).order_by('?')  
-
-    # Get the page number from the request
-    # page = request.GET.get('page', 1)
-
-    # Create a Paginator object with 10 posts per page
-    # paginator = Paginator(allposts, 20)
-    # posts=paginator.page(page)
-    # params={'allPosts':posts,'filters':filters,'activeFilter':{'name':'All'}}
     params={'allPosts':allposts,'filters':filters,'activeFilter':{'name':'All'}}
 
     # for filtering posts
@@ -66,14 +58,23 @@ def home(request):    #fname is filter name
             params={'allPosts':latest_posts,'filters':filters,'activeFilter':activefilter }
         else:
             params={'allPosts':allposts,'filters':filters,'activeFilter':{'name':'All'} }
+    
+
     paginator=Paginator(params['allPosts'],10)
-    page = request.GET.get('page', 1)
-    posts=paginator.page(page)
+    # request.session['all_posts_queryset']=list(params['allPosts'].values())
+    posts=paginator.page(1)
     params['allPosts']=posts
+    params['page_number']=1
     return render(request,'App/index.html',params)
 
-def homeLoadPosts(request):
-    pass
+def loadMorePosts(request):
+    page=request.GET.get('page',1)
+    paginator=Paginator(request.session['all_posts_queryset'],10)
+    total_pages=paginator.num_pages
+    if page > total_pages:
+        return JsonResponse({'posts':[]})
+    posts=paginator.page(page)
+    return JsonResponse({'posts':posts})
 
 def Create_account(request):
     if request.method=="POST":

@@ -14,25 +14,30 @@
 
     </div>
     {% endif %}
-    
+
     <!-- Search post option by filters -->
-    <div class="filters-Box bg-white  px-4 pt-4" >
+    <div class="filters-Box bg-white  px-4 pt-4">
         <ul class="flex  space-x-1 p-2 overflow-x-scroll no-scrollbar " id="filtersContainer">
             {% for filter in filters %}
             {% if activeFilter and activeFilter.name == filter.name %}
-            <li class="" ><a
-                    href="{% url 'App:Home' %} {% if activeFilter.name == 'All' %}{% else %}?tag={{activeFilter.name}}{%endif %}" id="{{activeFilter.name}}"
-                    class="filter-op px-3 py-1  border bg-gray-100 rounded-md text-nowrap font-medium text-lg">{{activeFilter.name}}</a></li>
+            <li class=""><a
+                    href="{% url 'App:Home' %} {% if activeFilter.name == 'All' %}{% else %}?tag={{activeFilter.name}}{%endif %}"
+                    id="{{activeFilter.name}}"
+                    class="filter-op px-3 py-1  border bg-gray-100 rounded-md text-nowrap font-medium text-lg">{{activeFilter.name}}</a>
+            </li>
             {% else %}
-            <li class="" ><a
-                    href="{% url 'App:Home' %}{% if filter.name == 'All' %}{% else %}?tag={{filter.name}}{%endif %}"  id="{{filter.name}}"  class="text-lg filter-op px-3 py-1 bg-white border active:bg-gray-200  hover:bg-gray-100  rounded-md text-nowrap ">{{filter.name}}</a></li>
+            <li class=""><a
+                    href="{% url 'App:Home' %}{% if filter.name == 'All' %}{% else %}?tag={{filter.name}}{%endif %}"
+                    id="{{filter.name}}"
+                    class="text-lg filter-op px-3 py-1 bg-white border active:bg-gray-200  hover:bg-gray-100  rounded-md text-nowrap ">{{filter.name}}</a>
+            </li>
             {% endif %}
             {% endfor %}
         </ul>
     </div>
 
     <!-- showing all posts  -->
-    <div class="mt-8 flex flex-col lg:space-y-3 space-y-2 lg:px-4 px-2">
+    <div id="post_container" class=" mt-8 flex flex-col lg:space-y-3 space-y-2 lg:px-4 px-2">
         {% if activeFilter and allPosts|length == 0%}
         {% else %}
         {% for post in allPosts %}
@@ -64,9 +69,9 @@
                         </p>
                     </div>
                     {% if post.thImg != '' %}
-                     <div class="w-14 h-14 lg:w-24 lg:h-24   rounded-md flex-shrink-0 ">
+                    <div class="w-14 h-14 lg:w-24 lg:h-24   rounded-md flex-shrink-0 ">
                         <img src="/media/{{post.thImg}}" class="object-fit object-center w-full h-full" alt="">
-                    </div> 
+                    </div>
                     {% endif %}
                 </div>
             </a>
@@ -84,7 +89,8 @@
                     </span>
                     <span class="comment_span">
                         <span class="comment-count">{{ post.comment_count }}</span>
-                        <a href="{% url 'App:Detail Post' post.author.user.username post.slug %}#comments" class=""><i class="fa-regular fa-comment "></i></a>
+                        <a href="{% url 'App:Detail Post' post.author.user.username post.slug %}#comments" class=""><i
+                                class="fa-regular fa-comment "></i></a>
                     </span>
                 </span>
                 <span class="flex space-x-6 items-center mx-3 relative">
@@ -121,9 +127,10 @@
 
             </div>
         </div>
-        {% endfor %}
-        {% endif %}
+         {% endfor %}
+        {% endif %} 
     </div>
+
     <div class="h-14 w-full"></div>
 </div>
 {% endblock body %}
@@ -131,7 +138,6 @@
 {% block js%}
 <script>
     ChangeFilterStyle = (element) => {
-        console.log('Success');
         element.classList.add('bg-gray-200');
     }
 
@@ -149,6 +155,30 @@
             }
         }
     };
+
+
+    window.onscroll = function () {
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+            loadMorePosts();
+        }
+    };
+
+    loadMorePosts = () => {
+        console.log('loading more posts');
+        $.ajax({
+            url: "{% url 'App:load-more-posts' %}",
+            type: "GET",
+            data: { 'page': {{page_number}}+1 },
+            dataType: "json",
+            success: function (response) {
+                console.log(response)
+            },
+            //here error is error return by the url 
+            error: function (error) {
+                console.log("Error:", error);
+            }
+        });
+    }
 
 </script>
 {% endblock js %}

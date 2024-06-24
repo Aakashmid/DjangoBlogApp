@@ -59,6 +59,7 @@
         <div class="empty-box w-full h-14"></div>
     </header>
     <span id="close_modals" class="w-full h-[100%] z-20 fixed top-0 bg-black opacity-30 hidden"></span>
+
     {% for Message in messages %}
     <div id="alert" class="p-1 block z-10 fixed  top-15 w-1/2 -left-1/2 ">
         <div
@@ -245,7 +246,7 @@
 
         <!-- searchbar -->
         <div id="searchBar"
-            class="z-10 searchBar fixed lg:w-[50%] md:w-[80%] rounded-b-lg left-1/2 top-15 -translate-x-1/2 w-full  bg-white   p-2 hidden  ">
+            class="z-10 searchBar fixed lg:w-[50%] md:w-[80%] rounded-b-lg left-1/2 top-14 -translate-x-1/2 w-full  bg-white   p-2 hidden  ">
             <form action="{% url 'App:Search Posts' %}" method="get" class="space-x-2 flex px-1">
                 <input type="text" name="q" id="q"
                     class="w-full p-[7px]  bg-gray-50  outline outline-1 focus:outline-2 outline-gray-500 shadow-md   focus:outline-gray-800  rounded"
