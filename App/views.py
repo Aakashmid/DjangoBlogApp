@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login,logout,authenticate
 from django.contrib import messages
 from .models import Post,Comment,PostLike,CommentLike,PostReadedUser ,BlogUser,AuthorFollower,Tag,SavedPost
+from .serializers import PostSerializer
 from .templatetags import extraFilter
 from django.db.models import Q
 from django.http import JsonResponse
@@ -25,7 +26,8 @@ def home(request):    #fname is filter name
     for tag in postTags:
         filters.append({'name':str(tag.name)})
 
-    allposts= Post.objects.select_related('author__user').annotate(comment_count=Count('comment', filter=Q(comment__parent=None))).order_by('?')  
+    # allposts= Post.objects.select_related('author__user').annotate(comment_count=Count('comment', filter=Q(comment__parent=None))).order_by('?')  
+    allposts= Post.objects.select_related('author__user').annotate(comment_count=Count('comment', filter=Q(comment__parent=None)))
     params={'allPosts':allposts,'filters':filters,'activeFilter':{'name':'All'}}
 
     # for filtering posts
@@ -61,7 +63,6 @@ def home(request):    #fname is filter name
     
 
     paginator=Paginator(params['allPosts'],10)
-    # request.session['all_posts_queryset']=list(params['allPosts'].values())
     posts=paginator.page(1)
     params['allPosts']=posts
     params['page_number']=1
@@ -69,12 +70,17 @@ def home(request):    #fname is filter name
 
 def loadMorePosts(request):
     page=request.GET.get('page',1)
-    paginator=Paginator(request.session['all_posts_queryset'],10)
+    allposts= Post.objects.select_related('author__user').annotate(comment_count=Count('comment', filter=Q(comment__parent=None)))
+    paginator=Paginator(allposts,10)
     total_pages=paginator.num_pages
-    if page > total_pages:
+    if int(page) > total_pages:
         return JsonResponse({'posts':[]})
-    posts=paginator.page(page)
-    return JsonResponse({'posts':posts})
+    posts_page=paginator.page(page)  # posts_page is page object storeing page data
+
+    # serializing data so can return jsonresponse
+    serializer = PostSerializer(posts_page.object_list, many=True)   
+  
+    return JsonResponse({'posts':serializer.data})
 
 def Create_account(request):
     if request.method=="POST":
@@ -452,7 +458,7 @@ def Change_profile(request):
             return HttpResponseRedirect(reverse('App:Profile',args=(request.user.username,)))
 
 def update_post(request,slug=None,post_id=None):
-    if slug is not None and Post.objects.get(slug=slug).author.user==request.user:
+    if slug is not None and Post.objects.select_related('author__user').get(slug=slug).author.user==request.user:
         # for update post
         if request.method=="POST":
             post=Post.objects.get(slug=slug)
@@ -479,8 +485,6 @@ def update_post(request,slug=None,post_id=None):
                     Tags.append(tag)        
             author=BlogUser.objects.get(user=request.user)
             author.save()
-            # Create post 
-            # post=Post.objects.create(author=author,title=title,content=content,category=category)
             post.title=title
             post.content=content
             post.tags.set(Tags)
@@ -489,10 +493,12 @@ def update_post(request,slug=None,post_id=None):
                 post.thImg=thumImg
             post.save()
             messages.success(request,'Updated post successully ')
-            return HttpResponseRedirect(reverse('App:Update post',args=(post.slug,)))
+            # return HttpResponseRedirect(reverse('App:Update post',args=(post.slug,)))
+            return HttpResponseRedirect(reverse('App:Detail Post',args=(request.user.username,slug)))
         post=Post.objects.get(slug=slug)
         params={'post':post}
         return render(request,'App/updatePost.html',params)
+        
         # when post.slug is wrong or another user is trying to access another user's post
 
     # for delete post

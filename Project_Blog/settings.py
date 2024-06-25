@@ -32,10 +32,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    'App',  #updated part
-    # 'compressor',
+    'App',  
     'django_summernote',
     'debug_toolbar',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
