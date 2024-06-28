@@ -13,7 +13,7 @@ urlpatterns = [
     path('sign-up/', views.Create_account, name="Create user"),
     path('login-user/', views.Login_hand, name="login_user"),
     path('logout-user/', views.Logout_hand, name="Logout user"),
-    path('load_more_posts/', views.loadMorePosts, name="load-more-posts"),
+    # path('load_more_posts/', views.loadMorePosts, name="load-more-posts"),
     
     # Search and filter
     path('search/', views.SearchResult, name="Search Posts"),

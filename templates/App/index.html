@@ -9,8 +9,8 @@
     {% else %}
     <div class="w-[92%] p-3   mb-5 mt-2  jumbotron mx-auto border-[1px] rounded-md text-white bg-gray-800 ">
         <p class="text-lg mt-2">Welcome to BlogBlend , your destination for curated insights and inspiration. Dive into
-            thought-provoking articles on career, mindfulness, and creativity. Unleash your potential with us. Explore
-            BlogBlend today.</p>
+            thought-provoking articles on career, mindfulness, and creativity. Unleash your potential with us.<a href="{% url 'App:Create user'%}" class="hover:bg-gray-300 rounded hover:text-black underline-offset-2 underline ">   Explore
+            BlogBlend    </a> today.</p>
 
     </div>
     {% endif %}
@@ -37,11 +37,10 @@
     </div>
 
     <!-- showing all posts  -->
-    <div id="post_container" class=" mt-8 flex flex-col lg:space-y-3 space-y-2 lg:px-4 px-2">
+    <div id="post_container" class="">
         {% if activeFilter and allPosts|length == 0%}
         {% else %}
-        <div class="cards-container">
-
+        <div class="cards-container  mt-8 flex flex-col lg:space-y-3 space-y-2 lg:px-4 px-2">
             {% for post in allPosts %}
             <div class="post-card border-gray-400 border-[1px] rounded-md shadow-md px-3 pt-2">
                 <div class="upper-part flex-col   ">
@@ -133,6 +132,23 @@
             </div>
             {% endfor %}
         </div>
+
+        <div class="pagination lg:p-3 mt-4 p-2 mx-auto w-fit">
+            <span class="current p-2 my-1">
+                Page {{ allPosts.number }} of {{ allPosts.paginator.num_pages }}
+            </span>
+            <span class="step-links flex space-x-1">
+                {% if allPosts.has_previous %}
+                    <a class="p-2 border-gray-500 rounded-md border hover:font-semibold "  href="?page=1">1</a>
+                    <a  class="p-2 border-gray-500 rounded-md border hover:font-semibold " href="?page={{ allPosts.previous_page_number }}">prev</a>
+                {% endif %}
+    
+                {% if allPosts.has_next %}
+                    <a class="p-2 border-gray-500 rounded-md border hover:font-semibold " href="?page={{ allPosts.next_page_number }}">{{ allPosts.next_page_number }}</a>
+                    <a class="p-2 border-gray-500 rounded-md border hover:font-semibold " href="?page={{ allPosts.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
         {% endif %}
     </div>
 
@@ -160,34 +176,6 @@
             }
         }
     };
-
-
-    window.onscroll = function () {
-        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-            loadMorePosts();
-        }
-    };
-
-    loadMorePosts = () => {
-        console.log('loading more posts');
-        // $.ajax({
-        //     url: "{% url 'App:load-more-posts' %}",
-        //     type: "GET",
-        //     data: { 'page': {{ page_number }}+1 },
-        //     dataType: "json",
-        // success: function (response) {
-        //     card_container = document.getElementsByClassName('cards-container')[0];
-        //     card_layout = document.getElementsByClassName('card')[0]
-        //     card = `{% for post in `+ response.posts + ` %} ` + card_layout.outerHTML+ `{% endfor %}`;
-        //     card_container.appendChild(card);
-        // },
-    //here error is error return by the url 
-    error: function (error) {
-        console.log("Error:", error);
-        
-    }
-        });
-    }
 
 </script>
 {% endblock js %}

@@ -5,7 +5,6 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login,logout,authenticate
 from django.contrib import messages
 from .models import Post,Comment,PostLike,CommentLike,PostReadedUser ,BlogUser,AuthorFollower,Tag,SavedPost
-from .serializers import PostSerializer
 from .templatetags import extraFilter
 from django.db.models import Q
 from django.http import JsonResponse
@@ -27,7 +26,7 @@ def home(request):    #fname is filter name
         filters.append({'name':str(tag.name)})
 
     # allposts= Post.objects.select_related('author__user').annotate(comment_count=Count('comment', filter=Q(comment__parent=None))).order_by('?')  
-    allposts= Post.objects.select_related('author__user').annotate(comment_count=Count('comment', filter=Q(comment__parent=None)))
+    allposts= Post.objects.select_related('author__user').annotate(comment_count=Count('comment', filter=Q(comment__parent=None))).order_by('?')
     params={'allPosts':allposts,'filters':filters,'activeFilter':{'name':'All'}}
 
     # for filtering posts
@@ -37,7 +36,7 @@ def home(request):    #fname is filter name
         if filter!='Following' and filter!='All' and filter!='Latest':
             try :
                 activefilter=Tag.objects.get(name=filter)
-                filteredPosts=Post.objects.select_related('author__user').filter(tags=activefilter).annotate(comment_count=Count('comment', filter=Q(comment__parent=None)))
+                filteredPosts=Post.objects.select_related('author__user').filter(tags=activefilter).annotate(comment_count=Count('comment', filter=Q(comment__parent=None))).order_by('?')
                 # filteredPosts=Post.objects.filter(tags=activefilter)
                 params={'allPosts':filteredPosts,'filters':filters,'activeFilter':activefilter}
             except Exception as e:
@@ -55,32 +54,18 @@ def home(request):    #fname is filter name
             params={'allPosts':followedAuthorPosts,'filters':filters,'activeFilter':activefilter }
         elif filter=='Latest':
             activefilter={'name':'Latest'} 
-            latest_posts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=3)).select_related('author__user').annotate(comment_count=Count('comment',filter=Q(comment__parent=None)))
+            latest_posts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=3)).select_related('author__user').annotate(comment_count=Count('comment',filter=Q(comment__parent=None))).order_by('?')
             # latest_posts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=3)).order_by('-read_count')
             params={'allPosts':latest_posts,'filters':filters,'activeFilter':activefilter }
         else:
             params={'allPosts':allposts,'filters':filters,'activeFilter':{'name':'All'} }
     
 
-    paginator=Paginator(params['allPosts'],10)
-    posts=paginator.page(1)
+    paginator=Paginator(params['allPosts'],15)
+    page_number = request.GET.get('page')
+    posts = paginator.get_page(page_number)
     params['allPosts']=posts
-    params['page_number']=1
     return render(request,'App/index.html',params)
-
-def loadMorePosts(request):
-    page=request.GET.get('page',1)
-    allposts= Post.objects.select_related('author__user').annotate(comment_count=Count('comment', filter=Q(comment__parent=None)))
-    paginator=Paginator(allposts,10)
-    total_pages=paginator.num_pages
-    if int(page) > total_pages:
-        return JsonResponse({'posts':[]})
-    posts_page=paginator.page(page)  # posts_page is page object storeing page data
-
-    # serializing data so can return jsonresponse
-    serializer = PostSerializer(posts_page.object_list, many=True)   
-  
-    return JsonResponse({'posts':serializer.data})
 
 def Create_account(request):
     if request.method=="POST":
