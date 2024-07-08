@@ -116,16 +116,13 @@
 
     {% if not readingList%}
     {% if allPosts and allPosts|length > 0 %}
-    <div class="category  flex overflow-x-auto w-full">
-        {% comment %} change it trend posts to all {% endcomment %}
-        <a href="/post-blogs/trend" id="trend"
-            class="p-2 text-lg font-semibold hover:text-blue-600 hover:underline">Trending</a>
-        <a href="/post-blogs/new" id="new"
-            class="p-2 text-lg font-semibold hover:text-blue-600 hover:underline">Newest</a>
-        <a href="/post-blogs/old" id="old"
-            class="p-2 text-lg font-semibold hover:text-blue-600 hover:underline">Oldest</a>
-        <a href="/post-blogs/mostreaded" id="mostreaded"
-            class="p-2 text-lg font-semibold hover:text-blue-600 hover:underline">Most Readed </a>
+    <div class="filter ">
+        <form action="{% url 'App:Search Posts'%}" class="flex overflow-x-auto w-full space-x-2 items-center" method="get">
+            <input type="hidden" name="{% if tag %}tag{% elif query %}q{% endif %}" value="{% if tag %}{{tag}}{% elif query %}{{query}}{% endif %}">
+            <button name="filter" type="submit" class="lg:text-lg hover:text-blue-600 {% if filter == 'most_readed' %}underline underline-offset-1 font-semibold{%endif%}" value="most_readed">MostReaded</button>
+            <button name="filter" type="submit" class="lg:text-lg hover:text-blue-600 {% if filter == 'newest' %}underline underline-offset-1 font-semibold{%endif%}" value="newest">Newest</button>
+            <button name="filter" type="submit" class="lg:text-lg hover:text-blue-600 {% if filter == 'oldest' %}underline underline-offset-1 font-semibold{%endif%}" value="oldest">Oldest</button>
+        </form>
     </div>
     <div class="blogs mt-4 clear-left w-full">
         <div id="testid" class=" flex flex-col space-y-2">

@@ -125,44 +125,44 @@ def Logout_hand(request):
     messages.success(request,"Successsfully logout !!")
     return redirect('/')
     
-def SearchResult(request,filterOrder=None,category=None,tagName=None):
+def SearchResult(request,tagName=None):
     # Handling search query 
     if request.method=="GET" and 'q' in  request.GET:
         query=request.GET.get('q')
-        allPosts=Post.objects.select_related('author__user').annotate(comment_count=Count('comment', filter=Q(comment__parent=None)))
-        Posts=[]
-        for post in allPosts:
-            if query.lower() in  post.title.lower() :
-                Posts.append(post)
-        params={"allPosts":Posts,'Search':"Search_result_page"}
-
-# --------------------------- handle later
- 
-    elif tagName is not None:
-        allPosts=Post.objects.all()
-        Posts=[]
-        for post in allPosts:
-            for tag in post.tags.all():
-                if tagName==tag.name:
-                    Posts.append(post)
-                    break
-        params={'allPosts':Posts}
-
-    # FOR FILTERING POST SERRCHRESULT PAGE
-    elif filterOrder : 
-        ids=['trend','new','old','mostreaded']
-        if filterOrder==ids[0]:
-            #write query for selecting trending posts
-            allPosts=Post.objects.filter(Q(read_count__gte=0)& Q(publish_time__gte=timezone.now()-timedelta(days=6)))[:20]
-        elif filterOrder==ids[1]:
-            allPosts=Post.objects.all().order_by('-publish_time')
-        elif filterOrder==ids[2]:
-            allPosts=Post.objects.all().order_by('publish_time')
-        elif filterOrder==ids[3]:
-            allPosts=Post.objects.all().order_by('-read_count')[:20]
-        params={'allPosts':allPosts}
-   
-#----------------------------- 
+        allPosts=Post.objects.select_related('author__user').annotate(comment_count=Count('comment', filter=Q(comment__parent=None))).filter(title__icontains=query)
+        params={"allPosts":allPosts,'Search':"Search_result_page",'query':query}
+        if 'filter' in request.GET:
+            filter=request.GET.get('filter')
+            allPosts=params['allPosts']
+            if filter=='most_readed':
+                filltered_posts=allPosts.order_by('read_count')
+                params['allPosts']=filltered_posts
+            elif filter=='newest':
+                filltered_posts=allPosts.order_by('-publish_time')
+                params['allPosts']=filltered_posts
+            elif filter=='oldest':
+                filltered_posts=allPosts.order_by('publish_time')
+                params['allPosts']=filltered_posts
+            params['filter']=filter
+        
+    elif 'tag' in request.GET:
+        tagName=request.GET.get('tag')
+        tag=Tag.objects.get(name=tagName)
+        allPosts=Post.objects.select_related('author__user').annotate(comment_count=Count('comment', filter=Q(comment__parent=None))).filter(tags=tag)
+        params={"allPosts":allPosts,'Search':"Search_result_page",'tag':tag.name}
+        if 'filter' in request.GET:
+            filter=request.GET.get('filter')
+            allPosts=params['allPosts']
+            if filter=='most_readed':
+                filltered_posts=allPosts.order_by('read_count')
+                params['allPosts']=filltered_posts
+            elif filter=='newest':
+                filltered_posts=allPosts.order_by('-publish_time')
+                params['allPosts']=filltered_posts
+            elif filter=='oldest':
+                filltered_posts=allPosts.order_by('publish_time')
+                params['allPosts']=filltered_posts
+            params['filter']=filter
     # FOR SHOWING READING LIST 
     else:
         SavedPosts=[]
@@ -250,7 +250,7 @@ def detail_post(request,slug=None,author_username=None):
         replies=Comment.objects.filter(post=post).exclude(parent=None)
         # related_posts=Post.objects.filter(category=post.category)
         tags=post.tags.all()
-        related_posts=Post.objects.filter(tags__in=tags).select_related('author__user').exclude(id=post.id).distinct().annotate(same_tag_count=Count('tags')).annotate(comment_count=Count('comment', filter=Q(comment__parent=None))).order_by('-same_tag_count')
+        related_posts=Post.objects.filter(tags__in=tags).select_related('author__user').exclude(id=post.id).distinct().annotate(same_tag_count=Count('tags')).annotate(comment_count=Count('comment', filter=Q(comment__parent=None))).order_by('-same_tag_count')[:5]
         # Author=BlogUser.objects.get(user=post.author)
         CommentsDict={}
         replyDict={}
