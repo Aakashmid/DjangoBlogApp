@@ -32,10 +32,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    'App',  #updated part
-    # 'compressor',
+    'App',  
     'django_summernote',
     'debug_toolbar',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -80,11 +80,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    }     
 }
 
-
-# for testing production database
+               
 # DATABASES = {
 #     'default': dj_database_url.parse('postgres://blogblenddb_x6a0_user:C8N7OqUHrsNpz0T2Oi0AQI6Y9ErEjHaL@dpg-cpjhnmed3nmc73bnv4tg-a.singapore-postgres.render.com/blogblenddb_x6a0', conn_max_age=600)
 #     }
@@ -151,11 +150,6 @@ INTERNAL_IPS = [
 MEDIA_ROOT=os.path.join(BASE_DIR,'media')
 MEDIA_URL="/media/"
 X_FRAME_OPTIONS='SAMEORIGIN'
-
-
-# COMPRESS_ROOT=BASE_DIR /'static'
-# COMPRESS_ENABLED=True
-# STATICFILES_FINDERS=('compressor.finders.CompressorFinder',)
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_AGE = 3600

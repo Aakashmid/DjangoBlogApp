@@ -1,2 +1,5 @@
 CACHE/
 node_modules/
+venv/
+__pycache__
+migragtions/

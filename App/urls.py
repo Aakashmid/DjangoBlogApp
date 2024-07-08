@@ -13,18 +13,12 @@ urlpatterns = [
     path('sign-up/', views.Create_account, name="Create user"),
     path('login-user/', views.Login_hand, name="login_user"),
     path('logout-user/', views.Logout_hand, name="Logout user"),
+    # path('load_more_posts/', views.loadMorePosts, name="load-more-posts"),
     
     # Search and filter
     path('search/', views.SearchResult, name="Search Posts"),
     path('readinglist/', views.SearchResult, name="Reading_list"),
 
-    #-------------have to modify----------------
-    # path('post-blogs/<str:filterOrder>/', views.SearchResult, name="Blogs filter"),
-    path('search/category/<str:category>/', views.SearchResult, name="Blogs By Category"),
-    path('search/tag/<str:tagName>/', views.SearchResult, name="Blogs by tag"),
-    # ----------------------------
-
-    # path('<str:author_username>/<str:slug>/', views.detail_post, name="Blog Post"),
     path('post-comment-reply/', views.CommentReplyHandler, name="comment-reply"),
     path('savepost/', views.SavePost, name='Save Post'),
     path('delete-post/post-<int:post_id>/', views.update_post, name="delete post"),

@@ -110,7 +110,7 @@ Profile
                                     </a>
                                 </span>
                                 <span class="comment_span">
-                                    <span class="comment-count">{{ post|get_comments|length }}</span>
+                                    <span class="comment-count">{{ post.comment_count }}</span>
                                     <a href="{% url 'App:Detail Post' post.author.user.username post.slug %}#comments"
                                         class=""><i class="fa-regular fa-comment "></i></a>
                                 </span>
@@ -226,13 +226,9 @@ Profile
             </div>
             <div class="px-4 py-2">
                 <label for="Bio" class=" text-lg w-full font-medium">Bio</label>
-                {% if User.Bio %}
                 <textarea name="Bio" id="Bio"
-                    class="text-lg rounded bg-white w-full outline outline-0 border-[2px] px-2 py-[6px] h-32 focus:outline-2 focus:outline-blue-400">{{User.Bio}}</textarea>
-                {% else %}
-                <textarea name="Bio" id="Bio"
-                    class="text-lg rounded bg-white w-full outline outline-0 border-[2px] px-2 py-[6px] h-32 focus:outline-2 focus:outline-blue-400">Write about you so people can know about you more </textarea>
-                {% endif %}
+                    class="text-lg rounded bg-white w-full outline outline-0 border-[2px] px-2 py-[6px] h-32 focus:outline-2 focus:outline-blue-400" {% if not User.Bio %} placeholder='Write bio...'{% endif %} >{% if User.Bio %} {{User.Bio}} {%endif%}</textarea>
+                
             </div>
             <button type="submit"
                 class="mx-auto mt-6 submit py-2 px-6 rounded-lg text-lg bg-blue-950 text-white font-normal w-fit">Save

@@ -17,27 +17,17 @@ from django.http import QueryDict
 from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
-
-# # Cache the view for 15 minutes
-# @cache_page(60 * 15)
 def home(request):    #fname is filter name
     filters=[{'name':'All'},{'name':'Latest'},{'name':'Following'}] if 'FollowedAuthor' in request.session and len(request.session['FollowedAuthor']) > 0 else [{'name':'All'},{'name':'Latest'}]
 
     postTags = Tag.objects.annotate(post_count=Count('tagPosts')).filter(post_count__gt=0)  # posts is related name of  # tag in post model ,get tag whose posts are more than 0
+
     for tag in postTags:
         filters.append({'name':str(tag.name)})
 
-    allposts= Post.objects.select_related('author__user').annotate(comment_count=Count('comment', filter=Q(comment__parent=None))).order_by('?')  
-
-    # allposts=Post.objects.all().order_by('?')  
-
-    # Get the page number from the request
-    page = request.GET.get('page', 1)
-
-    # Create a Paginator object with 10 posts per page
-    paginator = Paginator(allposts, 20)
-    posts=paginator.page(page)
-    params={'allPosts':posts,'filters':filters,'activeFilter':{'name':'All'}}
+    # allposts= Post.objects.select_related('author__user').annotate(comment_count=Count('comment', filter=Q(comment__parent=None))).order_by('?')  
+    allposts= Post.objects.select_related('author__user').annotate(comment_count=Count('comment', filter=Q(comment__parent=None))).order_by('?')
+    params={'allPosts':allposts,'filters':filters,'activeFilter':{'name':'All'}}
 
     # for filtering posts
     filter=request.GET.get('tag','')
@@ -46,7 +36,7 @@ def home(request):    #fname is filter name
         if filter!='Following' and filter!='All' and filter!='Latest':
             try :
                 activefilter=Tag.objects.get(name=filter)
-                filteredPosts=Post.objects.select_related('author__user').filter(tags=activefilter).annotate(comment_count=Count('comment', filter=Q(comment__parent=None)))
+                filteredPosts=Post.objects.select_related('author__user').filter(tags=activefilter).annotate(comment_count=Count('comment', filter=Q(comment__parent=None))).order_by('?')
                 # filteredPosts=Post.objects.filter(tags=activefilter)
                 params={'allPosts':filteredPosts,'filters':filters,'activeFilter':activefilter}
             except Exception as e:
@@ -64,13 +54,18 @@ def home(request):    #fname is filter name
             params={'allPosts':followedAuthorPosts,'filters':filters,'activeFilter':activefilter }
         elif filter=='Latest':
             activefilter={'name':'Latest'} 
-            latest_posts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=3)).select_related('author__user').annotate(comment_count=Count('comment',filter=Q(comment__parent=None)))
+            latest_posts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=3)).select_related('author__user').annotate(comment_count=Count('comment',filter=Q(comment__parent=None))).order_by('?')
             # latest_posts=Post.objects.filter(publish_time__gte=timezone.now()-timedelta(days=3)).order_by('-read_count')
             params={'allPosts':latest_posts,'filters':filters,'activeFilter':activefilter }
         else:
             params={'allPosts':allposts,'filters':filters,'activeFilter':{'name':'All'} }
-    return render(request,'App/index.html',params)
+    
 
+    paginator=Paginator(params['allPosts'],15)
+    page_number = request.GET.get('page')
+    posts = paginator.get_page(page_number)
+    params['allPosts']=posts
+    return render(request,'App/index.html',params)
 
 def Create_account(request):
     if request.method=="POST":
@@ -93,6 +88,7 @@ def Create_account(request):
             return HttpResponseRedirect(reverse('App:Home'))
     else:
         return render(request,'signup.html')
+
 def Login_hand(request):
     if request.method=="POST":
         username=request.POST.get('username')
@@ -117,6 +113,7 @@ def Login_hand(request):
             return HttpResponseRedirect(reverse('App:Home'))
     else:
          return redirect('/')
+
 def Logout_hand(request):
     try:
         user=BlogUser.objects.get(user=request.user)
@@ -128,44 +125,44 @@ def Logout_hand(request):
     messages.success(request,"Successsfully logout !!")
     return redirect('/')
     
-def SearchResult(request,filterOrder=None,category=None,tagName=None):
+def SearchResult(request,tagName=None):
     # Handling search query 
     if request.method=="GET" and 'q' in  request.GET:
         query=request.GET.get('q')
-        allPosts=Post.objects.select_related('author__user').annotate(comment_count=Count('comment', filter=Q(comment__parent=None)))
-        Posts=[]
-        for post in allPosts:
-            if query.lower() in  post.title.lower() :
-                Posts.append(post)
-        params={"allPosts":Posts,'Search':"Search_result_page"}
-
-# --------------------------- handle later
- 
-    elif tagName is not None:
-        allPosts=Post.objects.all()
-        Posts=[]
-        for post in allPosts:
-            for tag in post.tags.all():
-                if tagName==tag.name:
-                    Posts.append(post)
-                    break
-        params={'allPosts':Posts}
-
-    # FOR FILTERING POST SERRCHRESULT PAGE
-    elif filterOrder : 
-        ids=['trend','new','old','mostreaded']
-        if filterOrder==ids[0]:
-            #write query for selecting trending posts
-            allPosts=Post.objects.filter(Q(read_count__gte=0)& Q(publish_time__gte=timezone.now()-timedelta(days=6)))[:20]
-        elif filterOrder==ids[1]:
-            allPosts=Post.objects.all().order_by('-publish_time')
-        elif filterOrder==ids[2]:
-            allPosts=Post.objects.all().order_by('publish_time')
-        elif filterOrder==ids[3]:
-            allPosts=Post.objects.all().order_by('-read_count')[:20]
-        params={'allPosts':allPosts}
-   
-#----------------------------- 
+        allPosts=Post.objects.select_related('author__user').annotate(comment_count=Count('comment', filter=Q(comment__parent=None))).filter(title__icontains=query)
+        params={"allPosts":allPosts,'Search':"Search_result_page",'query':query}
+        if 'filter' in request.GET:
+            filter=request.GET.get('filter')
+            allPosts=params['allPosts']
+            if filter=='most_readed':
+                filltered_posts=allPosts.order_by('read_count')
+                params['allPosts']=filltered_posts
+            elif filter=='newest':
+                filltered_posts=allPosts.order_by('-publish_time')
+                params['allPosts']=filltered_posts
+            elif filter=='oldest':
+                filltered_posts=allPosts.order_by('publish_time')
+                params['allPosts']=filltered_posts
+            params['filter']=filter
+        
+    elif 'tag' in request.GET:
+        tagName=request.GET.get('tag')
+        tag=Tag.objects.get(name=tagName)
+        allPosts=Post.objects.select_related('author__user').annotate(comment_count=Count('comment', filter=Q(comment__parent=None))).filter(tags=tag)
+        params={"allPosts":allPosts,'Search':"Search_result_page",'tag':tag.name}
+        if 'filter' in request.GET:
+            filter=request.GET.get('filter')
+            allPosts=params['allPosts']
+            if filter=='most_readed':
+                filltered_posts=allPosts.order_by('read_count')
+                params['allPosts']=filltered_posts
+            elif filter=='newest':
+                filltered_posts=allPosts.order_by('-publish_time')
+                params['allPosts']=filltered_posts
+            elif filter=='oldest':
+                filltered_posts=allPosts.order_by('publish_time')
+                params['allPosts']=filltered_posts
+            params['filter']=filter
     # FOR SHOWING READING LIST 
     else:
         SavedPosts=[]
@@ -248,12 +245,12 @@ def detail_post(request,slug=None,author_username=None):
 
     ###  Fitler comments and replies of a post 
     elif Post.objects.filter(slug=slug).exists():
-        post=Post.objects.get(slug=slug)
+        post=Post.objects.select_related('author__user').get(slug=slug)
         comments=Comment.objects.filter(Q(parent=None) & Q(post=post))
         replies=Comment.objects.filter(post=post).exclude(parent=None)
         # related_posts=Post.objects.filter(category=post.category)
         tags=post.tags.all()
-        related_posts=Post.objects.filter(tags__in=tags).exclude(id=post.id).distinct().annotate(same_tag_count=Count('tags')).annotate(comment_count=Count('comment', filter=Q(comment__parent=None))).order_by('-same_tag_count')
+        related_posts=Post.objects.filter(tags__in=tags).select_related('author__user').exclude(id=post.id).distinct().annotate(same_tag_count=Count('tags')).annotate(comment_count=Count('comment', filter=Q(comment__parent=None))).order_by('-same_tag_count')[:5]
         # Author=BlogUser.objects.get(user=post.author)
         CommentsDict={}
         replyDict={}
@@ -291,6 +288,7 @@ def CommentReplyHandler(request):
         return redirect('/')
  
  # this is for profile  for author profile  # we have pass the same name in parameters as we passed in url    
+
 def profile(request,text=None,username=None):
     # For showing followers following  page
     if username is not None and  text is not None:
@@ -383,44 +381,33 @@ def profile(request,text=None,username=None):
     elif username is not None:
         # for showing current user profile
         if not request.user.is_anonymous and  username==request.user.username:
-            bloguser=BlogUser.objects.get(user=request.user)
-            SavedPosts=[]
-            postIds=request.session['SavedPosts'] if 'SavedPosts' in request.session else []
-            if len(postIds)>0:
-                for id in postIds:
-                    try:
-                        SavedPosts.append(Post.objects.get(id=id))
-                    except Exception as e:
-                        request.session['SavedPosts'].remove(id)
-                        request.session.modified=True
             CurrentUser=BlogUser.objects.get(user=request.user)
-            UsersPosts=Post.objects.filter(author=CurrentUser) if Post.objects.filter(author=CurrentUser).exists() else []
-            context={"User":bloguser,'saved_posts':SavedPosts,'UsersPosts':UsersPosts}
+            UsersPosts=Post.objects.filter(author=CurrentUser).select_related('author__user').annotate(comment_count=Count('comment', filter=Q(comment__parent=None))) if Post.objects.filter(author=CurrentUser).exists() else []
+            # context={'saved_posts':SavedPosts,'UsersPosts':UsersPosts}
+            context={'UsersPosts':UsersPosts}
             return render(request,'App/profile.html',context=context)
         
         # for showing  author profile
         elif User.objects.filter(username=username).exists():
             user=User.objects.get(username=username)
-            bloguser=BlogUser.objects.get(user=user)
-            allPosts=Post.objects.filter(author=bloguser)
+            author=BlogUser.objects.select_related('user').get(user=user)
+            allPosts=Post.objects.filter(author=author).select_related('author__user').annotate(comment_count=Count('comment', filter=Q(comment__parent=None))) if Post.objects.filter(author=author).exists() else []
             if not request.user.is_anonymous:
-                if AuthorFollower.objects.filter(follower=request.user,Author=bloguser).exists():
+                if AuthorFollower.objects.filter(follower=request.user,Author=author).exists():
                     userFollower=True
                 else:
                     userFollower=False
             else:
                 userFollower=False
             # here Author is author of post
-            return render(request,'App/author.html',{"Author":bloguser,'Posts':allPosts,'userFollower':userFollower})
+            return render(request,'App/author.html',{"Author":author,'Posts':allPosts,'userFollower':userFollower})
             # return render(request,'App/author.html',{'Posts':allPosts})
 
         else:
             return redirect('/')
     else:
         return redirect('/')
-
-
-    
+  
 def Change_profile(request):
     if request.method=="POST":
         username=request.POST.get('username')
@@ -456,7 +443,7 @@ def Change_profile(request):
             return HttpResponseRedirect(reverse('App:Profile',args=(request.user.username,)))
 
 def update_post(request,slug=None,post_id=None):
-    if slug is not None and Post.objects.get(slug=slug).author.user==request.user:
+    if slug is not None and Post.objects.select_related('author__user').get(slug=slug).author.user==request.user:
         # for update post
         if request.method=="POST":
             post=Post.objects.get(slug=slug)
@@ -483,20 +470,20 @@ def update_post(request,slug=None,post_id=None):
                     Tags.append(tag)        
             author=BlogUser.objects.get(user=request.user)
             author.save()
-            # Create post 
-            # post=Post.objects.create(author=author,title=title,content=content,category=category)
             post.title=title
             post.content=content
-            post.tags.add(*Tags)
+            post.tags.set(Tags)
             post.save()
             if thumImg is not None:
                 post.thImg=thumImg
             post.save()
             messages.success(request,'Updated post successully ')
-            return HttpResponseRedirect(reverse('App:Update post',args=(post.slug,)))
+            # return HttpResponseRedirect(reverse('App:Update post',args=(post.slug,)))
+            return HttpResponseRedirect(reverse('App:Detail Post',args=(request.user.username,slug)))
         post=Post.objects.get(slug=slug)
         params={'post':post}
         return render(request,'App/updatePost.html',params)
+        
         # when post.slug is wrong or another user is trying to access another user's post
 
     # for delete post
@@ -511,13 +498,13 @@ def update_post(request,slug=None,post_id=None):
     
     else:
         return redirect('/')
+
 # function for serailize session data
 def serialize_session(session):
     serialized_data = {}
     for key, value in session.items():
         serialized_data[key] = value
     return json.dumps(serialized_data)
-
 
 def SavePost(request):
     if request.method == "POST":
