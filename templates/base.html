@@ -61,15 +61,8 @@
     <span id="close_modals" class="w-full h-[100%] z-20 fixed top-0 bg-black opacity-30 hidden"></span>
 
     {% for Message in messages %}
-    <div id="alert" class="p-1 block z-10 fixed  top-15 w-1/2 -left-1/2 ">
-        <div
-            class="Dismissable-alert  rounded-md  p-2 mx-auto w-full lg:w-9/12 {% if Message.tags == 'error' %}bg-red-200 opacity-75 {% elif  Message.tags == 'success' %}bg-blue-300 {% endif %}  border   w-full flex justify-between items-center">
-            <p
-                class="{% if Message.tags == 'error' %} text-red-800 {% elif  Message.tags == 'success' %} text-blue-700 {% endif %} ">
-                {{Message}}</p>
-            <span class=" text-xl text-black px-2 py-1 rounded-md  hover:bg-gray-50 active:text-white cursor-pointer"
-                id="dismiss_alert">&times;</span>
-        </div>
+    <div id="alert" class="p-1 w-full lg:w-1/2 fixed left-1/2 -translate-x-1/2 top-15 z-30">
+       <div class="w-full rounded-lg lg:text-lg font-medium {% if Message.tags == 'success' %} bg-green-400 {% else %}bg-red-500 {% endif %}flex items-center opacity-90 border"><p class="p-2 flex-grow">{{Message}}</p><span class="cursor-pointer font-medium text-xl px-2 py-1  rounded hover:bg-white" id="dismiss_alert">&times;</span></div>
     </div>
     {% endfor %}
 

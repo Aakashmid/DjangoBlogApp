@@ -136,9 +136,15 @@ if (alert) {
     alert_btn.onclick = function () {
         var alert = document.getElementById('alert');
         alert.classList.toggle('hidden');
-
+        
     }
+    setTimeout(() => {
+        if (alert && !alert.classList.contains('hidden')) {
+            alert.classList.toggle('hidden');
+        }
+    }, 6000);
 }
+
 
 
 let previews = document.getElementsByClassName('preview');
