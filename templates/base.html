@@ -242,10 +242,10 @@
             class="z-10 searchBar fixed lg:w-[50%] md:w-[80%] rounded-b-lg left-1/2 top-14 -translate-x-1/2 w-full  bg-white   p-2 hidden  ">
             <form action="{% url 'App:Search Posts' %}" method="get" class="space-x-2 flex px-1">
                 <input type="text" name="q" id="q"
-                    class="w-full p-[7px]  bg-gray-50  outline outline-1 focus:outline-2 outline-gray-500 shadow-md   focus:outline-gray-800  rounded"
+                    class="w-full p-[7px]  bg-gray-50  outline outline-1  outline-gray-500 shadow-md   rounded focus:shadow-lg"
                     placeholder="Search..." required>
                 <button type="submit"
-                    class="hover:bg-gray-800 hover:text-white shadow-sm bg-white text-black rounded text-sm p-[7px] border-[1px] border-gray-500">Search</button>
+                    class="hover:bg-gradient-to-l from-gray-900 via-slate-800 to-gray-700   hover:text-white shadow-sm bg-white text-black rounded text-sm p-[7px] border-[1px]  border-gray-500">Search</button>
             </form>
         </div>
         <!-- main body -->

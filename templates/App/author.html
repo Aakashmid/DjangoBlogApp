@@ -85,15 +85,10 @@
                                 </a>
                             </span>
                             <span class="comment_span">
-                                <span class="comment">{{ post.comment_count }}</span>
-                                <a href="{% url 'App:Detail Post' post.author.user.username  post.slug %}" class=""><i
-                                        class="fa-regular fa-comment "></i></a>
+                                <span class="comment-count">{% if post.comment_count > 0 %}{{ post.comment_count }} {% endif %}</span>
+                                <a href="{% url 'App:Detail Post' post.author.user.username post.slug %}#comments"
+                                    class=""><i class="fa-regular fa-comment "></i></a>
                             </span>
-                        </span>
-                        <span
-                            class="p-2 hidden fixed top-16 left-1/2  transform duration-300 -translate-y-full -translate-x-1/2 w-32 text-center text-white font-semibold rounded shadow-green-100 bg-black"
-                            id="SavePost_popover">
-                            Post saved
                         </span>
                         <span class="flex space-x-6 items-center mx-3 relative">
                             <a role="button" class="bookmark" onclick="SavePost(this)" id="Save_post{{post.id}}">
@@ -108,13 +103,16 @@
                             <span id="Option_box{{post.id}}"
                                 class="absolute z bg-white right-0 top-6 hidden p-1 border-gray-500 border rounded ">
                                 <ul class="flex flex-col items-start w-fit space-y-1">
-                                    {% if post.author == User %}
-                                    <li class=" hover:bg-slate-200 active:bg-slate-300 px-1 rounded text-nowrap">
-                                        <a href="{% url 'App:Update post' post.id %}" class="">Update post</a>
+                                    {% if post.author == User%}
+                                    <li class="px-1 rounded  text-nowrap text-gray-900 hover:text-gray-600">
+                                        <a href="{% url 'App:Update post' post.slug %}" class="">Update post</a>
                                     </li>
-                                  
+                                    <li onclick="RemovePost({{post.id}})" class="px-1 rounded  text-nowrap text-gray-900 hover:text-gray-600">
+                                        <a role="button" >Remove post</a>
+                                    </li>
                                     {% else %}
-                                    <li class="px-1 hover:bg-gray-200" id="follow_op{{post.id}}">
+                                    <li class="px-1 rounded text-gray-900 hover:text-gray-600"
+                                        id="follow_op{{post.id}}">
                                         {% if post.author_id in request.session.FollowedAuthor %}
                                         <a onclick="ChangeFollowers(this)" id="follow{{post.author_id}}"
                                             class="cursor-pointer">Following</a>
@@ -127,6 +125,7 @@
                                 </ul>
                             </span>
                         </span>
+
                     </div>
                 </div>
                 <hr class="bg-black w-full mt-2">

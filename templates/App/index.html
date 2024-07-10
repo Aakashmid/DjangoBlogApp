@@ -91,7 +91,7 @@
                             </a>
                         </span>
                         <span class="comment_span">
-                            <span class="comment-count">{{ post.comment_count }}</span>
+                            <span class="comment-count">{% if post.comment_count > 0 %}{{ post.comment_count }} {% endif %}</span>
                             <a href="{% url 'App:Detail Post' post.author.user.username post.slug %}#comments"
                                 class=""><i class="fa-regular fa-comment "></i></a>
                         </span>

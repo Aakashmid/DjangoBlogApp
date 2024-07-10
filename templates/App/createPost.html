@@ -12,17 +12,28 @@
     $(document).ready(function () {
 
         var screenWidth = $(window).width();
-        if (screenWidth < 768) {
-            $('#blog_content').summernote({
-                height: 240,
-                width: '100%',
-            });
-        } else {
-            $('#blog_content').summernote({
-                height: 240,
-                width: '100%',
-            });
-        }
+        $('#blog_content').summernote({
+            toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'italic', 'underline', 'clear']],
+            ['fontname', ['fontname']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['insert', ['link', 'picture', 'video']],
+            ['view', ['fullscreen', 'codeview', 'help']]
+        ],
+        styleTags: [
+        { title: 'Paragraph', tag: 'p', value: 'p' },
+        { title: 'Blockquote', tag: 'blockquote', value: 'blockquote' },
+        { title: 'Preformatted', tag: 'pre', value: 'pre' },
+        { title: 'Header 1', tag: 'h2', value: 'h2' },
+        { title: 'Header 2', tag: 'h3', value: 'h3' },
+        { title: 'Header 3', tag: 'h4', value: 'h4' }
+    ],
+        height: 240,
+        });
+        
 
         // $("#trigger_cat_dropdown").on("click", function () {
         //     document.getElementById('Categories').classList.toggle('hidden');

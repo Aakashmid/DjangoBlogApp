@@ -163,6 +163,7 @@ def SearchResult(request,tagName=None):
                 filltered_posts=allPosts.order_by('publish_time')
                 params['allPosts']=filltered_posts
             params['filter']=filter
+
     # FOR SHOWING READING LIST 
     else:
         SavedPosts=[]
@@ -346,7 +347,6 @@ def profile(request,text=None,username=None):
             likedPosts = [pid for pid in likedPosts if pid != post_id]
             response_context={'likeCount':post.like,'status':'unliked'}
         except Exception as e:
-             print(request.session.items())
              return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
     # for follow a author or unfollow 
     elif request.method=="PATCH": 
