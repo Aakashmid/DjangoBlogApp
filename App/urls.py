@@ -10,7 +10,9 @@ urlpatterns = [
     # Home page
     path('', views.home, name="Home"),
     # Authentication
+
     path('sign-up/', views.Create_account, name="Create user"),
+    path('aboutUs/', views.About, name="About"),
     path('login-user/', views.Login_hand, name="login_user"),
     path('logout-user/', views.Logout_hand, name="Logout user"),
     # path('load_more_posts/', views.loadMorePosts, name="load-more-posts"),

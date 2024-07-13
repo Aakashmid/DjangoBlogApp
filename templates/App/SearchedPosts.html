@@ -1,10 +1,13 @@
 {% extends "base.html" %}
 {% load static %}
 {% load extraFilter %}
+
+{% block title %}
+{% if readingList %} ReadingList {% else %} SearchResult{% endif %}- BlogBlend
+{% endblock title %}
+
 {% block js%}
 <script>
-
-
 </script>
 {% endblock js %}
 

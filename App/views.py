@@ -61,10 +61,12 @@ def home(request):    #fname is filter name
             params={'allPosts':allposts,'filters':filters,'activeFilter':{'name':'All'} }
     
 
-    paginator=Paginator(params['allPosts'],15)
-    page_number = request.GET.get('page')
-    posts = paginator.get_page(page_number)
-    params['allPosts']=posts
+    # for pagination
+    # paginator=Paginator(params['allPosts'],2)
+    # page_number = request.GET.get('page')
+    # posts = paginator.get_page(page_number)
+    # params['allPosts']=posts
+    params['home']=True
     return render(request,'App/index.html',params)
 
 def Create_account(request):
@@ -247,8 +249,8 @@ def detail_post(request,slug=None,author_username=None):
     ###  Fitler comments and replies of a post 
     elif Post.objects.filter(slug=slug).exists():
         post=Post.objects.select_related('author__user').get(slug=slug)
-        comments=Comment.objects.filter(Q(parent=None) & Q(post=post))
-        replies=Comment.objects.filter(post=post).exclude(parent=None)
+        comments=Comment.objects.filter(Q(parent=None) & Q(post=post)).order_by('-timeStamp')
+        replies=Comment.objects.filter(post=post).exclude(parent=None).order_by('-timeStamp')
         # related_posts=Post.objects.filter(category=post.category)
         tags=post.tags.all()
         related_posts=Post.objects.filter(tags__in=tags).select_related('author__user').exclude(id=post.id).distinct().annotate(same_tag_count=Count('tags')).annotate(comment_count=Count('comment', filter=Q(comment__parent=None))).order_by('-same_tag_count')[:5]
@@ -277,12 +279,10 @@ def CommentReplyHandler(request):
         if parentSno=="":
             comment=Comment(user=user,post=post,comment_text=comment_text)
             comment.save()
-            messages.success(request,"Comment is posted successfully ")
         else:
             parent=Comment.objects.get(sno=parentSno)
             comment=Comment(user=user,post=post,comment_text=comment_text,parent=parent)
             comment.save()
-            messages.success(request," Reply posted successfully ")
         return HttpResponseRedirect(reverse('App:Detail Post',args=(post.author.user.username,post.slug,)))
     else:
         # next_url=request.GET.get('')
@@ -527,3 +527,7 @@ def SavePost(request):
             return HttpResponse('Invalid Post ID', status=400)
     else:
         return redirect('/')
+
+
+def About(request):
+    return render(request,'App/about.html')    

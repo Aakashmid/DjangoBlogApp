@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% load static %}
 
-
+{% block title %}
+NewPost - BlogBlend
+{% endblock title %}
 {% block css %}
 
 {% endblock css %}
@@ -33,11 +35,6 @@
     ],
         height: 240,
         });
-        
-
-        // $("#trigger_cat_dropdown").on("click", function () {
-        //     document.getElementById('Categories').classList.toggle('hidden');
-        // });
     });
 
 </script>
@@ -60,25 +57,6 @@
                 </div>
                 <div class="flex flex-col md:flex-row space-y-4 md:justify-between md:items-center">
 
-                    <!-- Categories sectio -->
-                    <!-- <span class="Category-dropDown flex space-x-2">
-                        <span class="flex items-center space-x-4">
-                            <a class=" font-medium text-lg " id="trigger_cat_dropdown" onclick="toggleDropDown()"
-                                role="button">Select
-                                Category <span class="angle-icon mx-1"><i class="fa-solid fa-angle-down fa-sm"></i></span> </a>
-                            <p class="" id="selectedOp"></p>
-                        </span>
-                        <ul id="Categories"
-                            class="hidden w-fit top-[185px] md:top-[207px] absolute z-10 bg-gray-100 font-normal max-h-52 overflow-y-auto p-2 rounded-md"
-                            onclick="selectOption(event)">
-                            {% for cat in Categories %}
-                            <li class="cursor-pointer hover:bg-white active:bg-blue-200 px-1 text-lg"
-                                data-value="{{cat.name}}">
-                                {{cat.name}}</li>
-                            {% endfor %}
-                        </ul>
-                        <input name="category" type="hidden" id="selectedOption" value="">
-                    </span> -->
                     <!-- Tag selector -->
                     <span class="flex flex-col items-start">
                         <p class="text-lg font-medium">Tags </p>
@@ -89,7 +67,7 @@
                 </div>
                 <div class="">
                     <label for="thumbnail" class="text-lg font-medium">Select Thumbnail (If Any) : </label>
-                    <input type="file" id="thumbnail" name="thumbnail" accept="image/*" value="">
+                    <input type="file"  id="thumbnail" name="thumbnail" accept="image/*"  value="">
                 </div>
 
                 <!-- Write blog section -->

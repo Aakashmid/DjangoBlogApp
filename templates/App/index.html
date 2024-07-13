@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %}
+Home - BlogBlend
 {% endblock title %}
+
 {% block body %}
 {% load extraFilter %}
+
 <div class="container">
     {% if user.is_authenticated %}
     {% else %}
@@ -133,22 +136,21 @@
             {% endfor %}
         </div>
 
+        <!-- for pagination -->
+<!-- 
         <div class="pagination lg:p-3 mt-4 p-2 mx-auto w-fit">
-            <span class="current p-2 my-1">
-                Page {{ allPosts.number }} of {{ allPosts.paginator.num_pages }}
-            </span>
             <span class="step-links flex space-x-1">
                 {% if allPosts.has_previous %}
-                    <a class="p-2 border-gray-500 rounded-md border hover:font-semibold "  href="?page=1">1</a>
-                    <a  class="p-2 border-gray-500 rounded-md border hover:font-semibold " href="?page={{ allPosts.previous_page_number }}">prev</a>
+                    <a style="box-shadow: 0px 0px 16px -4px rgba(0,0,0,0.68);" class="p-2  rounded-md   shad"  href="?page=1">1</a>
+                    <a  style="box-shadow: 0px 0px 16px -4px rgba(0,0,0,0.68);" class="p-2  rounded-md  " href="?page={{ allPosts.previous_page_number }}">prev</a>
                 {% endif %}
     
                 {% if allPosts.has_next %}
-                    <a class="p-2 border-gray-500 rounded-md border hover:font-semibold " href="?page={{ allPosts.next_page_number }}">{{ allPosts.next_page_number }}</a>
-                    <a class="p-2 border-gray-500 rounded-md border hover:font-semibold " href="?page={{ allPosts.paginator.num_pages }}">last &raquo;</a>
+                    <a style="box-shadow: 0px 0px 16px -4px rgba(0,0,0,0.68);" class="p-2  rounded-md  " href="?page={{ allPosts.next_page_number }}">{{ allPosts.next_page_number }}</a>
+                    <a style="box-shadow: 0px 0px 16px -4px rgba(0,0,0,0.68);" class="p-2  rounded-md  " href="?page={{ allPosts.paginator.num_pages }}">last &raquo;</a>
                 {% endif %}
             </span>
-        </div>
+        </div> -->
         {% endif %}
     </div>
 
