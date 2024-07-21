@@ -76,17 +76,17 @@ WSGI_APPLICATION = 'Project_Blog.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }     
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }     
+# }
 
                
-# DATABASES = {
-#     'default': dj_database_url.parse('postgres://blogblenddb_x6a0_user:C8N7OqUHrsNpz0T2Oi0AQI6Y9ErEjHaL@dpg-cpjhnmed3nmc73bnv4tg-a.singapore-postgres.render.com/blogblenddb_x6a0', conn_max_age=600)
-#     }
+DATABASES = {
+    'default': dj_database_url.parse('postgresql://blogblenddb_zq2o_user:vyOylQcW4RE0lYKxXspKOAnXdgciZ0Fm@dpg-cqd8uuhu0jms73ebgak0-a.singapore-postgres.render.com/blogblenddb_zq2o', conn_max_age=600)   # use conn_max_age so that connection from  db remain for given time
+    }
 
 
 

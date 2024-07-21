@@ -4,8 +4,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib.auth import login,logout,authenticate
 from django.contrib import messages
-from .models import Post,Comment,PostLike,CommentLike,PostReadedUser ,BlogUser,AuthorFollower,Tag,SavedPost
-from .templatetags import extraFilter
+from .models import Post,Comment,PostLike,CommentLike,BlogUser,AuthorFollower,Tag
 from django.db.models import Q
 from django.http import JsonResponse
 from django.utils import timezone
@@ -20,7 +19,7 @@ from django.views.decorators.csrf import csrf_exempt
 def home(request):    #fname is filter name
     filters=[{'name':'All'},{'name':'Latest'},{'name':'Following'}] if 'FollowedAuthor' in request.session and len(request.session['FollowedAuthor']) > 0 else [{'name':'All'},{'name':'Latest'}]
 
-    postTags = Tag.objects.annotate(post_count=Count('tagPosts')).filter(post_count__gt=0)  # posts is related name of  # tag in post model ,get tag whose posts are more than 0
+    postTags = Tag.objects.annotate(post_count=Count('tagPosts')).filter(post_count__gt=1)  # posts is related name of  # tag in post model ,get tag whose posts are more than 0
 
     for tag in postTags:
         filters.append({'name':str(tag.name)})
