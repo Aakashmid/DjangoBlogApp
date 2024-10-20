@@ -1,5 +1,9 @@
 CACHE/
 node_modules/
+
+
+media/
+db.sqlite3
 venv/
 __pycache__/
 migragtions/

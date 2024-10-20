@@ -76,17 +76,17 @@ WSGI_APPLICATION = 'Project_Blog.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }     
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }     
+}
 
                
-DATABASES = {
-    'default': dj_database_url.parse('postgresql://blogblenddb_zq2o_user:vyOylQcW4RE0lYKxXspKOAnXdgciZ0Fm@dpg-cqd8uuhu0jms73ebgak0-a.singapore-postgres.render.com/blogblenddb_zq2o', conn_max_age=600)   # use conn_max_age so that connection from  db remain for given time
-    }
+# DATABASES = {
+#     'default': dj_database_url.parse('postgresql://blogblenddb_zq2o_user:vyOylQcW4RE0lYKxXspKOAnXdgciZ0Fm@dpg-cqd8uuhu0jms73ebgak0-a.singapore-postgres.render.com/blogblenddb_zq2o', conn_max_age=600)   # use conn_max_age so that connection from  db remain for given time
+#     }
 
 
 
@@ -133,7 +133,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 #### Added manually   ####
-if DEBUG:
+if  DEBUG:
     STATICFILES_DIRS=[
     BASE_DIR /'static'
     ]
@@ -160,7 +160,7 @@ SESSION_COOKIE_AGE = 3600
 
 ### Settings configuration for production
 
-if not DEBUG:  # checking whether debug is false or true
+if not DEBUG: 
     STATIC_ROOT=BASE_DIR /'staticfiles'
     # Compress and cache static files for production
     # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
